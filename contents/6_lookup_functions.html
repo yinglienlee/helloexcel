@@ -1,0 +1,1773 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>查詢與參照函數</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: "Microsoft JhengHei", "微軟正黑體", Arial, sans-serif;
+            line-height: 1.8;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
+        }
+        
+        .section h2 {
+            color: #1e3c72;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section h3 {
+            color: #2a5298;
+            margin: 20px 0 15px 0;
+            font-size: 1.3em;
+        }
+        
+        .icon {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+            background: #667eea;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .example-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .example-table th {
+            background: #667eea;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+        }
+        
+        .example-table td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            color: black;
+        }
+        
+        .example-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        
+        .example-table tr:hover {
+            background: #e9ecef;
+        }
+        
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: "Consolas", "Monaco", monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+            white-space: pre;
+        }
+        
+        .formula {
+            background: #fff3cd;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: "Consolas", "Monaco", monospace;
+            color: #856404;
+            font-weight: bold;
+        }
+        
+        .tip-box {
+            background: #d1ecf1;
+            border-left: 4px solid #0c5460;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            color: black;
+        }
+        
+        .tip-box strong {
+            color: #0c5460;
+        }
+        
+        .warning-box {
+            background: #fff3cd;
+            border-left: 4px solid #856404;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            color: black;
+        }
+        
+        .warning-box strong {
+            color: #856404;
+        }
+
+        .error-box {
+            background: #f8d7da;
+            border-left: 4px solid #721c24;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            color: black;
+        }
+        
+        .error-box strong {
+            color: #721c24;
+        }
+        
+        .practice-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            margin-top: 40px;
+            border-radius: 10px;
+        }
+        
+        .practice-section h2 {
+            color: white;
+            margin-bottom: 30px;
+        }
+        
+        .question {
+            background: rgba(255,255,255,0.1);
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border-left: 5px solid white;
+        }
+        
+        .question h3 {
+            color: white;
+            margin-bottom: 15px;
+        }
+        
+        .question ul {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+        
+        .question li {
+            margin: 8px 0;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            margin: 20px 0;
+        }
+        
+        .comparison-table td {
+            padding: 15px;
+            vertical-align: top;
+        }
+        
+        .comparison-table td:first-child {
+            background: #e7f3ff;
+            border-right: 3px solid #667eea;
+            font-weight: bold;
+        }
+        
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+
+        .success-box {
+            background: #d4edda;
+            border-left: 4px solid #155724;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            color: black;
+        }
+        
+        .success-box strong {
+            color: #155724;
+        }
+        
+        ul, ol {
+            margin-left: 25px;
+            margin-top: 10px;
+        }
+        
+        li {
+            margin: 8px 0;
+        }
+
+        .function-card {
+            background: white;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .function-card h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .pros-cons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .pros, .cons {
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .pros {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+        }
+
+        .cons {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+        }
+
+        .pros h4, .cons h4 {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔍 查詢與參照函數</h1>
+            <p>精通數據查找的關鍵技能</p>
+        </div>
+        
+        <div class="content">
+            <!-- 查詢函數概述 -->
+            <div class="section">
+                <h2><span class="icon">1</span>查詢函數概述與重要性</h2>
+                
+                <p>查詢與參照函數是 Excel 中最強大且最常用的工具之一。在實務工作中,我們經常需要從大型數據表中快速找到特定資訊,而查詢函數就是解決這個問題的關鍵。</p>
+                
+                <h3>📊 實務應用場景</h3>
+                <ul>
+                    <li><strong>工業工程 (IE):</strong> 根據產品編號查找標準成本、製造時間、庫存量</li>
+                    <li><strong>經濟學:</strong> 根據國家代碼查找 GDP、失業率、通膨率等經濟指標</li>
+                    <li><strong>人力資源:</strong> 根據員工編號查找薪資、部門、職位資訊</li>
+                    <li><strong>銷售管理:</strong> 根據客戶代碼查找聯絡資訊、交易記錄</li>
+                    <li><strong>財務會計:</strong> 根據科目代碼查找會計科目名稱、預算金額</li>
+                </ul>
+
+                <div class="tip-box">
+                    <strong>💡 為什麼需要學習查詢函數?</strong><br>
+                    想像你有一份包含 10,000 筆產品資料的清單,客戶詢問某個產品的價格,你不可能手動翻找。查詢函數可以在不到一秒的時間內找到答案,並且當資料更新時,結果會自動更新。這就是查詢函數的威力!
+                </div>
+
+                <h3>📈 本週學習路徑</h3>
+                <div class="code-block">
+傳統函數 (VLOOKUP/HLOOKUP)
+    ↓ 了解基本概念與限制
+進階組合 (INDEX + MATCH)
+    ↓ 突破傳統限制,更靈活
+現代函數 (XLOOKUP)
+    ↓ Excel 365 最佳解決方案
+實務綜合應用
+    ↓ IE 與經濟學案例演練
+                </div>
+            </div>
+
+            <!-- VLOOKUP 函數 -->
+            <div class="section">
+                <h2><span class="icon">2</span>VLOOKUP 函數 - 傳統查詢利器</h2>
+                
+                <div class="function-card">
+                    <h4>🔧 函數語法</h4>
+                    <div class="code-block">=VLOOKUP(lookup_value, table_array, col_index_num, [range_lookup])
+
+參數說明:
+• lookup_value:    要查找的值(查詢鍵)
+• table_array:     查找範圍(必須包含查詢鍵和返回值)
+• col_index_num:   返回第幾欄的資料(從查找範圍的第1欄開始算)
+• range_lookup:    TRUE=近似匹配 / FALSE=精確匹配(通常用FALSE)</div>
+                </div>
+
+                <h3>📋 實務範例 1:產品成本查詢 (IE)</h3>
+                <p>某電子零件製造商需要根據產品編號快速查找標準成本:</p>
+
+                <table class="example-table">
+                    <thead>
+                        <tr>
+                            <th colspan="4" style="background: #28a745;">產品主檔表 (A1:D6)</th>
+                            <th style="background: #6c757d;"></th>
+                            <th colspan="3" style="background: #17a2b8;">訂單查詢表 (F1:H4)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="background: #e7f3ff;">
+                            <td><strong>產品編號</strong></td>
+                            <td><strong>產品名稱</strong></td>
+                            <td><strong>標準成本</strong></td>
+                            <td><strong>庫存量</strong></td>
+                            <td></td>
+                            <td><strong>訂單產品</strong></td>
+                            <td><strong>查詢成本</strong></td>
+                            <td><strong>查詢庫存</strong></td>
+                        </tr>
+                        <tr>
+                            <td>IC-2001</td>
+                            <td>微控制器</td>
+                            <td>125.50</td>
+                            <td>1,500</td>
+                            <td></td>
+                            <td>IC-2003</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr>
+                            <td>IC-2002</td>
+                            <td>記憶體晶片</td>
+                            <td>89.20</td>
+                            <td>2,300</td>
+                            <td></td>
+                            <td>IC-2001</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr>
+                            <td>IC-2003</td>
+                            <td>電源管理IC</td>
+                            <td>156.80</td>
+                            <td>800</td>
+                            <td></td>
+                            <td>IC-2005</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr>
+                            <td>IC-2004</td>
+                            <td>感測器晶片</td>
+                            <td>210.00</td>
+                            <td>650</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>IC-2005</td>
+                            <td>通訊晶片</td>
+                            <td>178.50</td>
+                            <td>1,100</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>📝 公式範例</h3>
+                <div class="code-block">
+在 G2 儲存格輸入(查詢成本):
+=VLOOKUP(F2,$A$2:$D$6,3,FALSE)
+
+在 H2 儲存格輸入(查詢庫存):
+=VLOOKUP(F2,$A$2:$D$6,4,FALSE)
+
+公式說明:
+• F2:              查找"IC-2003"
+• $A$2:$D$6:       在產品主檔表中查找(使用絕對參照)
+• 3 或 4:          返回第3欄(標準成本)或第4欄(庫存量)
+• FALSE:           精確匹配產品編號
+                </div>
+
+                <div class="tip-box">
+                    <strong>💡 實務技巧:</strong><br>
+                    • 查找範圍使用絕對參照 ($A$2:$D$6) 方便公式向下複製<br>
+                    • col_index_num 是從查找範圍的第1欄開始計數,不是工作表的欄號<br>
+                    • 務必使用 FALSE 進行精確匹配,避免錯誤結果<br>
+                    • 查找值(產品編號)必須在查找範圍的第一欄
+                </div>
+
+                <h3>🌍 實務範例 2:經濟指標查詢 (Econ)</h3>
+                <p>經濟學研究中經常需要根據國家代碼查找各項經濟指標:</p>
+
+                <table class="example-table">
+                    <thead>
+                        <tr>
+                            <th colspan="5">國家經濟數據表 (2024年)</th>
+                        </tr>
+                        <tr style="background: #e7f3ff;">
+                            <td><strong>國家代碼</strong></td>
+                            <td><strong>國家名稱</strong></td>
+                            <td><strong>GDP (十億美元)</strong></td>
+                            <td><strong>失業率 (%)</strong></td>
+                            <td><strong>通膨率 (%)</strong></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>USA</td>
+                            <td>美國</td>
+                            <td>27,974</td>
+                            <td>3.8</td>
+                            <td>3.2</td>
+                        </tr>
+                        <tr>
+                            <td>CHN</td>
+                            <td>中國</td>
+                            <td>17,963</td>
+                            <td>5.2</td>
+                            <td>0.5</td>
+                        </tr>
+                        <tr>
+                            <td>JPN</td>
+                            <td>日本</td>
+                            <td>4,231</td>
+                            <td>2.6</td>
+                            <td>2.8</td>
+                        </tr>
+                        <tr>
+                            <td>DEU</td>
+                            <td>德國</td>
+                            <td>4,456</td>
+                            <td>3.1</td>
+                            <td>5.9</td>
+                        </tr>
+                        <tr>
+                            <td>GBR</td>
+                            <td>英國</td>
+                            <td>3,495</td>
+                            <td>4.2</td>
+                            <td>4.0</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="code-block">
+查詢公式範例:
+=VLOOKUP("CHN",A2:E6,3,FALSE)    → 返回中國的GDP: 17,963
+=VLOOKUP("JPN",A2:E6,4,FALSE)    → 返回日本的失業率: 2.6
+=VLOOKUP("DEU",A2:E6,5,FALSE)    → 返回德國的通膨率: 5.9
+                </div>
+
+                <h3>⚠️ VLOOKUP 的限制</h3>
+                <div class="pros-cons">
+                    <div class="pros">
+                        <h4>✅ 優點</h4>
+                        <ul>
+                            <li>語法相對簡單,容易學習</li>
+                            <li>適合簡單的垂直查找</li>
+                            <li>所有 Excel 版本都支援</li>
+                            <li>執行速度快</li>
+                        </ul>
+                    </div>
+                    <div class="cons">
+                        <h4>❌ 限制</h4>
+                        <ul>
+                            <li>只能向右查找,無法向左</li>
+                            <li>查詢鍵必須在第一欄</li>
+                            <li>插入/刪除欄位會破壞公式</li>
+                            <li>col_index_num 不直觀</li>
+                        </ul>
+                    </div>
+                </div>
+
+				<h3>🔍 範圍查詢:range_lookup = TRUE 的實務應用</h3>
+                <p>當 range_lookup 設為 TRUE 時,VLOOKUP 會進行「近似匹配」,找到「小於等於查找值的最大值」。這在處理區間數據時非常有用。</p>
+
+                <div class="warning-box">
+                    <strong>⚠️ 使用 TRUE 的重要前提:</strong><br>
+                    查找範圍的<strong>第一欄必須按升序排列</strong>,否則會返回錯誤結果!
+                </div>
+
+                <h4>📊 實務範例 1:運費級距計算 (IE/物流)</h4>
+                <table class="example-table">
+                    <thead>
+                        <tr>
+                            <th colspan="3">運費級距表 (A1:C6)</th>
+                        </tr>
+                        <tr style="background: #e7f3ff;">
+                            <td><strong>重量下限(kg)</strong></td>
+                            <td><strong>運費(元)</strong></td>
+                            <td><strong>說明</strong></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>0</td>
+                            <td>100</td>
+                            <td>0-5kg</td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td>150</td>
+                            <td>5-10kg</td>
+                        </tr>
+                        <tr>
+                            <td>10</td>
+                            <td>200</td>
+                            <td>10-20kg</td>
+                        </tr>
+                        <tr>
+                            <td>20</td>
+                            <td>350</td>
+                            <td>20-50kg</td>
+                        </tr>
+                        <tr>
+                            <td>50</td>
+                            <td>600</td>
+                            <td>50kg以上</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="code-block">
+計算不同重量的運費:
+
+=VLOOKUP(3, A2:B6, 2, TRUE)    → 100元 (3kg落在0-5kg區間)
+=VLOOKUP(15, A2:B6, 2, TRUE)   → 200元 (15kg落在10-20kg區間)
+=VLOOKUP(45, A2:B6, 2, TRUE)   → 350元 (45kg落在20-50kg區間)
+=VLOOKUP(80, A2:B6, 2, TRUE)   → 600元 (80kg超過50kg)
+
+運作原理:
+- VLOOKUP找到「小於等於查找值的最大值」
+- 例如查找15kg時,找到的是10(≤15的最大值)
+- 然後返回對應的運費200元
+                </div>
+
+                <h4>💰 實務範例 2:所得稅率計算 (Econ/財務)</h4>
+                <table class="example-table">
+                    <thead>
+                        <tr>
+                            <th colspan="4">個人所得稅級距表 (A1:D6)</th>
+                        </tr>
+                        <tr style="background: #e7f3ff;">
+                            <td><strong>所得下限</strong></td>
+                            <td><strong>所得上限</strong></td>
+                            <td><strong>稅率(%)</strong></td>
+                            <td><strong>累進差額</strong></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>0</td>
+                            <td>560,000</td>
+                            <td>5</td>
+                            <td>0</td>
+                        </tr>
+                        <tr>
+                            <td>560,001</td>
+                            <td>1,260,000</td>
+                            <td>12</td>
+                            <td>39,200</td>
+                        </tr>
+                        <tr>
+                            <td>1,260,001</td>
+                            <td>2,520,000</td>
+                            <td>20</td>
+                            <td>140,000</td>
+                        </tr>
+                        <tr>
+                            <td>2,520,001</td>
+                            <td>4,720,000</td>
+                            <td>30</td>
+                            <td>392,000</td>
+                        </tr>
+                        <tr>
+                            <td>4,720,001</td>
+                            <td>以上</td>
+                            <td>40</td>
+                            <td>864,000</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="code-block">
+查詢適用稅率:
+
+年所得 800,000 元:
+=VLOOKUP(800000, A2:C6, 3, TRUE)   → 12% (落在560,001-1,260,000區間)
+
+年所得 1,800,000 元:
+=VLOOKUP(1800000, A2:C6, 3, TRUE)  → 20% (落在1,260,001-2,520,000區間)
+
+年所得 5,000,000 元:
+=VLOOKUP(5000000, A2:C6, 3, TRUE)  → 40% (超過4,720,001)
+
+完整稅額計算公式:
+=查詢所得*VLOOKUP(查詢所得,A2:C6,3,TRUE)/100-VLOOKUP(查詢所得,A2:D6,4,TRUE)
+         ↑                                               ↑
+      所得×稅率                                      累進差額
+                </div>
+
+                <h4>🎯 實務範例 3:學生成績等第判定 (教育)</h4>
+                <table class="example-table">
+                    <thead>
+                        <tr>
+                            <th colspan="3">成績等第對照表</th>
+                        </tr>
+                        <tr style="background: #e7f3ff;">
+                            <td><strong>分數下限</strong></td>
+                            <td><strong>等第</strong></td>
+                            <td><strong>評語</strong></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>0</td>
+                            <td>F</td>
+                            <td>不及格</td>
+                        </tr>
+                        <tr>
+                            <td>60</td>
+                            <td>D</td>
+                            <td>及格</td>
+                        </tr>
+                        <tr>
+                            <td>70</td>
+                            <td>C</td>
+                            <td>普通</td>
+                        </tr>
+                        <tr>
+                            <td>80</td>
+                            <td>B</td>
+                            <td>良好</td>
+                        </tr>
+                        <tr>
+                            <td>90</td>
+                            <td>A</td>
+                            <td>優秀</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="code-block">
+判定成績等第:
+
+=VLOOKUP(75, A2:B6, 2, TRUE)   → "C" (75分落在70-80區間)
+=VLOOKUP(88, A2:B6, 2, TRUE)   → "B" (88分落在80-90區間)
+=VLOOKUP(95, A2:B6, 2, TRUE)   → "A" (95分超過90分)
+=VLOOKUP(55, A2:B6, 2, TRUE)   → "F" (55分未達60分)
+                </div>
+
+                <div class="tip-box">
+                    <strong>💡 TRUE vs FALSE 使用時機:</strong><br><br>
+                    <strong>使用 TRUE (近似匹配) 當:</strong><br>
+                    ✅ 處理區間數據(運費級距、稅率級距、折扣級距)<br>
+                    ✅ 分數評級、績效評等<br>
+                    ✅ 數據已按升序排列<br>
+                    ✅ 需要找到「小於等於」的匹配值<br><br>
+                    
+                    <strong>使用 FALSE (精確匹配) 當:</strong><br>
+                    ✅ 查找唯一標識符(產品編號、員工編號、訂單號)<br>
+                    ✅ 需要完全相同的匹配<br>
+                    ✅ 數據沒有排序或無法排序<br>
+                    ✅ 大多數一般查詢情況 ← <strong>預設建議</strong>
+                </div>
+
+                <div class="warning-box">
+                    <strong>⚠️ 使用 TRUE 時的常見錯誤:</strong><br><br>
+                    <strong>錯誤1:數據未排序</strong><br>
+                    如果第一欄沒有按升序排列,會得到錯誤結果!<br>
+                    解決:使用前先對數據排序,或使用 FALSE + IF 組合<br><br>
+                    
+                    <strong>錯誤2:邊界值處理不當</strong><br>
+                    要注意區間的上下限是否包含在內<br>
+                    解決:明確定義每個區間的範圍<br><br>
+                    
+                    <strong>錯誤3:混淆 TRUE 和 FALSE</strong><br>
+                    大多數情況應該用 FALSE,只有區間查詢才用 TRUE<br>
+                    解決:不確定時優先使用 FALSE
+                </div>
+
+                <div class="error-box">
+                    <strong>🚫 常見錯誤與解決方案:</strong><br><br>
+                    <strong>#N/A 錯誤:</strong> 找不到查找值<br>
+                    → 檢查查找值是否存在於查找範圍的第一欄<br>
+                    → 檢查是否有多餘空格或格式不一致<br><br>
+                    <strong>#REF! 錯誤:</strong> col_index_num 超出範圍<br>
+                    → 確認欄索引號碼在查找範圍的欄數內<br><br>
+                    <strong>#VALUE! 錯誤:</strong> col_index_num 不是數字<br>
+                    → 確保欄索引號碼是正整數
+                </div>
+            </div>
+
+            <!-- HLOOKUP 函數 -->
+            <div class="section">
+                <h2><span class="icon">3</span>HLOOKUP 函數 - 水平查詢</h2>
+                
+                <div class="function-card">
+                    <h4>🔧 函數語法</h4>
+                    <div class="code-block">=HLOOKUP(lookup_value, table_array, row_index_num, [range_lookup])
+
+參數說明:
+• lookup_value:    要查找的值
+• table_array:     查找範圍(水平排列)
+• row_index_num:   返回第幾列的資料
+• range_lookup:    TRUE=近似匹配 / FALSE=精確匹配</div>
+                </div>
+
+                <h3>📊 實務範例:季度業績報表</h3>
+                <table class="example-table">
+                    <thead>
+                        <tr>
+                            <th>項目</th>
+                            <th>Q1</th>
+                            <th>Q2</th>
+                            <th>Q3</th>
+                            <th>Q4</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>營收(百萬)</td>
+                            <td>125.5</td>
+                            <td>138.2</td>
+                            <td>142.8</td>
+                            <td>156.3</td>
+                        </tr>
+                        <tr>
+                            <td>成本(百萬)</td>
+                            <td>87.2</td>
+                            <td>92.1</td>
+                            <td>95.8</td>
+                            <td>102.5</td>
+                        </tr>
+                        <tr>
+                            <td>毛利率(%)</td>
+                            <td>30.5</td>
+                            <td>33.4</td>
+                            <td>32.9</td>
+                            <td>34.4</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="code-block">
+查詢公式範例:
+=HLOOKUP("Q3",A1:E1,2,FALSE)     → 返回Q3的營收: 142.8
+=HLOOKUP("Q2",A1:E1,4,FALSE)     → 返回Q2的毛利率: 33.4
+                </div>
+
+                <div class="warning-box">
+                    <strong>⚠️ HLOOKUP 使用建議:</strong><br>
+                    HLOOKUP 較少使用,因為大多數數據表都是垂直排列。在實務上,如果遇到水平排列的數據,建議考慮:<br>
+                    • 將數據轉置為垂直排列,使用 VLOOKUP<br>
+                    • 使用 INDEX + MATCH 組合(更靈活)<br>
+                    • 使用 XLOOKUP(如果可用)
+                </div>
+            </div>
+
+            <!-- INDEX + MATCH 組合 -->
+            <div class="section">
+                <h2><span class="icon">4</span>INDEX + MATCH 組合 - 靈活的查詢方案</h2>
+                
+                <p>INDEX 和 MATCH 的組合是比 VLOOKUP 更強大、更靈活的查詢方式,可以突破 VLOOKUP 的所有限制。</p>
+
+                <h3>🔧 函數拆解</h3>
+                
+                <div class="function-card">
+                    <h4>📍 MATCH 函數 - 找位置</h4>
+                    <div class="code-block">=MATCH(lookup_value, lookup_array, [match_type])
+
+作用: 返回查找值在範圍中的相對位置(第幾個)
+
+參數說明:
+• lookup_value:   要查找的值
+• lookup_array:   查找範圍(單行或單列)
+• match_type:     0=精確匹配(最常用)
+                  1=小於等於(需升序排列)
+                 -1=大於等於(需降序排列)
+
+範例:
+=MATCH("IC-2003",A2:A6,0)  → 返回 3 (在第3個位置)</div>
+                </div>
+
+                <div class="function-card">
+                    <h4>📍 INDEX 函數 - 取值</h4>
+                    <div class="code-block">=INDEX(array, row_num, [column_num])
+
+作用: 返回範圍中指定位置的值
+
+參數說明:
+• array:          查找範圍
+• row_num:        第幾列
+• column_num:     第幾欄(可選,單欄範圍時不需要)
+
+範例:
+=INDEX(C2:C6,3)            → 返回C2:C6範圍中第3個值</div>
+                </div>
+
+                <h3>🎯 INDEX + MATCH 組合邏輯</h3>
+                <div class="code-block">
+=INDEX(返回值範圍, MATCH(查找值, 查找範圍, 0))
+       ↑               ↑
+     取第N個值      找出位置N
+
+執行流程:
+1. MATCH 先找出查找值在查找範圍中的位置(例如:第3個)
+2. INDEX 再根據這個位置,從返回值範圍中取出對應的值
+                </div>
+
+                <h3>📋 實務範例 1:向左查詢 (突破VLOOKUP限制)</h3>
+                <p>VLOOKUP 無法做到的向左查詢,INDEX+MATCH 輕鬆解決:</p>
+
+                <table class="example-table">
+                    <thead>
+                        <tr style="background: #e7f3ff;">
+                            <td><strong>產品名稱</strong></td>
+                            <td><strong>產品編號</strong></td>
+                            <td><strong>單價</strong></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>微控制器</td>
+                            <td>IC-2001</td>
+                            <td>125.50</td>
+                        </tr>
+                        <tr>
+                            <td>記憶體晶片</td>
+                            <td>IC-2002</td>
+                            <td>89.20</td>
+                        </tr>
+                        <tr>
+                            <td>電源管理IC</td>
+                            <td>IC-2003</td>
+                            <td>156.80</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="code-block">
+任務:根據產品編號(B欄)查找產品名稱(A欄) ← 向左查詢!
+
+VLOOKUP 無法做到(因為查詢鍵不在第一欄)
+
+INDEX + MATCH 解決方案:
+=INDEX(A2:A4, MATCH("IC-2003",B2:B4,0))
+      ↑               ↑
+  產品名稱範圍    在產品編號中找位置
+
+結果: "電源管理IC"
+
+執行過程:
+1. MATCH("IC-2003",B2:B4,0) → 返回 3
+2. INDEX(A2:A4, 3) → 返回 A2:A4 中第3個值 → "電源管理IC"
+                </div>
+
+                <h3>📋 實務範例 2:IE 成本分析</h3>
+                <table class="example-table">
+                    <thead>
+                        <tr>
+                            <th colspan="6">完整產品成本資料表</th>
+                        </tr>
+                        <tr style="background: #e7f3ff;">
+                            <td><strong>產品編號</strong></td>
+                            <td><strong>產品名稱</strong></td>
+                            <td><strong>材料成本</strong></td>
+                            <td><strong>人工成本</strong></td>
+                            <td><strong>製造費用</strong></td>
+                            <td><strong>總成本</strong></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>P-101</td>
+                            <td>齒輪組件</td>
+                            <td>45.00</td>
+                            <td>25.00</td>
+                            <td>15.00</td>
+                            <td>85.00</td>
+                        </tr>
+                        <tr>
+                            <td>P-102</td>
+                            <td>軸承模組</td>
+                            <td>62.50</td>
+                            <td>32.00</td>
+                            <td>18.50</td>
+                            <td>113.00</td>
+                        </tr>
+                        <tr>
+                            <td>P-103</td>
+                            <td>馬達組件</td>
+                            <td>128.00</td>
+                            <td>45.00</td>
+                            <td>28.00</td>
+                            <td>201.00</td>
+                        </tr>
+                        <tr>
+                            <td>P-104</td>
+                            <td>控制面板</td>
+                            <td>95.00</td>
+                            <td>38.00</td>
+                            <td>22.00</td>
+                            <td>155.00</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="code-block">
+查詢不同成本類型的公式:
+
+查詢材料成本:
+=INDEX(C2:C5, MATCH("P-103",A2:A5,0))  → 128.00
+
+查詢人工成本:
+=INDEX(D2:D5, MATCH("P-102",A2:A5,0))  → 32.00
+
+查詢製造費用:
+=INDEX(E2:E5, MATCH("P-104",A2:A5,0))  → 22.00
+
+優勢:
+- 可以查詢任何欄位,不受位置限制
+- 插入/刪除欄位不會影響公式
+- 邏輯清晰,易於維護
+                </div>
+
+                <h3>📊 實務範例 3:雙向查詢 (進階應用)</h3>
+                <p>同時根據行和列條件查詢數據:</p>
+
+                <table class="example-table">
+                    <thead>
+                        <tr>
+                            <th>產品</th>
+                            <th>北區</th>
+                            <th>中區</th>
+                            <th>南區</th>
+                            <th>東區</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>產品A</td>
+                            <td>125</td>
+                            <td>138</td>
+                            <td>142</td>
+                            <td>156</td>
+                        </tr>
+                        <tr>
+                            <td>產品B</td>
+                            <td>87</td>
+                            <td>92</td>
+                            <td>95</td>
+                            <td>102</td>
+                        </tr>
+                        <tr>
+                            <td>產品C</td>
+                            <td>210</td>
+                            <td>225</td>
+                            <td>218</td>
+                            <td>234</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="code-block">
+任務:查詢"產品B"在"南區"的銷售量
+
+=INDEX(B2:E4, MATCH("產品B",A2:A4,0), MATCH("南區",B1:E1,0))
+      ↑              ↑                      ↑
+    數據範圍      找出在第幾行            找出在第幾欄
+
+執行過程:
+1. MATCH("產品B",A2:A4,0) → 返回 2 (第2行)
+2. MATCH("南區",B1:E1,0) → 返回 3 (第3欄)
+3. INDEX(B2:E4, 2, 3) → 返回第2行第3欄的值 → 95
+                </div>
+
+                <div class="success-box">
+                    <strong>✅ INDEX + MATCH 優勢總結:</strong><br>
+                    1. <strong>方向自由:</strong> 可以向左、向右、向上、向下查詢<br>
+                    2. <strong>不怕變動:</strong> 插入/刪除欄位不影響公式<br>
+                    3. <strong>邏輯清晰:</strong> 查找位置和返回值分離,易於理解<br>
+                    4. <strong>功能強大:</strong> 支持雙向查詢、多條件查詢<br>
+                    5. <strong>效能優秀:</strong> 大數據量時比VLOOKUP更快
+                </div>
+            </div>
+
+            <!-- XLOOKUP 函數 -->
+            <div class="section">
+                <h2><span class="icon">5</span>XLOOKUP 函數 - 現代化查詢方案</h2>
+                
+                <div class="warning-box">
+                    <strong>⚠️ 版本需求:</strong><br>
+                    XLOOKUP 僅在 Excel 365 和 Excel 2021 以後的版本中可用。如果你使用的是較舊版本,請使用 INDEX + MATCH 組合。
+                </div>
+
+                <div class="function-card">
+                    <h4>🔧 函數語法</h4>
+                    <div class="code-block">=XLOOKUP(lookup_value, lookup_array, return_array, [if_not_found], [match_mode], [search_mode])
+
+參數說明:
+- lookup_value:    要查找的值
+- lookup_array:    查找範圍
+- return_array:    返回值範圍
+- if_not_found:    找不到時返回的值(可選)
+- match_mode:      0=精確匹配(預設), -1=精確或小於, 1=精確或大於, 2=通配符匹配
+- search_mode:     1=從頭搜尋(預設), -1=從尾搜尋, 2=二分搜尋(升序), -2=二分搜尋(降序)</div>
+                </div>
+
+                <h3>📋 實務範例 1:基本使用</h3>
+                <div class="code-block">
+使用先前的產品成本表:
+
+XLOOKUP 查詢:
+=XLOOKUP("IC-2003", A2:A6, C2:C6)
+         ↑            ↑        ↑
+    查找"IC-2003"  在A欄中找  返回C欄的值
+
+結果: 156.80
+
+相比 VLOOKUP 的優勢:
+- 不需要計算欄位索引號
+- 查找欄和返回欄可以是任意位置
+- 語法更簡潔直觀
+                </div>
+
+                <h3>🎯 實務範例 2:找不到時的預設值</h3>
+                <div class="code-block">
+=XLOOKUP("IC-9999", A2:A6, C2:C6, "查無此產品")
+                                      ↑
+                            找不到時顯示這個訊息
+
+如果 VLOOKUP 要實現同樣效果:
+=IFERROR(VLOOKUP("IC-9999",A2:D6,3,FALSE), "查無此產品")
+↑ 需要額外使用 IFERROR 函數
+                </div>
+
+                <h3>📊 實務範例 3:查詢整個欄位</h3>
+                <div class="code-block">
+查詢整個產品資訊(多欄):
+
+=XLOOKUP("IC-2003", A2:A6, B2:D6)
+                           ↑
+                  返回多個欄位(產品名稱、成本、庫存)
+
+結果會返回一個陣列:
+["電源管理IC", 156.80, 800]
+
+這在建立動態報表時非常有用!
+                </div>
+
+                <h3>🔍 實務範例 4:反向查詢(從下往上找)</h3>
+                <div class="code-block">
+當有重複值時,找最後一個出現的項目:
+
+=XLOOKUP("產品A", A2:A10, B2:B10, "找不到", 0, -1)
+                                              ↑
+                                        search_mode=-1
+                                        從尾端開始搜尋
+
+應用場景:
+- 查詢客戶最新的訂單
+- 查詢員工最近的考績記錄
+- 查詢產品最新的價格異動
+                </div>
+
+                <h3>📈 實務範例 5:區間查詢(經濟學應用)</h3>
+                <table class="example-table">
+                    <thead>
+                        <tr>
+                            <th colspan="3">所得稅級距表</th>
+                        </tr>
+                        <tr style="background: #e7f3ff;">
+                            <td><strong>所得下限</strong></td>
+                            <td><strong>稅率(%)</strong></td>
+                            <td><strong>累進差額</strong></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>0</td>
+                            <td>5</td>
+                            <td>0</td>
+                        </tr>
+                        <tr>
+                            <td>560,000</td>
+                            <td>12</td>
+                            <td>39,200</td>
+                        </tr>
+                        <tr>
+                            <td>1,260,000</td>
+                            <td>20</td>
+                            <td>140,000</td>
+                        </tr>
+                        <tr>
+                            <td>2,520,000</td>
+                            <td>30</td>
+                            <td>392,000</td>
+                        </tr>
+                        <tr>
+                            <td>4,720,000</td>
+                            <td>40</td>
+                            <td>864,000</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="code-block">
+查詢年所得 1,800,000 元適用的稅率:
+
+=XLOOKUP(1800000, A2:A6, B2:B6, , -1)
+                                      ↑
+                            match_mode=-1 (精確或小於)
+
+結果: 20% (因為 1,800,000 落在 1,260,000 ~ 2,520,000 區間)
+
+說明:
+- match_mode=-1 會找到"小於等於查找值的最大值"
+- 這在稅率級距、運費級距、折扣級距等場景非常實用
+                </div>
+
+                <div class="pros-cons">
+                    <div class="pros">
+                        <h4>✅ XLOOKUP 優點</h4>
+                        <ul>
+                            <li>語法簡潔,最直觀易懂</li>
+                            <li>可向任何方向查詢</li>
+                            <li>內建錯誤處理機制</li>
+                            <li>支持返回多個欄位</li>
+                            <li>支持反向搜尋</li>
+                            <li>支持區間查詢</li>
+                            <li>效能優於 VLOOKUP</li>
+                        </ul>
+                    </div>
+                    <div class="cons">
+                        <h4>⚠️ 使用限制</h4>
+                        <ul>
+                            <li>僅限 Excel 365/2021+</li>
+                            <li>較舊版本無法使用</li>
+                            <li>與他人共享檔案需確認版本</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="tip-box">
+                    <strong>💡 函數選擇建議:</strong><br>
+                    <strong>優先使用:</strong> XLOOKUP (如果版本支持)<br>
+                    <strong>次優選擇:</strong> INDEX + MATCH (兼容性最佳)<br>
+                    <strong>簡單情境:</strong> VLOOKUP (向右查詢且數據結構不變時)<br>
+                    <strong>避免使用:</strong> HLOOKUP (建議轉置數據改用 VLOOKUP 或其他方法)
+                </div>
+            </div>
+
+            
+            <!-- 常見問題與技巧 -->
+            <div class="section">
+                <h2><span class="icon">6</span>常見問題與進階技巧</h2>
+                
+                <h3>❓ 常見問題解答</h3>
+                
+                <div class="function-card">
+                    <h4>Q1: 為什麼查詢結果是 #N/A?</h4>
+                    <p><strong>可能原因:</strong></p>
+                    <ul>
+                        <li>查找值在查找範圍中不存在</li>
+                        <li>數據格式不一致(例如:數字vs文字)</li>
+                        <li>有多餘的空格或不可見字符</li>
+                        <li>查找範圍選擇錯誤</li>
+                    </ul>
+                    <p><strong>解決方法:</strong></p>
+                    <div class="code-block">
+使用 IFERROR 處理錯誤:
+=IFERROR(VLOOKUP(...), "查無資料")
+
+或使用 XLOOKUP 的 if_not_found 參數:
+=XLOOKUP(..., "查無資料")
+
+檢查空格問題:
+=XLOOKUP(TRIM(A1), ...)  ← 使用TRIM去除空格
+                    </div>
+                </div>
+
+                <div class="function-card">
+                    <h4>Q2: 如何處理重複值問題?</h4>
+                    <p>當查找範圍中有重複值時,查詢函數只會返回第一個匹配的結果。</p>
+                    <p><strong>解決方案:</strong></p>
+                    <ul>
+                        <li>使用 XLOOKUP 的 search_mode=-1 從後往前找</li>
+                        <li>建立輔助欄位組合唯一鍵(例如:編號+日期)</li>
+                        <li>使用進階篩選或 FILTER 函數找出所有匹配項</li>
+                    </ul>
+                </div>
+
+                <div class="function-card">
+                    <h4>Q3: 大數據量時查詢很慢怎麼辦?</h4>
+                    <p><strong>效能優化技巧:</strong></p>
+                    <ul>
+                        <li>使用 XLOOKUP 或 INDEX+MATCH 代替 VLOOKUP</li>
+                        <li>避免使用揮發性函數(如 INDIRECT, OFFSET)</li>
+                        <li>將常用查詢結果用 <span class="formula">Ctrl+Shift+Enter</span> 轉為陣列公式</li>
+                        <li>考慮使用 Power Query 預先處理數據</li>
+                        <li>啟用 Excel 的多執行緒計算</li>
+                    </ul>
+                </div>
+
+                <h3>🚀 進階技巧</h3>
+
+                <div class="function-card">
+                    <h4>技巧 1:多條件查詢</h4>
+                    <div class="code-block">
+方法一:輔助欄組合鍵
+在輔助欄建立: =A2&"-"&B2
+然後查詢: =XLOOKUP(F2&"-"&G2, 輔助欄, 返回欄)
+
+方法二:陣列公式(INDEX+MATCH)
+=INDEX(返回欄, MATCH(1, (條件1範圍=條件1)*(條件2範圍=條件2), 0))
+按 Ctrl+Shift+Enter 確認
+
+方法三:XLOOKUP 嵌套(Excel 365)
+=XLOOKUP(條件1, 範圍1, XLOOKUP(條件2, 範圍2, 返回欄))
+                    </div>
+                </div>
+
+                <div class="function-card">
+                    <h4>技巧 2:動態下拉選單與查詢</h4>
+                    <div class="code-block">
+步驟1:建立下拉選單
+選取儲存格 → 資料 → 資料驗證 → 清單來源
+
+步驟2:使用查詢函數連動顯示
+當選擇項目改變時,自動更新相關資訊
+
+步驟3:組合 IF 判斷
+=IF(A1="", "請選擇", XLOOKUP(A1, 查找範圍, 返回範圍))
+                    </div>
+                </div>
+
+                <div class="function-card">
+                    <h4>技巧 3:近似匹配的實務應用</h4>
+                    <div class="code-block">
+運費級距表範例:
+重量(kg)  運費
+0         100
+5         150
+10        200
+20        350
+
+使用 XLOOKUP 的 match_mode=-1:
+=XLOOKUP(15, A2:A5, B2:B5, , -1)
+→ 返回 200 (因為15kg落在10~20kg區間)
+
+應用場景:
+- 稅率級距計算
+- 折扣級距判定
+- 運費分級計算
+- 績效獎金計算
+                    </div>
+                </div>
+
+                <div class="tip-box">
+                    <strong>💡 除錯小技巧:</strong><br>
+                    1. 使用<strong>公式評估</strong>工具(公式 → 公式稽核 → 評估公式)逐步檢查<br>
+                    2. 將複雜公式拆分成多個步驟,分別檢查中間結果<br>
+                    3. 使用<strong>F9鍵</strong>在編輯欄中選取部分公式並按F9查看該部分的計算結果<br>
+                    4. 善用<strong>追蹤前導參照/從屬參照</strong>功能檢查數據關聯
+                </div>
+            </div>
+
+			<!-- 揮發性函數說明 -->
+            <div class="section">
+                <h2><span class="icon">⚡</span>揮發性與非揮發性函數解析</h2>
+                
+                <h3>🤔 什麼是揮發性函數?</h3>
+                <p><strong>揮發性函數 (Volatile Function)</strong> 是指<strong>每次 Excel 重新計算時都會執行</strong>的函數,即使其相依的儲存格沒有改變。</p>
+                
+                <div class="comparison-table">
+                    <table class="example-table">
+                        <thead>
+                            <tr>
+                                <th style="background: #28a745;">非揮發性函數 (一般函數)</th>
+                                <th style="background: #dc3545;">揮發性函數</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>只在輸入值改變時重新計算</td>
+                                <td>每次計算循環都會重新計算</td>
+                            </tr>
+                            <tr>
+                                <td>效能好,適合大量數據</td>
+                                <td>效能較差,可能造成延遲</td>
+                            </tr>
+                            <tr>
+                                <td>Excel 可追蹤相依性</td>
+                                <td>Excel 無法完全追蹤相依性</td>
+                            </tr>
+                            <tr>
+                                <td>範例: VLOOKUP, INDEX, MATCH</td>
+                                <td>範例: NOW, RAND, INDIRECT</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3>⚙️ 揮發性函數的運作原理</h3>
+                <div class="code-block">
+非揮發性函數範例:
+A1: 100
+A2: 200
+A3: =A1+A2
+
+執行過程:
+1. 首次計算: A3 = 300
+2. 改變 Z99 儲存格 → A3 不重新計算 (因為 A1、A2 沒變)
+3. 改變 A1 → A3 重新計算 ✓
+
+----------------------------------------
+
+揮發性函數範例:
+A1: 100
+A2: =INDIRECT("A1")
+
+執行過程:
+1. 首次計算: A2 = 100
+2. 改變 Z99 儲存格 → A2 重新計算! (即使 A1 沒變)
+3. 按 F9 → A2 重新計算!
+4. 開啟檔案 → A2 重新計算!
+
+原因: Excel 無法透過文字字串 "A1" 追蹤相依性,
+      所以保險起見,每次都重新計算
+                </div>
+
+                <h3>📋 揮發性函數完整清單</h3>
+                
+                <div class="function-card">
+                    <h4>🔴 永遠揮發性的函數</h4>
+                    <table class="example-table">
+                        <thead>
+                            <tr style="background: #dc3545;">
+                                <td><strong>函數</strong></td>
+                                <td><strong>用途</strong></td>
+                                <td><strong>為何揮發</strong></td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="formula">NOW()</span></td>
+                                <td>取得當前日期與時間</td>
+                                <td>時間持續變動</td>
+                            </tr>
+                            <tr>
+                                <td><span class="formula">TODAY()</span></td>
+                                <td>取得當前日期</td>
+                                <td>日期會改變</td>
+                            </tr>
+                            <tr>
+                                <td><span class="formula">RAND()</span></td>
+                                <td>產生隨機數 (0-1)</td>
+                                <td>每次都產生新的隨機數</td>
+                            </tr>
+                            <tr>
+                                <td><span class="formula">RANDBETWEEN()</span></td>
+                                <td>產生區間隨機數</td>
+                                <td>每次都產生新的隨機數</td>
+                            </tr>
+                            <tr>
+                                <td><span class="formula">OFFSET()</span></td>
+                                <td>動態範圍參照</td>
+                                <td>動態計算參照位置</td>
+                            </tr>
+                            <tr>
+                                <td><span class="formula">INDIRECT()</span></td>
+                                <td>文字轉參照</td>
+                                <td>無法透過文字追蹤相依性</td>
+                            </tr>
+                            <tr>
+                                <td><span class="formula">INFO()</span></td>
+                                <td>系統資訊</td>
+                                <td>系統資訊可能改變</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="function-card">
+                    <h4>🟡 條件性揮發的函數</h4>
+                    <table class="example-table">
+                        <thead>
+                            <tr style="background: #ffc107;">
+                                <td><strong>函數</strong></td>
+                                <td><strong>何時揮發</strong></td>
+                                <td><strong>何時不揮發</strong></td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="formula">CELL()</span></td>
+                                <td>使用 "format"、"address" 參數時</td>
+                                <td>使用 "contents"、"type" 參數時</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="function-card">
+                    <h4>🟢 常見的非揮發性函數 (效能良好)</h4>
+                    <table class="example-table">
+                        <thead>
+                            <tr style="background: #28a745;">
+                                <td><strong>類型</strong></td>
+                                <td><strong>函數範例</strong></td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>查詢函數</strong></td>
+                                <td>VLOOKUP, HLOOKUP, XLOOKUP, INDEX, MATCH</td>
+                            </tr>
+                            <tr>
+                                <td><strong>數學函數</strong></td>
+                                <td>SUM, AVERAGE, COUNT, MAX, MIN, ROUND</td>
+                            </tr>
+                            <tr>
+                                <td><strong>邏輯函數</strong></td>
+                                <td>IF, AND, OR, NOT, IFS, SWITCH</td>
+                            </tr>
+                            <tr>
+                                <td><strong>文字函數</strong></td>
+                                <td>LEFT, RIGHT, MID, CONCATENATE, TEXT</td>
+                            </tr>
+                            <tr>
+                                <td><strong>條件統計</strong></td>
+                                <td>SUMIF, COUNTIF, AVERAGEIF, SUMIFS</td>
+                            </tr>
+                            <tr>
+                                <td><strong>日期函數</strong></td>
+                                <td>DATE, YEAR, MONTH, DAY, EOMONTH</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3>🧪 如何測試函數是否揮發?</h3>
+                
+                <div class="code-block">
+測試步驟:
+
+步驟 1: 建立測試公式
+A1: =你要測試的函數
+A2: =RAND()  (已知的揮發性函數,用於對照)
+
+步驟 2: 按 F9 (強制重新計算)
+觀察公式是否重新計算
+
+步驟 3: 修改不相關的儲存格
+在 Z99 輸入任何值
+觀察 A1 是否重新計算
+
+步驟 4: 判斷結果
+✓ 如果 A1 重新計算 → 揮發性函數
+✓ 如果 A1 不重新計算 → 非揮發性函數
+                </div>
+
+                <h3>📊 實測比較範例</h3>
+                <table class="example-table">
+                    <thead>
+                        <tr>
+                            <th>公式</th>
+                            <th>功能</th>
+                            <th>揮發性?</th>
+                            <th>按F9會重算?</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="formula">=INDIRECT("B1")</span></td>
+                            <td>參照 B1</td>
+                            <td style="background: #f8d7da;">✓ 是</td>
+                            <td style="background: #f8d7da;">是</td>
+                        </tr>
+                        <tr>
+                            <td><span class="formula">=INDEX(B:B,1)</span></td>
+                            <td>參照 B1</td>
+                            <td style="background: #d4edda;">✗ 否</td>
+                            <td style="background: #d4edda;">否</td>
+                        </tr>
+                        <tr>
+                            <td><span class="formula">=OFFSET(B1,0,0)</span></td>
+                            <td>參照 B1</td>
+                            <td style="background: #f8d7da;">✓ 是</td>
+                            <td style="background: #f8d7da;">是</td>
+                        </tr>
+                        <tr>
+                            <td><span class="formula">=B1</span></td>
+                            <td>參照 B1</td>
+                            <td style="background: #d4edda;">✗ 否</td>
+                            <td style="background: #d4edda;">否</td>
+                        </tr>
+                        <tr>
+                            <td><span class="formula">=VLOOKUP("A",B:C,2,0)</span></td>
+                            <td>查詢資料</td>
+                            <td style="background: #d4edda;">✗ 否</td>
+                            <td style="background: #d4edda;">否</td>
+                        </tr>
+                        <tr>
+                            <td><span class="formula">=NOW()</span></td>
+                            <td>當前時間</td>
+                            <td style="background: #f8d7da;">✓ 是</td>
+                            <td style="background: #f8d7da;">是</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>⚡ 效能影響分析</h3>
+                
+                <div class="error-box">
+                    <strong>🐌 揮發性函數對效能的影響:</strong><br><br>
+                    
+                    <strong>情境:</strong> 工作簿包含 10,000 個公式<br><br>
+                    
+                    <strong>案例 A: 使用 100 個 INDIRECT 函數</strong><br>
+                    • 每次任何儲存格改變,這 100 個公式都會重新計算<br>
+                    • 按 F9 時,這 100 個公式都會重新計算<br>
+                    • 開啟檔案時,這 100 個公式都會重新計算<br>
+                    • <strong>結果:</strong> 明顯延遲,尤其是頻繁更新時<br><br>
+                    
+                    <strong>案例 B: 使用 100 個 INDEX+MATCH 組合</strong><br>
+                    • 只有當相依儲存格改變時才重新計算<br>
+                    • 按 F9 時不會無謂重新計算<br>
+                    • <strong>結果:</strong> 快速且有效率
+                </div>
+
+                <h3>🎯 最佳實務建議</h3>
+                
+                <div class="success-box">
+                    <strong>✅ 優先使用非揮發性替代方案:</strong><br><br>
+                    
+                    <table class="example-table">
+                        <thead>
+                            <tr>
+                                <th style="background: #dc3545;">❌ 避免使用</th>
+                                <th style="background: #28a745;">✅ 建議替代</th>
+                                <th>說明</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="formula">INDIRECT("A1")</span></td>
+                                <td><span class="formula">INDEX(A:A,1)</span></td>
+                                <td>固定參照改用 INDEX</td>
+                            </tr>
+                            <tr>
+                                <td><span class="formula">OFFSET(A1,0,0,5,1)</span></td>
+                                <td><span class="formula">A1:A5</span></td>
+                                <td>固定範圍直接參照</td>
+                            </tr>
+                            <tr>
+                                <td><span class="formula">INDIRECT(A1&"!B2")</span></td>
+                                <td>使用命名範圍</td>
+                                <td>跨工作表參照改用名稱</td>
+                            </tr>
+                            <tr>
+                                <td><span class="formula">OFFSET(...)</span></td>
+                                <td><span class="formula">INDEX(..., MATCH(...))</span></td>
+                                <td>動態範圍改用 INDEX+MATCH</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="tip-box">
+                    <strong>💡 何時可以接受使用揮發性函數?</strong><br><br>
+                    
+                    <strong>可接受的情境:</strong><br>
+                    ✓ 小型工作簿(少於 1,000 個公式)<br>
+                    ✓ 確實需要即時更新的資料(如 NOW, TODAY)<br>
+                    ✓ 需要隨機數產生(如 RAND, RANDBETWEEN)<br>
+                    ✓ 複雜的動態範圍且無其他解決方案<br>
+                    ✓ 一次性使用,完成後轉為值<br><br>
+                    
+                    <strong>應該避免的情境:</strong><br>
+                    ✗ 大型數據分析工作簿<br>
+                    ✗ 需要頻繁編輯的檔案<br>
+                    ✗ 多人共享的檔案<br>
+                    ✗ 有非揮發性替代方案時
+                </div>
+
+                <h3>🔧 效能優化實戰技巧</h3>
+                
+                <div class="code-block">
+技巧 1: 將揮發性函數結果轉為靜態值
+如果不需要即時更新:
+1. 選取含有揮發性函數的儲存格
+2. Ctrl+C (複製)
+3. 在同一位置: Ctrl+Alt+V → 值 (將公式轉為值)
+
+技巧 2: 限制揮發性函數的使用範圍
+❌ 不好: 在 10,000 行中都使用 INDIRECT
+✅ 良好: 只在必要的幾個儲存格使用,其他參照該結果
+
+技巧 3: 使用手動計算模式
+當需要使用大量揮發性函數時:
+公式 → 計算選項 → 手動
+完成編輯後按 F9 手動重新計算
+
+技巧 4: 使用 VBA 或 Power Query 預處理
+對於複雜的動態參照需求:
+考慮使用 VBA 或 Power Query 一次性處理
+而非在儲存格中使用揮發性函數
+                </div>
+
+                <div class="warning-box">
+                    <strong>⚠️ 常見迷思澄清:</strong><br><br>
+                    
+                    <strong>迷思 1:</strong> "INDEX 和 MATCH 是揮發性函數"<br>
+                    <strong>真相:</strong> ✗ 錯誤! 它們是非揮發性函數,效能優秀<br><br>
+                    
+                    <strong>迷思 2:</strong> "所有查詢函數都很慢"<br>
+                    <strong>真相:</strong> ✗ 錯誤! VLOOKUP, INDEX, MATCH 都很快,只有 INDIRECT 和 OFFSET 才慢<br><br>
+                    
+                    <strong>迷思 3:</strong> "揮發性函數永遠不該使用"<br>
+                    <strong>真相:</strong> ✗ 過於絕對! 小規模使用或特定需求(如 NOW, RAND)是可以的<br><br>
+                    
+                    <strong>迷思 4:</strong> "XLOOKUP 是揮發性函數"<br>
+                    <strong>真相:</strong> ✗ 錯誤! XLOOKUP 是非揮發性的,可以放心使用
+                </div>
+            </div>
+
+			<!-- 學習重點回顧 -->
+            <div class="section">
+                <h2><span class="icon">📝</span>學習重點回顧</h2>
+                
+                <h3>🎯 核心函數比較</h3>
+                
+                <table class="example-table">
+                    <thead>
+                        <tr>
+                            <th>函數</th>
+                            <th>優點</th>
+                            <th>限制</th>
+                            <th>適用情境</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>VLOOKUP</strong></td>
+                            <td>語法簡單<br>所有版本可用</td>
+                            <td>只能向右查詢<br>欄號不直觀</td>
+                            <td>簡單向右查詢<br>結構固定的表格</td>
+                        </tr>
+                        <tr>
+                            <td><strong>INDEX+MATCH</strong></td>
+                            <td>方向不受限<br>不怕結構變動<br>非揮發性</td>
+                            <td>語法較複雜</td>
+                            <td>向左查詢<br>複雜查詢需求<br>最佳兼容方案</td>
+                        </tr>
+                        <tr>
+                            <td><strong>XLOOKUP</strong></td>
+                            <td>功能最強大<br>語法最簡潔<br>內建錯誤處理</td>
+                            <td>僅限365/2021+</td>
+                            <td>所有查詢需求<br>(版本支援時)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>⚡ 關鍵要點</h3>
+                
+                <div class="pros-cons">
+                    <div class="pros">
+                        <h4>✅ 必須記住</h4>
+                        <ul>
+                            <li>查找範圍用<strong>絕對參照</strong> ($A$1:$D$10)</li>
+                            <li>預設用 <strong>FALSE</strong> 精確匹配</li>
+                            <li>加入<strong>錯誤處理</strong> (IFERROR)</li>
+                            <li>INDEX、MATCH 是<strong>非揮發性</strong>的</li>
+                            <li>避免 INDIRECT、OFFSET (揮發性)</li>
+                        </ul>
+                    </div>
+                    <div class="cons">
+                        <h4>⚠️ 常見錯誤</h4>
+                        <ul>
+                            <li>#N/A: 找不到值或格式不一致</li>
+                            <li>#REF!: 欄號超出範圍</li>
+                            <li>使用TRUE時忘記排序數據</li>
+                            <li>相對參照導致公式錯誤</li>
+                            <li>混淆工作表欄號和範圍欄號</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>📊 快速決策指南</h3>
+                
+                <div class="code-block">
+選擇函數的簡單規則:
+
+1. 有 Excel 365/2021？
+   → 是：用 XLOOKUP ✅ (最佳選擇)
+   
+2. 需要向左查詢？
+   → 是：用 INDEX + MATCH ✅
+   
+3. 簡單向右查詢且結構固定？
+   → 是：用 VLOOKUP ✅ (最簡單)
+   
+4. 其他情況？
+   → 用 INDEX + MATCH ✅ (最安全)
+                </div>
+                
+            </div>
+            
+        </div>
+    </div>
+</body>
+</html>

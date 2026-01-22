@@ -1,0 +1,1980 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>工作表連結與資料驗證</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: "Microsoft JhengHei", "微軟正黑體", Arial, sans-serif;
+            line-height: 1.8;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
+        }
+        
+        .section h2 {
+            color: #1e3c72;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section h3 {
+            color: #2a5298;
+            margin: 20px 0 15px 0;
+            font-size: 1.3em;
+        }
+        
+        .icon {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+            background: #667eea;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .example-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .example-table th {
+            background: #667eea;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+        }
+        
+        .example-table td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            color: black;
+        }
+        
+        .example-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        
+        .example-table tr:hover {
+            background: #e9ecef;
+        }
+        
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: "Consolas", "Monaco", monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+			white-space: pre; 
+        }
+        
+        .formula {
+            background: #fff3cd;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: "Consolas", "Monaco", monospace;
+            color: #856404;
+            font-weight: bold;
+        }
+        
+        .tip-box {
+            background: #d1ecf1;
+            border-left: 4px solid #0c5460;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            color: black;
+        }
+        
+        .tip-box strong {
+            color: #0c5460;
+        }
+        
+        .warning-box {
+            background: #fff3cd;
+            border-left: 4px solid #856404;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            color: black;
+        }
+        
+        .warning-box strong {
+            color: #856404;
+        }
+        
+        .success-box {
+            background: #d4edda;
+            border-left: 4px solid #155724;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            color: black;
+        }
+        
+        .success-box strong {
+            color: #155724;
+        }
+        
+        .practice-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            margin-top: 40px;
+            border-radius: 10px;
+        }
+        
+        .practice-section h2 {
+            color: white;
+            margin-bottom: 30px;
+        }
+        
+        .question {
+            background: rgba(255,255,255,0.1);
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border-left: 5px solid white;
+        }
+        
+        .question h3 {
+            color: white;
+            margin-bottom: 15px;
+        }
+        
+        .question ul {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+        
+        .question li {
+            margin: 8px 0;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            margin: 20px 0;
+        }
+        
+        .comparison-table td {
+            padding: 15px;
+            vertical-align: top;
+        }
+        
+        .comparison-table td:first-child {
+            background: #e7f3ff;
+            border-right: 3px solid #667eea;
+            font-weight: bold;
+            width: 30%;
+        }
+        
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        
+        ul, ol {
+            margin-left: 25px;
+            margin-top: 10px;
+        }
+        
+        li {
+            margin: 8px 0;
+        }
+        
+        .step-card {
+            background: white;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .step-card h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔗 工作表連結與資料驗證</h1>
+            <p>跨工作表引用與資料驗證</p>
+        </div>
+        
+        <div class="content">
+            <!-- 跨工作表引用 -->
+            <div class="section">
+                <h2><span class="icon">1</span>跨工作表資料引用</h2>
+                
+                <p>當資料分散在不同工作表時,我們需要在公式中引用其他工作表的儲存格。這在製作彙總報表、部門對比分析時非常重要。</p>
+                
+                <h3>📌 基本語法</h3>
+                <div class="code-block">
+語法格式: =工作表名稱!儲存格位址
+
+範例:
+=Sheet2!A1          (引用 Sheet2 的 A1 儲存格)
+=銷售部!B5          (引用「銷售部」工作表的 B5 儲存格)
+=Q1數據!$C$10       (引用「Q1數據」工作表的 C10,使用絕對參照)
+                </div>
+                
+                <div class="tip-box">
+                    <strong>💡 專業提示:</strong>如果工作表名稱包含空格或特殊字元,Excel 會自動加上單引號:<br>
+                    <span class="formula">='2024 年報'!A1</span><br>
+                    <span class="formula">='財務-Q1'!B10</span>
+                </div>
+                
+                <h3>🎯 實務範例:部門銷售彙總</h3>
+                <p>假設公司有三個部門,各自在不同工作表記錄銷售數據,現在要在「彙總」工作表統計總銷售額。</p>
+                
+                <table class="comparison-table">
+					<tr>
+						<td><strong>工作表結構</strong></td>
+						<td>
+							<strong>工作表1:「北區」</strong>
+							<table class="example-table">
+								<thead>
+									<tr><th>商品名稱</th><th>銷售額</th></tr>
+								</thead>
+								<tbody>
+									<tr><td>筆記型電腦</td><td>200,000</td></tr>
+									<tr><td>手機</td><td>180,000</td></tr>
+									<tr><td>平板</td><td>120,000</td></tr>
+									<tr style="background:#fff3cd;font-weight:bold;">
+										<td>小計</td><td>500,000</td>
+									</tr>
+								</tbody>
+							</table>
+							
+							<strong>工作表2:「中區」</strong>
+							<table class="example-table">
+								<thead>
+									<tr><th>商品名稱</th><th>銷售額</th></tr>
+								</thead>
+								<tbody>
+									<tr><td>筆記型電腦</td><td>150,000</td></tr>
+									<tr><td>手機</td><td>200,000</td></tr>
+									<tr><td>平板</td><td>100,000</td></tr>
+									<tr style="background:#fff3cd;font-weight:bold;">
+										<td>小計</td><td>450,000</td>
+									</tr>
+								</tbody>
+							</table>
+							
+							<strong>工作表3:「南區」</strong>
+							<table class="example-table">
+								<thead>
+									<tr><th>商品名稱</th><th>銷售額</th></tr>
+								</thead>
+								<tbody>
+									<tr><td>筆記型電腦</td><td>120,000</td></tr>
+									<tr><td>手機</td><td>160,000</td></tr>
+									<tr><td>平板</td><td>100,000</td></tr>
+									<tr style="background:#fff3cd;font-weight:bold;">
+										<td>小計</td><td>380,000</td>
+									</tr>
+								</tbody>
+							</table>
+							
+						</td>
+					</tr>
+				</table>
+
+                
+                <div class="step-card">
+                    <h4>步驟 1: 在「彙總」工作表建立表格</h4>
+                    <table class="example-table">
+                        <thead>
+                            <tr>
+                                <th>區域</th>
+                                <th>銷售額</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>北區</td>
+                                <td>(公式)</td>
+                            </tr>
+                            <tr>
+                                <td>中區</td>
+                                <td>(公式)</td>
+                            </tr>
+                            <tr>
+                                <td>南區</td>
+                                <td>(公式)</td>
+                            </tr>
+                            <tr style="background: #fff3cd; font-weight: bold;">
+                                <td>總計</td>
+                                <td>(公式)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="step-card">
+                    <h4>步驟 2: 輸入跨工作表公式</h4>
+                    <ul>
+                        <li>B2 (北區銷售額): <span class="formula">=北區!B10</span></li>
+                        <li>B3 (中區銷售額): <span class="formula">=中區!B10</span></li>
+                        <li>B4 (南區銷售額): <span class="formula">=南區!B10</span></li>
+                        <li>B5 (總計): <span class="formula">=SUM(B2:B4)</span> 或 <span class="formula">=北區!B10+中區!B10+南區!B10</span></li>
+                    </ul>
+                </div>
+                
+                <div class="warning-box">
+                    <strong>⚠️ 常見錯誤:</strong>
+                    <ul>
+                        <li><strong>#REF! 錯誤:</strong>引用的工作表被刪除或重新命名</li>
+                        <li><strong>工作表名稱錯誤:</strong>確保名稱完全相同,包含大小寫</li>
+                        <li><strong>忘記驚嘆號:</strong>必須使用「!」分隔工作表名稱與儲存格位址</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 跨檔案引用 -->
+            <div class="section">
+                <h2><span class="icon">2</span>跨檔案資料引用</h2>
+                
+                <p>有時候需要引用其他 Excel 檔案的資料,例如從各分公司的獨立檔案中提取數據進行總部彙總。</p>
+                
+                <h3>📌 基本語法</h3>
+                <div class="code-block">
+語法格式: =[檔案名稱]工作表名稱!儲存格位址
+
+範例:
+=[銷售報表.xlsx]Sheet1!A1
+='[2024年報.xlsx]財務數據'!B10
+='[C:\報表\Q1數據.xlsx]彙總'!$C$5
+                </div>
+                
+                <div class="tip-box">
+                    <strong>💡 建立跨檔案引用的簡易方法:</strong><br>
+                    1. 同時開啟兩個檔案<br>
+                    2. 在目標儲存格輸入「=」<br>
+                    3. 切換到來源檔案,點選要引用的儲存格<br>
+                    4. 按 Enter,Excel 會自動產生完整的引用公式
+                </div>
+                
+                <h3>🔗 外部連結的狀態</h3>
+                <table class="comparison-table">
+                    <tr>
+                        <td><strong>來源檔案已開啟</strong></td>
+                        <td>
+                            公式會即時更新,顯示最新數值。<br>
+                            範例: <span class="formula">=[預算.xlsx]Sheet1!B5</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>來源檔案已關閉</strong></td>
+                        <td>
+                            公式會包含完整路徑,開啟檔案時會提示是否更新連結。<br>
+                            範例: <span class="formula">='C:\Documents\[預算.xlsx]Sheet1'!B5</span>
+                        </td>
+                    </tr>
+                </table>
+                
+                <div class="warning-box">
+                    <strong>⚠️ 跨檔案引用注意事項:</strong>
+                    <ul>
+                        <li><strong>檔案位置變更:</strong>如果來源檔案移動位置,連結會失效</li>
+                        <li><strong>網路共享:</strong>引用網路磁碟的檔案時,確保所有使用者都有存取權限</li>
+                        <li><strong>效能影響:</strong>大量跨檔案引用會降低檔案開啟速度</li>
+                        <li><strong>中斷連結:</strong>可在「資料」→「編輯連結」中管理或中斷外部連結</li>
+                    </ul>
+                </div>
+                
+				<h3>🎯 實務範例:分公司銷售報表整合</h3>
+				<p>公司有三個分公司 (台北、台中、高雄),各自維護獨立的 Excel 檔案記錄銷售數據。總部需要在「總部彙總.xlsx」中整合所有分公司的銷售額。</p>
+
+				<table class="comparison-table">
+					<tr>
+						<td><strong>檔案結構</strong></td>
+						<td>
+							<strong>檔案1:「台北分公司.xlsx」</strong>
+							<table class="example-table">
+								<thead>
+									<tr><th>商品名稱</th><th>銷售額</th></tr>
+								</thead>
+								<tbody>
+									<tr><td>筆記型電腦</td><td>250,000</td></tr>
+									<tr><td>手機</td><td>220,000</td></tr>
+									<tr><td>平板</td><td>130,000</td></tr>
+									<tr style="background:#fff3cd;font-weight:bold;">
+										<td>小計</td><td>600,000</td>
+									</tr>
+								</tbody>
+							</table>
+
+							<strong>檔案2:「台中分公司.xlsx」</strong>
+							<table class="example-table">
+								<thead>
+									<tr><th>商品名稱</th><th>銷售額</th></tr>
+								</thead>
+								<tbody>
+									<tr><td>筆記型電腦</td><td>180,000</td></tr>
+									<tr><td>手機</td><td>200,000</td></tr>
+									<tr><td>平板</td><td>100,000</td></tr>
+									<tr style="background:#fff3cd;font-weight:bold;">
+										<td>小計</td><td>480,000</td>
+									</tr>
+								</tbody>
+							</table>
+
+							<strong>檔案3:「高雄分公司.xlsx」</strong>
+							<table class="example-table">
+								<thead>
+									<tr><th>商品名稱</th><th>銷售額</th></tr>
+								</thead>
+								<tbody>
+									<tr><td>筆記型電腦</td><td>200,000</td></tr>
+									<tr><td>手機</td><td>170,000</td></tr>
+									<tr><td>平板</td><td>150,000</td></tr>
+									<tr style="background:#fff3cd;font-weight:bold;">
+										<td>小計</td><td>520,000</td>
+									</tr>
+								</tbody>
+							</table>						
+						</td>
+					</tr>
+				</table>
+
+				<div class="step-card">
+					<h4>在「總部彙總」工作表中建立表格</h4>
+					<table class="example-table">
+						<thead>
+							<tr>
+								<th>分公司</th>
+								<th>銷售額</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>台北</td>
+								<td>=[台北分公司.xlsx]銷售數據!B10 → 600,000</td>
+							</tr>
+							<tr>
+								<td>台中</td>
+								<td>=[台中分公司.xlsx]銷售數據!B10 → 480,000</td>
+							</tr>
+							<tr>
+								<td>高雄</td>
+								<td>=[高雄分公司.xlsx]銷售數據!B10 → 520,000</td>
+							</tr>
+							<tr style="background:#fff3cd;font-weight:bold;">
+								<td>總計</td>
+								<td>=SUM(B2:B4) → 1,600,000</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				
+                <h3>📊 管理外部連結</h3>
+                <div class="step-card">
+                    <h4>查看與更新外部連結</h4>
+                    <ol>
+                        <li>點選「資料」索引標籤</li>
+                        <li>在「查詢與連線」群組中,點選「編輯連結」</li>
+                        <li>在對話框中可以:
+                            <ul>
+                                <li><strong>更新值:</strong>手動更新所有外部連結</li>
+                                <li><strong>變更來源:</strong>修改來源檔案路徑</li>
+                                <li><strong>中斷連結:</strong>將公式轉換為數值,移除外部依賴</li>
+                            </ul>
+                        </li>
+                    </ol>
+                </div>				
+				
+            </div>
+            
+            <!-- 3D 參照 -->
+            <div class="section">
+                <h2><span class="icon">3</span>3D 參照 (跨多個工作表)</h2>
+                
+                <div class="tip-box">
+                    <strong>📖 專有名詞解釋:</strong><br>
+                    • <strong>3D 參照 (3D Reference):</strong>同時引用多個工作表中相同位置的儲存格進行計算。例如計算 1 月到 12 月工作表中同一位置的總和。這種參照方式就像在三維空間中垂直穿透多個工作表,因此稱為「3D」參照。
+                </div>
+                
+                <p>當需要彙總多個結構相同的工作表時,3D 參照可以大幅簡化公式。</p>
+                
+                <h3>📌 基本語法</h3>
+                <div class="code-block">
+語法格式: =函數(起始工作表:結束工作表!儲存格範圍)
+
+範例:
+=SUM(一月:三月!B5)         (計算一月到三月工作表的 B5 總和)
+=AVERAGE(Q1:Q4!C10)         (計算 Q1 到 Q4 工作表的 C10 平均值)
+=MAX(北區:南區!D15)         (找出北區到南區工作表 D15 的最大值)
+                </div>
+                
+                <h3>🎯 實務範例:年度預算彙總</h3>
+                <p>公司有 12 個月份的獨立工作表,每個工作表結構相同,現在要計算全年總額。</p>
+                
+                <table class="comparison-table">
+                    <tr>
+                        <td><strong>工作表結構</strong></td>
+                        <td>
+							<strong>工作表: 1月</strong>
+							<table class="example-table">
+								<thead>
+									<tr><th>費用項目</th><th>金額</th></tr>
+								</thead>
+								<tbody>
+									<tr><td>人事費用</td><td>120,000</td></tr>
+									<tr><td>行銷費用</td><td>80,000</td></tr>
+									<tr><td>營運費用</td><td>60,000</td></tr>
+								</tbody>
+							</table>
+
+							<strong>工作表: 2月</strong>
+							<table class="example-table">
+								<thead>
+									<tr><th>費用項目</th><th>金額</th></tr>
+								</thead>
+								<tbody>
+									<tr><td>人事費用</td><td>115,000</td></tr>
+									<tr><td>行銷費用</td><td>75,000</td></tr>
+									<tr><td>營運費用</td><td>65,000</td></tr>
+								</tbody>
+							</table>
+
+							<strong>工作表: 3月</strong>
+							<table class="example-table">
+								<thead>
+									<tr><th>費用項目</th><th>金額</th></tr>
+								</thead>
+								<tbody>
+									<tr><td>人事費用</td><td>118,000</td></tr>
+									<tr><td>行銷費用</td><td>82,000</td></tr>
+									<tr><td>營運費用</td><td>70,000</td></tr>
+								</tbody>
+							</table>
+                        </td>
+                    </tr>
+                </table>
+                
+                <div class="step-card">
+                    <h4>在「年度彙總」工作表中建立公式</h4>
+                    <table class="example-table">
+                        <thead>
+                            <tr>
+                                <th>費用項目</th>
+                                <th>全年總額</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>人事費用</td>
+                                <td>=SUM(1月:12月!B5)</td>
+                            </tr>
+                            <tr>
+                                <td>行銷費用</td>
+                                <td>=SUM(1月:12月!B6)</td>
+                            </tr>
+                            <tr>
+                                <td>營運費用</td>
+                                <td>=SUM(1月:12月!B7)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="success-box">
+                    <strong>✅ 3D 參照的優勢:</strong>
+                    <ul>
+                        <li><strong>公式簡潔:</strong>一個公式就能彙總多個工作表</li>
+                        <li><strong>易於維護:</strong>新增或刪除工作表時,公式自動調整</li>
+                        <li><strong>減少錯誤:</strong>不需要逐一輸入每個工作表的引用</li>
+                    </ul>
+                </div>
+                
+                <div class="warning-box">
+                    <strong>⚠️ 使用 3D 參照的前提條件:</strong>
+                    <ul>
+                        <li>所有工作表必須<strong>結構相同</strong>(欄位位置一致)</li>
+                        <li>工作表必須<strong>連續排列</strong>(中間不能插入其他不相關的工作表)</li>
+                        <li>只能用於<strong>彙總函數</strong>,如 SUM、AVERAGE、MAX、MIN、COUNT 等</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 資料驗證 -->
+            <div class="section">
+                <h2><span class="icon">4</span>資料驗證 (Data Validation)</h2>
+                
+                <div class="tip-box">
+                    <strong>📖 專有名詞解釋:</strong><br>
+                    • <strong>資料驗證 (Data Validation):</strong>限制儲存格可輸入的資料類型或範圍,確保資料符合特定規則。例如只能輸入 1-100 的數字、只能從下拉選單選擇預設選項、只能輸入有效的日期等。這是確保資料品質的重要工具。
+                </div>
+                
+                <p>資料驗證可以防止使用者輸入不正確的資料,提高資料品質,減少後續處理的錯誤。</p>
+                
+                <h3>📌 設定資料驗證的步驟</h3>
+                <ol>
+                    <li>選取要設定驗證的儲存格範圍</li>
+                    <li>點選「資料」索引標籤 → 「資料驗證」</li>
+                    <li>在「設定」頁籤選擇驗證條件</li>
+                    <li>設定輸入訊息和錯誤提示(可選)</li>
+                    <li>按「確定」完成設定</li>
+                </ol>
+                
+                <h3>🎯 常用驗證類型</h3>
+                
+                <div class="step-card">
+                    <h4>1️⃣ 整數驗證</h4>
+                    <p><strong>應用情境:</strong>限制員工年齡、產品數量等必須為整數</p>
+                    <ul>
+                        <li><strong>設定:</strong>資料驗證 → 整數 → 介於 → 最小值: 18 → 最大值: 65</li>
+                        <li><strong>錯誤訊息:</strong>"請輸入 18-65 之間的整數"</li>
+                    </ul>
+                </div>
+                
+                <div class="step-card">
+                    <h4>2️⃣ 小數驗證</h4>
+                    <p><strong>應用情境:</strong>限制折扣率、良品率等數值範圍</p>
+                    <ul>
+                        <li><strong>設定:</strong>資料驗證 → 小數 → 介於 → 最小值: 0 → 最大值: 1</li>
+                        <li><strong>錯誤訊息:</strong>"折扣率必須介於 0 到 1 之間"</li>
+                    </ul>
+                </div>
+                
+                <div class="step-card">
+                    <h4>3️⃣ 清單驗證 (下拉選單)</h4>
+                    <p><strong>應用情境:</strong>部門名稱、產品類別、狀態選項等固定選項</p>
+                    
+                    <p><strong>方法一:直接輸入選項</strong></p>
+                    <ul>
+                        <li><strong>設定:</strong>資料驗證 → 清單 → 來源: 北區,中區,南區,東區</li>
+                        <li><strong>注意:</strong>選項之間用「逗號」分隔</li>
+                    </ul>
+                    
+                    <p><strong>方法二:引用儲存格範圍</strong></p>
+                    <ul>
+                        <li><strong>設定:</strong>資料驗證 → 清單 → 來源: =$A$1:$A$4</li>
+                        <li><strong>優點:</strong>修改來源範圍,下拉選單會自動更新</li>
+                    </ul>
+                </div>
+                
+                <div class="step-card">
+                    <h4>4️⃣ 日期驗證</h4>
+                    <p><strong>應用情境:</strong>限制交易日期、出生日期等必須在合理範圍</p>
+                    <ul>
+                        <li><strong>設定:</strong>資料驗證 → 日期 → 介於 → 開始日期: 2024/1/1 → 結束日期: 2024/12/31</li>
+                        <li><strong>錯誤訊息:</strong>"請輸入 2024 年內的日期"</li>
+                    </ul>
+                </div>
+                
+                <div class="step-card">
+                    <h4>5️⃣ 文字長度驗證</h4>
+                    <p><strong>應用情境:</strong>限制員工編號、產品代碼等必須符合特定長度</p>
+                    <ul>
+                        <li><strong>設定:</strong>資料驗證 → 文字長度 → 等於 → 長度: 8</li>
+                        <li><strong>錯誤訊息:</strong>"員工編號必須為 8 位數字"</li>
+                    </ul>
+                </div>
+                
+                <div class="step-card">
+                    <h4>6️⃣ 自訂公式驗證</h4>
+                    <p><strong>應用情境:</strong>複雜的驗證邏輯,例如電子郵件格式、身分證號規則</p>
+                    <ul>
+                        <li><strong>設定:</strong>資料驗證 → 自訂 → 公式: =AND(A2>=B2, A2<=C2)</li>
+                        <li><strong>範例:</strong>驗證出貨日期必須晚於訂單日期</li>
+                    </ul>
+                </div>
+                
+                <h3>💬 輸入訊息與錯誤提示</h3>
+                <table class="comparison-table">
+                    <tr>
+                        <td><strong>輸入訊息</strong></td>
+                        <td>
+                            當使用者選取儲存格時顯示的提示訊息。<br><br>
+                            <strong>設定位置:</strong>資料驗證 → 輸入訊息頁籤<br>
+                            <strong>標題:</strong>請選擇部門<br>
+                            <strong>訊息:</strong>請從下拉選單中選擇您所屬的部門
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>錯誤提示</strong></td>
+                        <td>
+                            當使用者輸入不符合規則的資料時顯示的錯誤訊息。<br><br>
+                            <strong>設定位置:</strong>資料驗證 → 錯誤提示頁籤<br>
+                            <strong>樣式選項:</strong>
+                            <ul>
+                                <li><strong>停駐:</strong>強制阻止輸入(建議)</li>
+                                <li><strong>警告:</strong>提示但可選擇繼續</li>
+                                <li><strong>資訊:</strong>僅顯示訊息</li>
+                            </ul>
+                            <strong>標題:</strong>輸入錯誤<br>
+                            <strong>訊息:</strong>您輸入的值不在允許範圍內,請重新輸入
+                        </td>
+                    </tr>
+                </table>
+                
+				<!-- 資料驗證：實務範例 -->				
+				<h3>🎯 實務範例:員工資料輸入表</h3>
+
+				<p>
+					以下範例示範如何在實際工作情境中，透過「資料驗證」限制使用者輸入，
+					避免錯誤資料，並提升整體資料品質。
+				</p>
+
+				<h3>🎯 情境說明</h3>
+				<p>
+					公司人資部門需要建立一份「員工基本資料表」，希望：
+				</p>
+				<ul>
+					<li>部門與職級只能從下拉選單選擇</li>
+					<li>年資必須是合理的整數範圍</li>
+					<li>到職日期不能早於公司成立時間</li>
+				</ul>
+
+				<h3>📋 範例資料表</h3>
+				<table class="example-table">
+					<thead>
+						<tr>
+							<th>員工編號</th>
+							<th>姓名</th>
+							<th>部門</th>
+							<th>職級</th>
+							<th>年資(年)</th>
+							<th>到職日期</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>E001</td>
+							<td>王小明</td>
+							<td>(下拉選單)</td>
+							<td>(下拉選單)</td>
+							<td>(驗證)</td>
+							<td>(驗證)</td>
+						</tr>
+						<tr>
+							<td>E002</td>
+							<td>陳美玲</td>
+							<td>(下拉選單)</td>
+							<td>(下拉選單)</td>
+							<td>(驗證)</td>
+							<td>(驗證)</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<h3>🔧 資料驗證設定說明</h3>
+
+				<div class="step-card">
+					<h4>① 部門欄位（C2:C3）</h4>
+					<ul>
+						<li><strong>驗證類型：</strong>清單</li>
+						<li><strong>來源：</strong>業務部,研發部,行政部,財務部</li>
+						<li><strong>效果：</strong>使用者只能從下拉選單選擇部門，避免打錯字</li>
+					</ul>
+				</div>
+
+				<div class="step-card">
+					<h4>② 職級欄位（D2:D3）</h4>
+					<ul>
+						<li><strong>驗證類型：</strong>清單</li>
+						<li><strong>來源：</strong>專員,組長,經理,總監</li>
+						<li><strong>效果：</strong>統一職級名稱，方便後續統計分析</li>
+					</ul>
+				</div>
+
+				<div class="step-card">
+					<h4>③ 年資欄位（E2:E3）</h4>
+					<ul>
+						<li><strong>驗證類型：</strong>整數</li>
+						<li><strong>條件：</strong>介於 0 到 40</li>
+						<li><strong>錯誤提示：</strong>請輸入 0–40 之間的整數</li>
+					</ul>
+				</div>
+
+				<div class="step-card">
+					<h4>④ 到職日期欄位（F2:F3）</h4>
+					<ul>
+						<li><strong>驗證類型：</strong>日期</li>
+						<li><strong>條件：</strong>大於或等於 2000/01/01</li>
+						<li><strong>錯誤提示：</strong>到職日期不可早於 2000 年</li>
+					</ul>
+				</div>
+
+				<div class="tip-box">
+					<strong>💡 教學小提醒：</strong><br>
+					建議同時設定「輸入訊息」，例如：
+					<ul>
+						<li>標題：<strong>輸入提示</strong></li>
+						<li>訊息：<strong>請依照公司規定填寫資料</strong></li>
+					</ul>
+					當使用者點選儲存格時，就能清楚知道該怎麼填。
+				</div>
+
+				<div class="success-box">
+					<strong>✅ 使用資料驗證的好處：</strong>
+					<ul>
+						<li>避免輸入錯誤或格式不一致</li>
+						<li>提升資料的可信度與可用性</li>
+						<li>減少後續整理與清洗資料的時間</li>
+					</ul>
+				</div>
+			
+				
+				
+                <div class="tip-box">
+                    <strong>💡 進階技巧:動態下拉選單</strong><br>
+                    使用 INDIRECT 函數建立根據其他儲存格變化的動態下拉選單。<br><br>
+                    <strong>情境:</strong>先選擇「產品類別」,再根據類別顯示對應的「產品型號」<br>
+                    <strong>設定:</strong>資料驗證 → 清單 → 來源: =INDIRECT($A2)<br>
+                    <strong>說明:</strong>A2 儲存格的值會成為命名範圍的名稱,顯示該範圍的內容
+                </div>
+            </div>
+            
+            <!-- 綜合實務範例 -->
+            <div class="section">
+                <h2><span class="icon">5</span>綜合實務:多部門預算彙總系統</h2>
+                
+                <p>現在我們要建立一個完整的多部門預算管理系統,整合本週所學的所有技巧。</p>
+                
+                <h3>📋 系統架構</h3>
+                <div class="step-card">
+                    <h4>工作表結構規劃</h4>
+                    <ol>
+                        <li><strong>「設定」工作表:</strong>儲存部門清單、費用項目等基礎資料</li>
+                        <li><strong>「業務部」工作表:</strong>業務部門的預算明細</li>
+                        <li><strong>「研發部」工作表:</strong>研發部門的預算明細</li>
+                        <li><strong>「行政部」工作表:</strong>行政部門的預算明細</li>
+                        <li><strong>「彙總」工作表:</strong>所有部門的預算彙總與分析</li>
+                    </ol>
+                </div>
+                
+                <h3>步驟 1:建立「設定」工作表</h3>
+                <table class="example-table">
+                    <thead>
+                        <tr>
+                            <th colspan="2">基礎資料設定</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>部門清單 (A2:A4)</strong></td>
+                            <td><strong>費用項目 (C2:C6)</strong></td>
+                        </tr>
+                        <tr>
+                            <td>業務部</td>
+                            <td>人事費用</td>
+                        </tr>
+                        <tr>
+                            <td>研發部</td>
+                            <td>設備採購</td>
+                        </tr>
+                        <tr>
+                            <td>行政部</td>
+                            <td>行銷推廣</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>差旅費用</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>辦公耗材</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="tip-box">
+                    <strong>💡 命名範圍技巧:</strong>為了方便引用,可以為這些範圍命名:<br>
+                    • 選取 A2:A4 → 在名稱方塊輸入「部門清單」<br>
+                    • 選取 C2:C6 → 在名稱方塊輸入「費用項目」<br>
+                    這樣在資料驗證時可以直接引用名稱,更加直觀
+                </div>
+                
+                <h3>步驟 2:建立各部門預算工作表</h3>
+                <p>以「業務部」為範例,其他部門結構相同:</p>
+                
+                <table class="example-table">
+                    <thead>
+                        <tr>
+                            <th>費用項目</th>
+                            <th>Q1預算</th>
+                            <th>Q2預算</th>
+                            <th>Q3預算</th>
+                            <th>Q4預算</th>
+                            <th>全年預算</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>人事費用</td>
+                            <td>800,000</td>
+                            <td>850,000</td>
+                            <td>850,000</td>
+                            <td>900,000</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr>
+                            <td>設備採購</td>
+                            <td>200,000</td>
+                            <td>150,000</td>
+                            <td>100,000</td>
+                            <td>180,000</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr>
+                            <td>行銷推廣</td>
+                            <td>500,000</td>
+                            <td>550,000</td>
+                            <td>600,000</td>
+                            <td>650,000</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr>
+                            <td>差旅費用</td>
+                            <td>120,000</td>
+                            <td>130,000</td>
+                            <td>140,000</td>
+                            <td>150,000</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr>
+                            <td>辦公耗材</td>
+                            <td>50,000</td>
+                            <td>50,000</td>
+                            <td>50,000</td>
+                            <td>50,000</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr style="background: #fff3cd; font-weight: bold;">
+                            <td>部門小計</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h4>🔧 設定資料驗證</h4>
+                <div class="step-card">
+                    <h4>1. 費用項目欄位 (A2:A6)</h4>
+                    <ul>
+                        <li><strong>驗證類型:</strong>清單</li>
+                        <li><strong>來源:</strong>=設定!$C$2:$C$6 或 =費用項目</li>
+                        <li><strong>優點:</strong>確保所有部門使用一致的費用項目名稱</li>
+                    </ul>
+                </div>
+                
+                <div class="step-card">
+                    <h4>2. 預算金額欄位 (B2:E6)</h4>
+                    <ul>
+                        <li><strong>驗證類型:</strong>整數</li>
+                        <li><strong>條件:</strong>大於或等於 0</li>
+                        <li><strong>錯誤訊息:</strong>"預算金額必須為非負整數"</li>
+                    </ul>
+                </div>
+                
+                <h4>📊 公式設定</h4>
+                <ul>
+                    <li><strong>全年預算 (F2):</strong><span class="formula">=SUM(B2:E2)</span></li>
+                    <li><strong>季度小計 (B7):</strong><span class="formula">=SUM(B2:B6)</span></li>
+                    <li><strong>全年小計 (F7):</strong><span class="formula">=SUM(F2:F6)</span> 或 <span class="formula">=SUM(B7:E7)</span></li>
+                </ul>
+                
+                <h3>步驟 3:建立「彙總」工作表</h3>
+                <table class="example-table">
+                    <thead>
+                        <tr>
+                            <th>部門</th>
+                            <th>Q1預算</th>
+                            <th>Q2預算</th>
+                            <th>Q3預算</th>
+                            <th>Q4預算</th>
+                            <th>全年預算</th>
+                            <th>占比</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>業務部</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr>
+                            <td>研發部</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr>
+                            <td>行政部</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr style="background: #fff3cd; font-weight: bold;">
+                            <td>公司總計</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>100%</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h4>📊 跨工作表公式</h4>
+                <ul>
+                    <li><strong>業務部 Q1 (B2):</strong><span class="formula">=業務部!B7</span></li>
+                    <li><strong>業務部 Q2 (C2):</strong><span class="formula">=業務部!C7</span></li>
+                    <li><strong>業務部全年 (F2):</strong><span class="formula">=業務部!F7</span> 或 <span class="formula">=SUM(B2:E2)</span></li>
+                    <li><strong>研發部 Q1 (B3):</strong><span class="formula">=研發部!B7</span></li>
+                    <li><strong>行政部 Q1 (B4):</strong><span class="formula">=行政部!B7</span></li>
+                    <li><strong>公司總計 Q1 (B5):</strong><span class="formula">=SUM(B2:B4)</span></li>
+                    <li><strong>業務部占比 (G2):</strong><span class="formula">=F2/$F$5</span> (設為百分比格式)</li>
+                </ul>
+                
+                <div class="success-box">
+                    <strong>✅ 使用 3D 參照簡化公式 (進階技巧):</strong><br>
+                    如果所有部門工作表結構完全相同,且工作表名稱連續,可以使用:<br>
+                    <span class="formula">=SUM(業務部:行政部!B7)</span><br>
+                    這個公式會自動加總「業務部」到「行政部」之間所有工作表的 B7 儲存格
+                </div>
+                
+                <h3>步驟 4:費用項目明細分析</h3>
+                <p>新增一個分析表,顯示各費用項目在各部門的分布:</p>
+                
+                <table class="example-table">
+                    <thead>
+                        <tr>
+                            <th>費用項目</th>
+                            <th>業務部</th>
+                            <th>研發部</th>
+                            <th>行政部</th>
+                            <th>總計</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>人事費用</td>
+                            <td>=業務部!F2</td>
+                            <td>=研發部!F2</td>
+                            <td>=行政部!F2</td>
+                            <td>=SUM(B2:D2)</td>
+                        </tr>
+                        <tr>
+                            <td>設備採購</td>
+                            <td>=業務部!F3</td>
+                            <td>=研發部!F3</td>
+                            <td>=行政部!F3</td>
+                            <td>=SUM(B3:D3)</td>
+                        </tr>
+                        <tr>
+                            <td>行銷推廣</td>
+                            <td>=業務部!F4</td>
+                            <td>=研發部!F4</td>
+                            <td>=行政部!F4</td>
+                            <td>=SUM(B4:D4)</td>
+                        </tr>
+                        <tr>
+                            <td>差旅費用</td>
+                            <td>=業務部!F5</td>
+                            <td>=研發部!F5</td>
+                            <td>=行政部!F5</td>
+                            <td>=SUM(B5:D5)</td>
+                        </tr>
+                        <tr>
+                            <td>辦公耗材</td>
+                            <td>=業務部!F6</td>
+                            <td>=研發部!F6</td>
+                            <td>=行政部!F6</td>
+                            <td>=SUM(B6:D6)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- 課後練習題 -->
+        <div class="practice-section">
+            <h2>📝 課後練習題</h2>
+            
+            <div class="question">
+                <h3>練習題 1:建立分店銷售彙總系統</h3>
+                <p><strong>任務描述:</strong></p>
+                <p>某連鎖餐飲業有 3 家分店,請建立銷售彙總系統。</p>
+				
+				<div class="tip-box">
+					<strong>📥 練習檔案下載：</strong><br>
+					請先下載以下 Excel 檔案，並依照題目說明完成練習。<br><br>
+					👉 <a href="files/4_練習題1_分店銷售彙總.xlsx" download>
+						點此下載：練習題1－分店銷售彙總 Excel 檔
+					</a>
+				</div>				
+                
+                <p><strong>工作表結構:</strong></p>
+                <ul>
+                    <li><strong>「台北店」、「台中店」、「高雄店」:</strong>各分店的每月銷售明細</li>
+                    <li><strong>「彙總」:</strong>三家分店的銷售統計</li>
+                </ul>
+                
+                <p><strong>各分店工作表格式:</strong></p>
+                <table class="example-table" style="margin: 20px 0; background: white;">
+                    <thead>
+                        <tr>
+                            <th>月份</th>
+                            <th>正餐銷售</th>
+                            <th>飲料銷售</th>
+                            <th>甜點銷售</th>
+                            <th>月小計</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1月</td>
+                            <td>450,000</td>
+                            <td>120,000</td>
+                            <td>80,000</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr>
+                            <td>2月</td>
+                            <td>480,000</td>
+                            <td>130,000</td>
+                            <td>85,000</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr>
+                            <td>3月</td>
+                            <td>520,000</td>
+                            <td>140,000</td>
+                            <td>90,000</td>
+                            <td>(公式)</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <p><strong>要求:</strong></p>
+                <ul>
+                    <li>在「彙總」工作表建立三店銷售對比表</li>
+                    <li>計算各店各月的銷售總額</li>
+                    <li>計算各店第一季總銷售額</li>
+                    <li>計算各店銷售占比</li>
+                    <li>使用 3D 參照計算三店各類別銷售總和</li>
+                </ul>
+            </div>
+            
+            <div class="question">
+                <h3>練習題 2:建立員工資料管理系統</h3>
+                <p><strong>任務描述:</strong></p>
+                <p>建立公司員工基本資料表,並設定資料驗證確保資料品質。</p>
+                
+				<div class="tip-box">
+					<strong>📥 練習檔案下載：</strong><br>
+					請先下載以下 Excel 檔案，並依照題目說明完成練習。<br><br>
+					👉 <a href="files/4_練習題2_員工資料管理系統.xlsx" download>
+						點此下載：練習題2－員工資料管理系統 Excel 檔
+					</a>
+				</div>				
+
+				
+                <table class="example-table" style="margin: 20px 0; background: white;">
+                    <thead>
+                        <tr>
+                            <th>員工編號</th>
+                            <th>姓名</th>
+                            <th>部門</th>
+                            <th>職級</th>
+                            <th>年資</th>
+                            <th>到職日期</th>
+                            <th>電子郵件</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>E001</td>
+                            <td>王小明</td>
+                            <td>(下拉選單)</td>
+                            <td>(下拉選單)</td>
+                            <td>(驗證)</td>
+                            <td>(驗證)</td>
+                            <td>(驗證)</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <p><strong>資料驗證要求:</strong></p>
+                <ul>
+                    <li><strong>員工編號:</strong>文字長度必須等於 4(格式: E001)</li>
+                    <li><strong>部門:</strong>下拉選單(業務部、研發部、行政部、財務部)</li>
+                    <li><strong>職級:</strong>下拉選單(專員、組長、經理、總監)</li>
+                    <li><strong>年資:</strong>整數,介於 0-40 之間</li>
+                    <li><strong>到職日期:</strong>日期,不早於 2000/1/1</li>
+                    <li><strong>電子郵件:</strong>自訂公式驗證,必須包含 "@" 符號</li>
+                </ul>
+                
+                <p><strong>提示:</strong></p>
+                <ul>
+                    <li>電子郵件驗證公式: <span class="formula">=ISNUMBER(FIND("@",G2))</span></li>
+                    <li>建立「設定」工作表儲存部門和職級清單</li>
+                    <li>為每個欄位設定清楚的輸入訊息和錯誤提示</li>
+                </ul>
+            </div>
+            
+            <div class="question">
+                <h3>練習題 3:產品庫存預警系統</h3>
+                <p><strong>任務描述:</strong></p>
+                <p>建立倉庫庫存管理表,當庫存低於安全庫存量時自動標示警告。</p>
+                
+				<div class="tip-box">
+					<strong>📥 練習檔案下載：</strong><br>
+					請先下載以下 Excel 檔案，並依照題目說明完成練習。<br><br>
+					👉 <a href="files/4_練習題3_產品庫存預警系統.xlsx" download>
+						點此下載：練習題3－產品庫存預警系統 Excel 檔
+					</a>
+				</div>	
+				
+                <table class="example-table" style="margin: 20px 0; background: white;">
+                    <thead>
+                        <tr>
+                            <th>產品編號</th>
+                            <th>產品名稱</th>
+                            <th>類別</th>
+                            <th>現有庫存</th>
+                            <th>安全庫存</th>
+                            <th>建議訂購量</th>
+                            <th>庫存狀態</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>P-001</td>
+                            <td>螺絲 M5</td>
+                            <td>(下拉選單)</td>
+                            <td>3,500</td>
+                            <td>5,000</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr>
+                            <td>P-002</td>
+                            <td>電阻 1KΩ</td>
+                            <td>(下拉選單)</td>
+                            <td>12,000</td>
+                            <td>10,000</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <p><strong>要求:</strong></p>
+                <ul>
+                    <li><strong>類別:</strong>下拉選單(五金零件、電子元件、塑膠材料)</li>
+                    <li><strong>現有庫存:</strong>整數驗證,必須 ≥ 0</li>
+                    <li><strong>安全庫存:</strong>整數驗證,必須 > 0</li>
+                    <li><strong>建議訂購量 (F2):</strong>如果現有庫存&lt;安全庫存，則建議訂購量=安全庫存×1.5-現有庫存，否則為0</li>
+                    <li><strong>庫存狀態 (G2):</strong>如果現有庫存&lt;安全庫存×0.5則為「嚴重不足」，如果現有庫存<安全庫存則為「偏低」，否則為「正常」</li>
+                    <li>使用條件格式:庫存狀態「嚴重不足」顯示紅色,「偏低」顯示黃色</li>
+                </ul>
+            </div>
+            
+            <div class="question">
+                <h3>練習題 4:跨檔案預算控管系統(進階)</h3>
+                <p><strong>任務描述:</strong></p>
+                <p>公司有 3 個事業部,各自維護獨立的預算檔案,總部需要彙總所有預算。</p>
+                
+				<div class="tip-box">
+					<strong>📥 練習檔案下載：</strong><br>
+					請先下載以下 Excel 檔案，並依照題目說明完成練習。<br><br>
+					👉 <a href="files/4_練習題4_各事業部預算.zip" download>
+						點此下載：練習題4－各事業部預算壓縮檔
+					</a>
+				</div>	
+				
+				
+                <p><strong>檔案結構:</strong></p>
+                <ul>
+                    <li><strong>「事業部A預算.xlsx」:</strong>事業部 A 的年度預算</li>
+                    <li><strong>「事業部B預算.xlsx」:</strong>事業部 B 的年度預算</li>
+                    <li><strong>「事業部C預算.xlsx」:</strong>事業部 C 的年度預算</li>
+                    <li><strong>「集團預算彙總.xlsx」:</strong>總部彙總檔案(目前檔案)</li>
+                </ul>
+                
+                <p><strong>各事業部預算檔案格式:</strong></p>
+                <table class="example-table" style="margin: 20px 0; background: white;">
+                    <thead>
+                        <tr>
+                            <th>費用項目</th>
+                            <th>年度預算</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>營業費用</td>
+                            <td>5,000,000</td>
+                        </tr>
+                        <tr>
+                            <td>研發費用</td>
+                            <td>3,000,000</td>
+                        </tr>
+                        <tr>
+                            <td>管理費用</td>
+                            <td>2,000,000</td>
+                        </tr>
+                        <tr style="background: #fff3cd; font-weight: bold;">
+                            <td>事業部總計</td>
+                            <td>10,000,000</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <p><strong>在「集團預算彙總.xlsx」中建立彙總表:</strong></p>
+                <ul>
+                    <li>使用跨檔案引用,從三個事業部檔案提取預算數據</li>
+                    <li>計算各費用項目在三個事業部的總額</li>
+                    <li>計算各事業部預算占集團總預算的比例</li>
+                    <li>設定外部連結更新方式(自動更新或手動更新)</li>
+                </ul>
+                
+                <p><strong>公式範例:</strong></p>
+                <ul>
+                    <li>引用事業部 A 營業費用: <span class="formula">='[事業部A預算.xlsx]Sheet1'!B2</span></li>
+                    <li>三部門營業費用總計: <span class="formula">=SUM('[事業部A預算.xlsx]Sheet1'!B2, '[事業部B預算.xlsx]Sheet1'!B2, '[事業部C預算.xlsx]Sheet1'!B2)</span></li>
+                </ul>
+            </div>
+            
+            <div class="question">
+                <h3>練習題 5:動態下拉選單應用(進階)</h3>
+                <p><strong>任務描述:</strong></p>
+                <p>建立產品訂購表,根據選擇的「產品類別」,動態顯示對應的「產品型號」選項。</p>
+                
+                <p><strong>步驟 1:在「設定」工作表建立產品資料</strong></p>
+                <table class="example-table" style="margin: 20px 0; background: white;">
+                    <thead>
+                        <tr>
+                            <th>筆記型電腦</th>
+                            <th>平板電腦</th>
+                            <th>智慧手機</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>ThinkPad X1</td>
+                            <td>iPad Pro</td>
+                            <td>iPhone 15</td>
+                        </tr>
+                        <tr>
+                            <td>MacBook Pro</td>
+                            <td>Surface Pro</td>
+                            <td>Samsung S24</td>
+                        </tr>
+                        <tr>
+                            <td>Dell XPS</td>
+                            <td>Galaxy Tab</td>
+                            <td>Pixel 8</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <p><strong>步驟 2:建立命名範圍</strong></p>
+                <ul>
+                    <li>選取 A2:A4 → 名稱方塊輸入「筆記型電腦」</li>
+                    <li>選取 B2:B4 → 名稱方塊輸入「平板電腦」</li>
+                    <li>選取 C2:C4 → 名稱方塊輸入「智慧手機」</li>
+                </ul>
+                
+                <p><strong>步驟 3:在訂購表設定資料驗證</strong></p>
+                <table class="example-table" style="margin: 20px 0; background: white;">
+                    <thead>
+                        <tr>
+                            <th>產品類別</th>
+                            <th>產品型號</th>
+                            <th>數量</th>
+                            <th>單價</th>
+                            <th>金額</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>(下拉選單)</td>
+                            <td>(動態下拉選單)</td>
+                            <td>(驗證)</td>
+                            <td>(驗證)</td>
+                            <td>(公式)</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <p><strong>資料驗證設定:</strong></p>
+                <ul>
+                    <li><strong>產品類別 (A2):</strong>清單 → 來源: 筆記型電腦,平板電腦,智慧手機</li>
+                    <li><strong>產品型號 (B2):</strong>清單 → 來源: <span class="formula">=INDIRECT($A2)</span>
+                        <br>(會根據 A2 的內容,自動顯示對應的命名範圍)</li>
+                    <li><strong>數量 (C2):</strong>整數 → 介於 1-1000</li>
+                    <li><strong>單價 (D2):</strong>整數 → 大於 0</li>
+                    <li><strong>金額 (E2):</strong><span class="formula">=C2*D2</span></li>
+                </ul>
+                
+                <p><strong>💡 測試動態下拉選單:</strong></p>
+                <ul>
+                    <li>當 A2 選擇「筆記型電腦」時,B2 會顯示 ThinkPad X1、MacBook Pro、Dell XPS</li>
+                    <li>當 A2 改選「平板電腦」時,B2 會自動切換為 iPad Pro、Surface Pro、Galaxy Tab</li>
+                </ul>
+            </div>
+            
+			<div class="question">
+				<h3>練習題 6: 多區域業績彙總與資料輸入規範</h3>
+				<p><strong>任務描述:</strong></p>
+				<p>公司將全國分為四個銷售區域（北區、中區、南區、東區），各區域分別記錄季度業績數據。請建立一個完整的業績彙總系統，同時在輸入時加入資料驗證，確保數據一致性與正確性。</p>
+
+				<p><strong>工作表結構與資料範例:</strong></p>
+				<table class="example-table" style="margin: 20px 0; background: white;">
+					<thead>
+						<tr>
+							<th>產品類別 (A 欄)</th>
+							<th>Q1 銷售額 (B 欄)</th>
+							<th>Q2 銷售額 (C 欄)</th>
+							<th>Q3 銷售額 (D 欄)</th>
+							<th>Q4 銷售額 (E 欄)</th>
+							<th>年度總額 (F 欄)</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>筆記型電腦</td>
+							<td>1,200,000</td>
+							<td>1,350,000</td>
+							<td>1,400,000</td>
+							<td>1,500,000</td>
+							<td>(公式)</td>
+						</tr>
+						<tr>
+							<td>平板電腦</td>
+							<td>800,000</td>
+							<td>850,000</td>
+							<td>900,000</td>
+							<td>950,000</td>
+							<td>(公式)</td>
+						</tr>
+						<tr>
+							<td>智慧手機</td>
+							<td>1,500,000</td>
+							<td>1,600,000</td>
+							<td>1,750,000</td>
+							<td>1,800,000</td>
+							<td>(公式)</td>
+						</tr>
+						<tr>
+							<td>配件周邊</td>
+							<td>300,000</td>
+							<td>320,000</td>
+							<td>350,000</td>
+							<td>380,000</td>
+							<td>(公式)</td>
+						</tr>
+						<tr style="background: #fff3cd; font-weight: bold;">
+							<td>區域小計</td>
+							<td>(公式)</td>
+							<td>(公式)</td>
+							<td>(公式)</td>
+							<td>(公式)</td>
+							<td>(公式)</td>
+						</tr>
+					</tbody>
+				</table>
+				<p>以上表格為「北區」工作表的結構，其他區域（中區、南區、東區）工作表格式完全相同。</p>
+
+				<div class="tip-box">
+					<strong>💡 專有名詞解釋：</strong>
+					<ul>
+						<li><strong>季度銷售額：</strong>每三個月為一季度（Q1：1-3月，Q2：4-6月，Q3：7-9月，Q4：10-12月）的銷售總金額，用來追蹤業績的季節性變化。</li>
+					</ul>
+				</div>
+
+				<p><strong>要求:</strong></p>
+				<ul>
+					<li>在每個區域工作表（北區、中區、南區、東區）的 A 欄（產品類別）設定資料驗證，使用清單類型，選項為：筆記型電腦,平板電腦,智慧手機,配件周邊（可建立「設定」工作表存放清單並引用）</li>
+					<li>在每個區域工作表的 B 欄至 E 欄（季度銷售額）設定資料驗證，限制為整數且大於或等於 0，並設定錯誤提示：「銷售額必須為非負整數」</li>
+					<li>在每個區域工作表的 F 欄（年度總額）輸入公式，例如北區 F2：<span class="formula">=SUM(B2:E2)</span>，並向下填滿</li>
+					<li>在每個區域工作表的季度小計列（第 6 列）輸入公式，例如 B6：<span class="formula">=SUM(B2:B5)</span>，並向右填滿</li>
+					<li>在「彙總」工作表建立四區域對比表，使用跨工作表引用計算各區域各季度及年度總額，例如北區 Q1：<span class="formula">=北區!B6</span></li>
+					<li>在「彙總」工作表使用 3D 參照計算所有區域的產品類別總銷售額，例如筆記型電腦年度總額：<span class="formula">=SUM(北區:東區!F2)</span></li>
+					<li>在「彙總」工作表計算各區域年度銷售額占全公司比例，例如北區占比：<span class="formula">=北區!F6 / SUM(北區:東區!F6)</span>，並設定為百分比格式</li>
+					<li>為產品類別欄位設定輸入訊息：「請從下拉選單選擇產品類別，确保名稱一致」</li>
+				</ul>
+			</div>
+			
+			<div class="question">
+				<h3>練習題 7: 連鎖咖啡店庫存管理與訂購預警系統</h3>
+				<p><strong>任務描述:</strong></p>
+				<p>一家連鎖咖啡店擁有 5 家分店，每家分店需每日追蹤主要原料的庫存量。總部希望建立一套庫存管理表，能即時顯示庫存狀態，並在庫存低於安全水位時自動計算建議訂購量，同時確保輸入資料的正確性。</p>
+
+				<p><strong>工作表結構與資料範例:</strong></p>
+				<table class="example-table" style="margin: 20px 0; background: white;">
+					<thead>
+						<tr>
+							<th>原料名稱 (A 欄)</th>
+							<th>單位 (B 欄)</th>
+							<th>目前庫存 (C 欄)</th>
+							<th>安全庫存 (D 欄)</th>
+							<th>每日平均耗用量 (E 欄)</th>
+							<th>建議訂購量 (F 欄)</th>
+							<th>庫存狀態 (G 欄)</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>阿拉比卡咖啡豆</td>
+							<td>公斤</td>
+							<td>85</td>
+							<td>100</td>
+							<td>12</td>
+							<td>(公式)</td>
+							<td>(公式)</td>
+						</tr>
+						<tr>
+							<td>牛奶</td>
+							<td>公升</td>
+							<td>320</td>
+							<td>400</td>
+							<td>85</td>
+							<td>(公式)</td>
+							<td>(公式)</td>
+						</tr>
+						<tr>
+							<td>糖漿</td>
+							<td>瓶</td>
+							<td>45</td>
+							<td>60</td>
+							<td>8</td>
+							<td>(公式)</td>
+							<td>(公式)</td>
+						</tr>
+						<tr>
+							<td>紙杯</td>
+							<td>個</td>
+							<td>1,200</td>
+							<td>2,000</td>
+							<td>350</td>
+							<td>(公式)</td>
+							<td>(公式)</td>
+						</tr>
+						<tr>
+							<td>茶包</td>
+							<td>盒</td>
+							<td>28</td>
+							<td>50</td>
+							<td>15</td>
+							<td>(公式)</td>
+							<td>(公式)</td>
+						</tr>
+					</tbody>
+				</table>
+				<p>以上表格為「台北店」工作表的結構，其他分店（台中店、高雄店、台南店、新竹店）格式完全相同。「彙總」工作表用來跨分店統計總庫存與整體訂購需求。</p>
+
+				<div class="tip-box">
+					<strong>💡 專有名詞解釋：</strong>
+					<ul>
+						<li><strong>安全庫存：</strong>為避免缺貨而設定的最低庫存量，足以應付正常耗用與可能的延遲交貨期間的需求。</li>
+						<li><strong>每日平均耗用量：</strong>根據歷史銷售數據計算出的每日平均使用量，用來預估庫存可維持的天數與訂購時機。</li>
+						<li><strong>建議訂購量：</strong>當庫存低於安全庫存時，系統自動計算需補充的數量，以恢復至合理水位。</li>
+					</ul>
+				</div>
+
+				<p><strong>要求:</strong></p>
+				<ul>
+					<li>在每個分店工作表的 A 欄（原料名稱）設定資料驗證，使用清單類型，選項為：阿拉比卡咖啡豆,牛奶,糖漿,紙杯,茶包（可建立「設定」工作表存放清單並引用）</li>
+					<li>在每個分店工作表的 B 欄（單位）設定資料驗證，使用清單類型，選項為：公斤,公升,瓶,個,盒</li>
+					<li>在每個分店工作表的 C 欄至 E 欄（目前庫存、安全庫存、每日平均耗用量）設定資料驗證，限制為整數且大於 0，並設定錯誤提示：「數量必須為正整數」</li>
+					<li>在每個分店工作表的 F 欄（建議訂購量）輸入公式，例如 F2：<span class="formula">=IF(C2&lt;D2, D2*1.5-C2, 0)</span>，並向下填滿（表示低於安全庫存時訂購至 1.5 倍安全庫存）</li>
+					<li>在每個分店工作表的 G 欄（庫存狀態）輸入公式，例如 G2：<span class="formula">=IF(C2&lt;D2*0.5, "嚴重不足", IF(C2&lt;D2, "偏低", "正常"))</span>，並向下填滿</li>
+					<li>在「彙總」工作表使用 3D 參照計算所有分店的總目前庫存，例如阿拉比卡咖啡豆總庫存：<span class="formula">=SUM(台北店:新竹店!C2)</span></li>
+					<li>在「彙總」工作表使用跨工作表引用與 3D 參照計算全公司總建議訂購量，例如阿拉比卡咖啡豆總訂購量：<span class="formula">=SUM(台北店:新竹店!F2)</span></li>
+					<li>為原料名稱與單位欄位設定輸入訊息：「請從下拉選單選擇正確項目，確保全公司資料一致」</li>
+				</ul>
+			</div>
+						
+			<div class="question">
+				<h3>練習題 8: 跨檔案專案預算彙總與資料驗證系統</h3>
+				<p><strong>任務描述:</strong></p>
+				<p>公司同時執行多個專案，每個專案由不同團隊負責，並各自維護獨立的預算檔案。總部需要建立一個集團層級的彙總檔案，透過跨檔案引用整合各專案預算數據，同時在各專案檔案中加入資料驗證，確保費用項目與金額輸入的正確性與一致性。</p>
+
+				<p><strong>各專案預算檔案結構與資料範例:</strong></p>
+				<table class="example-table" style="margin: 20px 0; background: white;">
+					<thead>
+						<tr>
+							<th>費用項目 (A 欄)</th>
+							<th>預算金額 (B 欄)</th>
+							<th>實際支出 (C 欄)</th>
+							<th>差異 (D 欄)</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>人事費用</td>
+							<td>2,500,000</td>
+							<td>2,380,000</td>
+							<td>(公式)</td>
+						</tr>
+						<tr>
+							<td>設備採購</td>
+							<td>1,200,000</td>
+							<td>1,350,000</td>
+							<td>(公式)</td>
+						</tr>
+						<tr>
+							<td>軟體授權</td>
+							<td>800,000</td>
+							<td>800,000</td>
+							<td>(公式)</td>
+						</tr>
+						<tr>
+							<td>差旅費用</td>
+							<td>600,000</td>
+							<td>520,000</td>
+							<td>(公式)</td>
+						</tr>
+						<tr>
+							<td>外包服務</td>
+							<td>900,000</td>
+							<td>950,000</td>
+							<td>(公式)</td>
+						</tr>
+						<tr style="background: #fff3cd; font-weight: bold;">
+							<td>總計</td>
+							<td>(公式)</td>
+							<td>(公式)</td>
+							<td>(公式)</td>
+						</tr>
+					</tbody>
+				</table>
+				<p>以上表格為「專案A_新產品開發.xlsx」檔案中「預算」工作表的結構，其他專案檔案（「專案B_系統升級.xlsx」、「專案C_市場推廣.xlsx」）格式完全相同。「集團彙總.xlsx」為總部彙總檔案。</p>
+
+				<div class="tip-box">
+					<strong>💡 專有名詞解釋：</strong>
+					<ul>
+						<li><strong>費用項目：</strong>專案執行過程中主要的支出類別，公司統一規定名稱以便跨專案比較與彙總。</li>
+					</ul>
+				</div>
+
+				<p><strong>要求:</strong></p>
+				<ul>
+					<li>在每個專案檔案的 A 欄（費用項目）設定資料驗證，使用清單類型，選項為：人事費用,設備採購,軟體授權,差旅費用,外包服務（可建立「設定」工作表存放清單並引用）</li>
+					<li>在每個專案檔案的 B 欄與 C 欄（預算金額、實際支出）設定資料驗證，限制為整數且大於或等於 0，並設定錯誤提示：「金額必須為非負整數」</li>
+					<li>在每個專案檔案的 D 欄（差異）輸入公式，例如 D2：<span class="formula">=B2-C2</span>，並向下填滿</li>
+					<li>在每個專案檔案的第 7 列（總計）輸入公式，例如 B7：<span class="formula">=SUM(B2:B6)</span>，並向右填滿至 D7</li>
+					<li>在「集團彙總.xlsx」檔案的彙總工作表中使用跨檔案引用，提取各專案的總預算與總實際支出，例如專案A總預算：<span class="formula">='[專案A_新產品開發.xlsx]預算'!B7</span></li>
+					<li>在「集團彙總.xlsx」計算所有專案的費用項目彙總，例如人事費用全集團總預算：<span class="formula">='[專案A_新產品開發.xlsx]預算'!B2 + '[專案B_系統升級.xlsx]預算'!B2 + '[專案C_市場推廣.xlsx]預算'!B2</span></li>
+					<li>在「集團彙總.xlsx」計算各專案預算占比，例如專案A占比：<span class="formula">='[專案A_新產品開發.xlsx]預算'!B7 / SUM('[專案A_新產品開發.xlsx]預算'!B7:'[專案C_市場推廣.xlsx]預算'!B7)</span>，並設定為百分比格式</li>
+					<li>為費用項目欄位設定輸入訊息：「請從下拉選單選擇統一的費用項目名稱，確保集團彙總正確」</li>
+					<li>在「集團彙總.xlsx」開啟檔案時，設定自動更新外部連結，或手動提示是否更新</li>
+				</ul>
+			</div>			
+				
+			<div class="question">
+				<h3>練習題 9: 動態產品訂購表與下拉選單</h3>
+				<p><strong>任務描述:</strong></p>
+				<p>公司採購部門需要建立一份產品訂購表，為了提升輸入效率與準確度，要求當使用者選擇「產品大類」後，「產品型號」欄位能自動顯示該大類對應的選項（動態下拉選單）。同時對數量與單價設定資料驗證，並自動計算訂購金額。</p>
+
+				<p><strong>工作表結構與資料範例:</strong></p>
+				<table class="example-table" style="margin: 20px 0; background: white;">
+					<thead>
+						<tr>
+							<th>訂單編號 (A 欄)</th>
+							<th>產品大類 (B 欄)</th>
+							<th>產品型號 (C 欄)</th>
+							<th>數量 (D 欄)</th>
+							<th>單價 (E 欄)</th>
+							<th>訂購金額 (F 欄)</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>ORD-2025-001</td>
+							<td>(下拉選單)</td>
+							<td>(動態下拉選單)</td>
+							<td>(驗證)</td>
+							<td>(驗證)</td>
+							<td>(公式)</td>
+						</tr>
+						<tr>
+							<td>ORD-2025-002</td>
+							<td>(下拉選單)</td>
+							<td>(動態下拉選單)</td>
+							<td>(驗證)</td>
+							<td>(驗證)</td>
+							<td>(公式)</td>
+						</tr>
+						<tr>
+							<td>ORD-2025-003</td>
+							<td>(下拉選單)</td>
+							<td>(動態下拉選單)</td>
+							<td>(驗證)</td>
+							<td>(驗證)</td>
+							<td>(公式)</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<p><strong>「設定」工作表產品資料範例:</strong></p>
+				<table class="example-table" style="margin: 20px 0; background: white;">
+					<thead>
+						<tr>
+							<th>筆記型電腦</th>
+							<th>平板電腦</th>
+							<th>智慧型手機</th>
+							<th>周邊配件</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>MacBook Pro 14"</td>
+							<td>iPad Air</td>
+							<td>iPhone 16 Pro</td>
+							<td>無線滑鼠</td>
+						</tr>
+						<tr>
+							<td>MacBook Pro 16"</td>
+							<td>iPad Pro 11"</td>
+							<td>iPhone 16</td>
+							<td>藍牙鍵盤</td>
+						</tr>
+						<tr>
+							<td>Dell XPS 14</td>
+							<td>Surface Pro 9</td>
+							<td>Samsung S25</td>
+							<td>外接硬碟 1TB</td>
+						</tr>
+						<tr>
+							<td>ThinkPad X1 Carbon</td>
+							<td>Galaxy Tab S9</td>
+							<td>Google Pixel 9</td>
+							<td>USB-C 集線器</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<div class="tip-box">
+					<strong>💡 專有名詞解釋：</strong>
+					<ul>
+						<li><strong>產品大類：</strong>公司將產品依功能與用途分為主要類別，便於分類管理與採購統計。</li>
+						<li><strong>產品型號：</strong>同一大類下的具體產品規格與款式，使用動態下拉選單可避免選擇錯誤。</li>
+					</ul>
+				</div>
+
+				<p><strong>要求:</strong></p>
+				<ul>
+					<li>在「設定」工作表中，為每個產品大類建立命名範圍：
+						<ul>
+							<li>選取筆記型電腦列 → 名稱方塊輸入「筆記型電腦」</li>
+							<li>選取平板電腦列 → 名稱方塊輸入「平板電腦」</li>
+							<li>選取智慧型手機列 → 名稱方塊輸入「智慧型手機」</li>
+							<li>選取周邊配件列 → 名稱方塊輸入「周邊配件」</li>
+						</ul>
+					</li>
+					<li>在訂購表的 B 欄（產品大類）設定資料驗證，使用清單類型，來源為：筆記型電腦,平板電腦,智慧型手機,周邊配件</li>
+					<li>在訂購表的 C 欄（產品型號）設定資料驗證，使用清單類型，來源公式：<span class="formula">=INDIRECT($B2)</span>（實現依賴式動態下拉選單）</li>
+					<li>在訂購表的 D 欄（數量）設定資料驗證，整數，介於 1 到 500，並設定錯誤提示：「數量必須介於 1-500 之間」</li>
+					<li>在訂購表的 E 欄（單價）設定資料驗證，整數，大於或等於 100，並設定錯誤提示：「單價必須大於或等於 100」</li>
+					<li>在訂購表的 F 欄（訂購金額）輸入公式，例如 F2：<span class="formula">=D2*E2</span>，並向下填滿</li>
+					<li>為 B 欄與 C 欄設定輸入訊息：
+						<ul>
+							<li>B 欄：「請先選擇產品大類」</li>
+							<li>C 欄：「請根據左側大類選擇對應型號」</li>
+						</ul>
+					</li>
+					<li>測試功能：當 B2 選擇「筆記型電腦」時，C2 下拉應顯示 MacBook Pro 14"、MacBook Pro 16" 等；切換大類時，C 欄選項應自動更新</li>
+				</ul>
+			</div>
+	
+			<div class="question">
+				<h3>練習題 10: 員工出差申請表與多條件資料驗證</h3>
+				<p><strong>任務描述:</strong></p>
+				<p>公司人資部門要建立一份標準化的員工出差申請表，要求透過資料驗證限制輸入內容，確保出差目的地、日期、預算金額等關鍵欄位符合公司規定。同時結合自訂公式驗證，防止出差日期邏輯錯誤（如結束日期早於開始日期），並自動計算出差天數與每日預算。</p>
+
+				<p><strong>工作表結構與資料範例:</strong></p>
+				<table class="example-table" style="margin: 20px 0; background: white;">
+					<thead>
+						<tr>
+							<th>申請編號 (A 欄)</th>
+							<th>員工姓名 (B 欄)</th>
+							<th>部門 (C 欄)</th>
+							<th>出差目的地 (D 欄)</th>
+							<th>開始日期 (E 欄)</th>
+							<th>結束日期 (F 欄)</th>
+							<th>出差天數 (G 欄)</th>
+							<th>總預算金額 (H 欄)</th>
+							<th>每日預算上限 (I 欄)</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>TRIP-2025-001</td>
+							<td>王小明</td>
+							<td>(下拉選單)</td>
+							<td>(下拉選單)</td>
+							<td>(日期驗證)</td>
+							<td>(日期驗證)</td>
+							<td>(公式)</td>
+							<td>(驗證)</td>
+							<td>(公式)</td>
+						</tr>
+						<tr>
+							<td>TRIP-2025-002</td>
+							<td>陳美玲</td>
+							<td>(下拉選單)</td>
+							<td>(下拉選單)</td>
+							<td>(日期驗證)</td>
+							<td>(日期驗證)</td>
+							<td>(公式)</td>
+							<td>(驗證)</td>
+							<td>(公式)</td>
+						</tr>
+						<tr>
+							<td>TRIP-2025-003</td>
+							<td>張大為</td>
+							<td>(下拉選單)</td>
+							<td>(下拉選單)</td>
+							<td>(日期驗證)</td>
+							<td>(日期驗證)</td>
+							<td>(公式)</td>
+							<td>(驗證)</td>
+							<td>(公式)</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<div class="tip-box">
+					<strong>💡 專有名詞解釋：</strong>
+					<ul>
+						<li><strong>出差天數：</strong>包含開始與結束日期的總天數（結束日期 - 開始日期 + 1），用來計算總預算與每日補助額度。</li>
+						<li><strong>每日預算上限：</strong>公司根據目的地與部門級別設定的單日最高差旅費用，超過需主管特別核准。</li>
+					</ul>
+				</div>
+
+				<p><strong>要求:</strong></p>
+				<ul>
+					<li>在 C 欄（部門）設定資料驗證，使用清單類型，選項為：業務部,研發部,行政部,財務部,人資部（可建立「設定」工作表存放清單並引用）</li>
+					<li>在 D 欄（出差目的地）設定資料驗證，使用清單類型，選項為：台北,台中,台南,高雄,上海,東京,新加坡,美國紐約</li>
+					<li>在 E 欄（開始日期）與 F 欄（結束日期）設定資料驗證，日期類型，必須大於或等於 2025/1/1，並設定輸入訊息：「出差日期請選擇 2025 年內」</li>
+					<li>在 F 欄（結束日期）額外設定自訂公式驗證，公式：<span class="formula">=F2>=E2</span>，錯誤提示：「結束日期不能早於開始日期」</li>
+					<li>在 G 欄（出差天數）輸入公式，例如 G2：<span class="formula">=IF(F2="","",F2-E2+1)</span>，並向下填滿（避免空白時顯示負數）</li>
+					<li>在 H 欄（總預算金額）設定資料驗證，整數，大於或等於 5000，並設定錯誤提示：「總預算金額最低為 5000 元」</li>
+					<li>在 I 欄（每日預算上限）輸入自訂公式，例如 I2：<span class="formula">=IF(G2=0,0,IF(H2/G2>30000,"超過上限",H2/G2))</span>，用來檢查是否超過公司每日 30,000 元上限，並顯示警告文字</li>
+					<li>為部門與目的地欄位設定輸入訊息：
+						<ul>
+							<li>部門：「請選擇您的所屬部門」</li>
+							<li>目的地：「請選擇公司核准的出差目的地」</li>
+						</ul>
+					</li>
+					<li>測試功能：若結束日期早於開始日期，應跳出錯誤提示；若總預算除以天數超過 30,000 元，I 欄顯示「超過上限」</li>
+				</ul>
+			</div>
+	
+            <div style="margin-top: 30px; padding: 20px; background: rgba(255,255,255,0.2); border-radius: 8px;">
+                <h3 style="color: white; margin-top: 25px; margin-bottom: 15px;">🎓 學習重點回顧</h3>
+                <ul>
+                    <li><strong>跨工作表引用:</strong>使用「工作表名稱!儲存格」語法連結不同工作表資料</li>
+                    <li><strong>跨檔案引用:</strong>使用「[檔案名稱]工作表!儲存格」引用外部檔案</li>
+                    <li><strong>3D 參照:</strong>使用「起始:結束!範圍」同時彙總多個工作表</li>
+                    <li><strong>資料驗證:</strong>限制輸入範圍,確保資料品質與一致性</li>
+                    <li><strong>下拉選單:</strong>提供預設選項,減少輸入錯誤</li>
+                    <li><strong>動態驗證:</strong>使用 INDIRECT 建立互動式下拉選單</li>
+                    <li><strong>命名範圍:</strong>讓公式更易讀、易維護</li>
+                    <li><strong>外部連結管理:</strong>定期更新與維護跨檔案連結</li>
+                </ul>
+                
+                <h3 style="color: white; margin-top: 25px; margin-bottom: 15px;">💼 實務應用場景</h3>
+                <ul>
+                    <li><strong>財務管理:</strong>多部門預算彙總、跨月份費用統計</li>
+                    <li><strong>銷售分析:</strong>多分店業績對比、產品類別銷售追蹤</li>
+                    <li><strong>庫存控管:</strong>多倉庫庫存監控、安全庫存預警</li>
+                    <li><strong>人資管理:</strong>員工資料標準化、部門人力統計</li>
+                    <li><strong>專案管理:</strong>跨部門資源分配、進度追蹤彙整</li>
+                </ul>
+                
+                <h3 style="color: white; margin-top: 25px; margin-bottom: 15px;">⚡ 進階技巧提示</h3>
+                <ul>
+                    <li>使用<strong>命名範圍</strong>讓公式更容易理解和維護</li>
+                    <li>善用<strong>資料驗證的輸入訊息</strong>,提供使用者操作指引</li>
+                    <li>建立<strong>標準化的工作表範本</strong>,確保各部門資料格式一致</li>
+                    <li>定期<strong>檢查與更新外部連結</strong>,避免 #REF! 錯誤</li>
+                    <li>使用<strong>條件格式</strong>搭配資料驗證,視覺化呈現異常數據</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

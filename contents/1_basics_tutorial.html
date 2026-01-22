@@ -1,0 +1,1455 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Excel 基礎操作教學</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: "Microsoft JhengHei", "微軟正黑體", Arial, sans-serif;
+            line-height: 1.8;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
+        }
+        
+        .section h2 {
+            color: #1e3c72;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section h3 {
+            color: #2a5298;
+            margin: 20px 0 15px 0;
+            font-size: 1.3em;
+        }
+        
+        .icon {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+            background: #667eea;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .interface-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .interface-item {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        
+        .interface-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+        
+        .interface-item h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .example-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .example-table th {
+            background: #667eea;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+        }
+        
+        .example-table td {
+            padding: 12px;
+            border: 1px solid #ddd;
+			color: black;
+        }
+        
+        .example-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        
+        .example-table tr:hover {
+            background: #e9ecef;
+        }
+        
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: "Consolas", "Monaco", monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+			white-space: pre; 
+        }
+        
+        .formula {
+            background: #fff3cd;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: "Consolas", "Monaco", monospace;
+            color: #856404;
+            font-weight: bold;
+        }
+        
+        .tip-box {
+            background: #d1ecf1;
+            border-left: 4px solid #0c5460;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+			color: black;
+        }
+
+        
+        .tip-box strong {
+            color: #0c5460;
+        }
+        
+        .warning-box {
+            background: #fff3cd;
+            border-left: 4px solid #856404;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .warning-box strong {
+            color: #856404;
+        }
+        
+        .practice-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            margin-top: 40px;
+            border-radius: 10px;
+        }
+        
+        .practice-section h2 {
+            color: white;
+            margin-bottom: 30px;
+        }
+        
+        .question {
+            background: rgba(255,255,255,0.1);
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border-left: 5px solid white;
+        }
+        
+        .question h3 {
+            color: white;
+            margin-bottom: 15px;
+        }
+        
+        .question ul {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+        
+        .question li {
+            margin: 8px 0;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            margin: 20px 0;
+        }
+        
+        .comparison-table td {
+            padding: 15px;
+            vertical-align: top;
+        }
+        
+        .comparison-table td:first-child {
+            background: #e7f3ff;
+            border-right: 3px solid #667eea;
+            font-weight: bold;
+        }
+        
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        
+        ul, ol {
+            margin-left: 25px;
+            margin-top: 10px;
+        }
+        
+        li {
+            margin: 8px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Excel 環境介紹與基礎操作</h1>
+            <p>從零開始熟悉 Excel 介面、儲存格操作與基本資料輸入</p>
+        </div>
+        
+        <div class="content">
+            <!-- 介面認識 -->
+            <div class="section">
+                <h2><span class="icon">1</span>Excel 介面認識</h2>
+                
+                <div class="interface-grid">
+                    <div class="interface-item">
+                        <h4>🎯 功能區 (Ribbon)</h4>
+                        <p>包含「常用」、「插入」、「版面配置」、「公式」、「資料」、「校閱」、「檢視」等分頁，集中所有操作工具。</p>
+                    </div>
+                    
+                    <div class="interface-item">
+                        <h4>📝 名稱方塊</h4>
+                        <p>顯示目前選取的儲存格位置（如 A1、B5），也可以直接輸入儲存格位址快速跳轉。</p>
+                    </div>
+                    
+                    <div class="interface-item">
+                        <h4>✏️ 資料編輯列</h4>
+                        <p>顯示與編輯儲存格內容，支援公式輸入與編輯。</p>
+                    </div>
+                    
+                    <div class="interface-item">
+                        <h4>📋 工作表標籤</h4>
+                        <p>位於視窗底部，用於切換不同工作表，預設為 Sheet1、Sheet2 等。</p>
+                    </div>
+                    
+                    <div class="interface-item">
+                        <h4>🔤 欄標題 (A, B, C...)</h4>
+                        <p>英文字母標示，最多可到 XFD（16,384 欄）。</p>
+                    </div>
+                    
+                    <div class="interface-item">
+                        <h4>🔢 列標題 (1, 2, 3...)</h4>
+                        <p>數字標示，最多可到 1,048,576 列。</p>
+                    </div>
+                </div>
+                
+                <div class="tip-box">
+                    <strong>💡 專業提示：</strong>儲存格位址由「欄標題+列標題」組成，例如 B5 表示 B 欄第 5 列的儲存格。
+                </div>
+            </div>
+            
+            <!-- 儲存格與工作表 -->
+            <div class="section">
+                <h2><span class="icon">2</span>儲存格與工作表基本操作</h2>
+                
+                <h3>儲存格選取方式</h3>
+                <ul>
+                    <li><strong>單一儲存格：</strong>直接點擊</li>
+                    <li><strong>連續範圍：</strong>按住滑鼠左鍵拖曳，或點擊起始儲存格後按 Shift+點擊結束儲存格</li>
+                    <li><strong>不連續範圍：</strong>按住 Ctrl 鍵點擊多個儲存格</li>
+                    <li><strong>整欄/整列：</strong>點擊欄標題或列標題</li>
+                    <li><strong>全選：</strong>點擊左上角的全選按鈕或按 Ctrl+A</li>
+                </ul>
+                
+                <h3>工作表管理</h3>
+                <ul>
+                    <li><strong>新增工作表：</strong>點擊工作表標籤旁的 ➕ 圖示</li>
+                    <li><strong>重新命名：</strong>雙擊工作表標籤名稱</li>
+                    <li><strong>刪除工作表：</strong>右鍵點擊工作表標籤 → 刪除</li>
+                    <li><strong>移動工作表：</strong>拖曳工作表標籤到新位置</li>
+                    <li><strong>複製工作表：</strong>按住 Ctrl 鍵拖曳工作表標籤</li>
+                </ul>
+            </div>
+            
+            <!-- 資料輸入與格式設定 -->
+            <div class="section">
+                <h2><span class="icon">3</span>基本資料輸入與儲存格格式</h2>
+                
+                <h3>資料類型與輸入技巧</h3>
+                
+                <table class="comparison-table">
+                    <tr>
+                        <td><strong>數值格式</strong></td>
+                        <td>
+                            直接輸入數字，Excel 會自動右對齊。<br>
+                            例如：1000、-500、3.14<br>
+                            <span class="highlight">設定方式：</span>常用 → 數值 → 選擇格式（數值、貨幣、會計等）
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>日期格式</strong></td>
+                        <td>
+                            輸入格式：2024/1/15 或 2024-1-15<br>
+                            Excel 會自動識別並轉換為日期格式<br>
+                            <span class="highlight">設定方式：</span>常用 → 數值 → 簡短日期/完整日期
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>百分比格式</strong></td>
+                        <td>
+                            輸入 0.85 後設定為百分比會顯示 85%<br>
+                            或直接輸入 85% 也可以<br>
+                            <span class="highlight">設定方式：</span>常用 → 數值 → % (百分比符號)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>文字格式</strong></td>
+                        <td>
+                            如果數字要當文字（如員工編號 001），<br>
+                            在數字前加上單引號 '001<br>
+                            <span class="highlight">設定方式：</span>常用 → 數值 → 文字
+                        </td>
+                    </tr>
+                </table>
+                
+                <div class="warning-box">
+                    <strong>⚠️ 常見錯誤：</strong>輸入日期時若顯示為數字（如 45674），表示格式設定錯誤，需要重新設定為日期格式。
+                </div>
+            </div>
+            
+            <!-- 相對與絕對參照 -->
+            <div class="section">
+                <h2><span class="icon">4</span>相對參照與絕對參照</h2>
+                
+                <p>這是 Excel 中最重要的概念之一，影響公式複製時的行為。</p>
+                
+                <h3>📌 相對參照 (A1)</h3>
+                <p>當公式被複製到其他儲存格時，參照會<strong>自動調整</strong>。</p>
+                <div class="code-block">
+範例：在 C2 輸入公式 =A2*B2
+向下複製到 C3 時，公式自動變為 =A3*B3
+向下複製到 C4 時，公式自動變為 =A4*B4
+                </div>
+                
+                <h3>📌 絕對參照 ($A$1)</h3>
+                <p>當公式被複製時，參照<strong>保持不變</strong>，欄和列都固定。</p>
+                <div class="code-block">
+範例：在 C2 輸入公式 =A2*$B$1
+向下複製到 C3 時，公式變為 =A3*$B$1
+向下複製到 C4 時，公式變為 =A4*$B$1
+（$B$1 始終指向 B1 儲存格）
+                </div>
+                
+                <h3>📌 混合參照 ($A1 或 A$1)</h3>
+                <ul>
+                    <li><strong>$A1：</strong>欄固定，列可變動</li>
+                    <li><strong>A$1：</strong>列固定，欄可變動</li>
+                </ul>
+                
+                <div class="tip-box">
+                    <strong>💡 快速鍵：</strong>選取儲存格參照後按 <span class="formula">F4</span> 鍵，可在相對、絕對、混合參照之間快速切換。<br>
+                    • 按一次：$A$1 (絕對參照)<br>
+                    • 按兩次：A$1 (列固定)<br>
+                    • 按三次：$A1 (欄固定)<br>
+                    • 按四次：A1 (相對參照)
+                </div>
+            </div>
+            
+            <!-- 實務範例 -->
+            <div class="section">
+                <h2><span class="icon">5</span>實務範例：生產數據記錄表</h2>
+                
+                <p>以下是一個電子零件工廠的每日生產記錄表範例：</p>
+                
+                <table class="example-table">
+                    <thead>
+                        <tr>
+                            <th>日期</th>
+                            <th>產品代碼</th>
+                            <th>生產數量</th>
+                            <th>單位成本 (元)</th>
+                            <th>總成本 (元)</th>
+                            <th>良品率</th>
+                            <th>不良品數</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>2024/12/01</td>
+                            <td>IC-2001</td>
+                            <td>5,000</td>
+                            <td>12.50</td>
+                            <td>62,500</td>
+                            <td>98.5%</td>
+                            <td>75</td>
+                        </tr>
+                        <tr>
+                            <td>2024/12/02</td>
+                            <td>IC-2002</td>
+                            <td>3,800</td>
+                            <td>15.20</td>
+                            <td>57,760</td>
+                            <td>97.8%</td>
+                            <td>84</td>
+                        </tr>
+                        <tr>
+                            <td>2024/12/03</td>
+                            <td>IC-2001</td>
+                            <td>4,500</td>
+                            <td>12.50</td>
+                            <td>56,250</td>
+                            <td>99.1%</td>
+                            <td>41</td>
+                        </tr>
+                        <tr>
+                            <td>2024/12/04</td>
+                            <td>IC-2003</td>
+                            <td>6,200</td>
+                            <td>18.00</td>
+                            <td>111,600</td>
+                            <td>96.5%</td>
+                            <td>217</td>
+                        </tr>
+                        <tr>
+                            <td>2024/12/05</td>
+                            <td>IC-2002</td>
+                            <td>4,100</td>
+                            <td>15.20</td>
+                            <td>62,320</td>
+                            <td>98.2%</td>
+                            <td>74</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h3>公式應用說明</h3>
+                <ul>
+                    <li><strong>總成本 (E 欄)：</strong><span class="formula">=C2*D2</span> (生產數量 × 單位成本)</li>
+                    <li><strong>良品率 (F 欄)：</strong>指生產過程中合格產品佔總生產數量的百分比，是品質管理的重要指標</li>
+                    <li><strong>不良品數 (G 欄)：</strong><span class="formula">=C2*(1-F2)</span> (生產數量 × (1-良品率))</li>
+                    <li><strong>若要計算總生產成本：</strong><span class="formula">=SUM(E2:E6)</span></li>
+                    <li><strong>若要計算平均良品率：</strong><span class="formula">=AVERAGE(F2:F6)</span></li>
+                </ul>
+                
+                <h3>格式設定重點</h3>
+                <ol>
+                    <li>日期欄 (A 欄)：設定為「簡短日期」格式</li>
+                    <li>數量欄 (C 欄)：設定為「數值」格式，千位分隔符號</li>
+                    <li>成本欄 (D、E 欄)：設定為「貨幣」或「數值」格式，保留兩位小數</li>
+                    <li>良品率 (F 欄)：設定為「百分比」格式，保留一位小數</li>
+                    <li>標題列：加粗、置中對齊、背景色填滿</li>
+                </ol>
+            </div>
+            
+            <!-- 實務範例 2 -->
+            <div class="section">
+                <h2><span class="icon">6</span>實務範例：財務交易記錄表</h2>
+                
+                <table class="example-table">
+                    <thead>
+                        <tr>
+                            <th>交易日期</th>
+                            <th>項目</th>
+                            <th>收入</th>
+                            <th>支出</th>
+                            <th>餘額</th>
+                            <th>備註</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>2024/12/01</td>
+                            <td>期初餘額</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>500,000</td>
+                            <td>月初結餘</td>
+                        </tr>
+                        <tr>
+                            <td>2024/12/03</td>
+                            <td>銷售收入</td>
+                            <td>125,000</td>
+                            <td>-</td>
+                            <td>625,000</td>
+                            <td>客戶 A 訂單</td>
+                        </tr>
+                        <tr>
+                            <td>2024/12/05</td>
+                            <td>原物料採購</td>
+                            <td>-</td>
+                            <td>78,500</td>
+                            <td>546,500</td>
+                            <td>供應商 B</td>
+                        </tr>
+                        <tr>
+                            <td>2024/12/08</td>
+                            <td>薪資支出</td>
+                            <td>-</td>
+                            <td>156,000</td>
+                            <td>390,500</td>
+                            <td>12月薪資</td>
+                        </tr>
+                        <tr>
+                            <td>2024/12/10</td>
+                            <td>銷售收入</td>
+                            <td>89,600</td>
+                            <td>-</td>
+                            <td>480,100</td>
+                            <td>客戶 C 訂單</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h3>絕對參照應用範例</h3>
+                <p>假設需要計算每筆交易佔期初餘額的百分比：</p>
+                <div class="code-block">
+在新增欄位輸入公式：=C2/$E$2
+向下複製時，$E$2 (期初餘額) 保持不變
+C2、C3、C4... 會自動調整
+                </div>
+                
+                <div class="tip-box">
+                    <strong>💡 實務技巧：</strong>在財務報表中，常使用絕對參照來固定基準值（如期初金額、匯率、稅率等），方便批量計算相關比率。
+                </div>
+            </div>
+        </div>
+        
+        <!-- 練習題 -->
+        <div class="practice-section">
+            <h2>📝 課後練習題</h2>
+            
+            <div class="question">
+                <h3>練習題 1：製作員工出勤統計表</h3>
+                <p><strong>任務描述：</strong></p>
+                <p>某公司有 5 名員工，請建立一個出勤記錄表，包含以下欄位：</p>
+                
+                <table class="example-table" style="margin: 20px 0; background: white;">
+                    <thead>
+                        <tr>
+                            <th>員工編號</th>
+                            <th>員工姓名</th>
+                            <th>應出勤天數</th>
+                            <th>實際出勤天數</th>
+                            <th>缺勤天數</th>
+                            <th>出勤率</th>
+                            <th>日薪</th>
+                            <th>實領薪資</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>E001</td>
+                            <td>王小明</td>
+                            <td>22</td>
+                            <td>22</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>1,600</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr>
+                            <td>E002</td>
+                            <td>李美玲</td>
+                            <td>22</td>
+                            <td>20</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>1,600</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr>
+                            <td>E003</td>
+                            <td>張志豪</td>
+                            <td>22</td>
+                            <td>21</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>1,600</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr>
+                            <td>E004</td>
+                            <td>陳雅婷</td>
+                            <td>22</td>
+                            <td>19</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>1,600</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr>
+                            <td>E005</td>
+                            <td>林建宏</td>
+                            <td>22</td>
+                            <td>22</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>1,600</td>
+                            <td>(公式)</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <p><strong>公式提示：</strong></p>
+                <ul>
+                    <li>缺勤天數 (E2)：<span class="formula">=C2-D2</span> 或 <span class="formula">=$C$2-D2</span></li>
+                    <li>出勤率 (F2)：<span class="formula">=D2/C2</span> 或 <span class="formula">=D2/$C$2</span>（設定為百分比格式）</li>
+                    <li>實領薪資 (H2)：<span class="formula">=D2*G2</span> 或 <span class="formula">=D2*$G$2</span></li>
+                    <li>💡 將應出勤天數 (C2) 和日薪 (G2) 設為絕對參照，方便複製公式</li>
+                </ul>
+                
+                <p><strong>格式要求：</strong></p>
+                <ul>
+                    <li>標題列使用粗體、背景色</li>
+                    <li>薪資欄位顯示千位分隔符號</li>
+                    <li>出勤率顯示為百分比，保留一位小數</li>
+                    <li>使用絕對參照固定「應出勤天數」和「日薪」</li>
+                </ul>
+            </div>
+            
+            <div class="question">
+                <h3>練習題 2：產品銷售分析表</h3>
+                <p><strong>任務描述：</strong></p>
+                <p>某電子商務公司銷售 4 種產品，請建立銷售分析表：</p>
+                
+                <table class="example-table" style="margin: 20px 0; background: white;">
+                    <thead>
+                        <tr>
+                            <th>產品名稱</th>
+                            <th>單價</th>
+                            <th>銷售數量</th>
+                            <th>銷售金額</th>
+                            <th>營業稅率</th>
+                            <th>營業稅額</th>
+                            <th>含稅總額</th>
+                            <th>銷售佔比</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>筆記型電腦</td>
+                            <td>25,000</td>
+                            <td>85</td>
+                            <td>(公式)</td>
+                            <td>5%</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr>
+                            <td>平板電腦</td>
+                            <td>18,000</td>
+                            <td>120</td>
+                            <td>(公式)</td>
+                            <td>5%</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr>
+                            <td>智慧手機</td>
+                            <td>15,000</td>
+                            <td>156</td>
+                            <td>(公式)</td>
+                            <td>5%</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr>
+                            <td>智慧手錶</td>
+                            <td>8,000</td>
+                            <td>98</td>
+                            <td>(公式)</td>
+                            <td>5%</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr style="background: #fff3cd; font-weight: bold;">
+                            <td>合計</td>
+                            <td>-</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>-</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>100%</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <p><strong>公式提示：</strong></p>
+                <ul>
+                    <li>銷售金額 (D2)：<span class="formula">=B2*C2</span></li>
+                    <li>營業稅額 (F2)：<span class="formula">=D2*E2</span> 或 <span class="formula">=D2*$E$2</span>（使用絕對參照固定稅率）</li>
+                    <li>含稅總額 (G2)：<span class="formula">=D2+F2</span></li>
+                    <li>銷售佔比 (H2)：<span class="formula">=D2/$D$6</span>（D6 是總銷售金額，設為絕對參照）</li>
+                    <li>合計列數量 (C6)：<span class="formula">=SUM(C2:C5)</span></li>
+                    <li>合計列金額 (D6)：<span class="formula">=SUM(D2:D5)</span></li>
+                </ul>
+                
+                <p><strong>格式要求：</strong></p>
+                <ul>
+                    <li>金額欄位使用貨幣格式或數值格式（千位分隔符號）</li>
+                    <li>營業稅率顯示為百分比</li>
+                    <li>銷售佔比顯示為百分比，保留兩位小數</li>
+                    <li>合計列使用不同背景色並加粗</li>
+                </ul>
+            </div>
+            
+            <div class="question">
+                <h3>練習題 3：製造成本分析表（進階）</h3>
+                <p><strong>任務描述：</strong></p>
+                <p>某工廠生產三種零件，需要分析各項成本：</p>
+                
+                <table class="example-table" style="margin: 20px 0; background: white;">
+                    <thead>
+                        <tr>
+                            <th>零件編號</th>
+                            <th>生產數量</th>
+                            <th>材料成本/件</th>
+                            <th>人工成本/件</th>
+                            <th>製造費用率</th>
+                            <th>單位總成本</th>
+                            <th>總生產成本</th>
+                            <th>良品率</th>
+                            <th>良品數量</th>
+                            <th>實際單位成本</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>P-001</td>
+                            <td>1,000</td>
+                            <td>50.00</td>
+                            <td>30.00</td>
+                            <td>20%</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>98.0%</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr>
+                            <td>P-002</td>
+                            <td>1,500</td>
+                            <td>65.00</td>
+                            <td>35.00</td>
+                            <td>20%</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>97.0%</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr>
+                            <td>P-003</td>
+                            <td>800</td>
+                            <td>80.00</td>
+                            <td>40.00</td>
+                            <td>20%</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>99.0%</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr style="background: #fff3cd; font-weight: bold;">
+                            <td colspan="6">總計</td>
+                            <td>(公式)</td>
+                            <td colspan="3">-</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <p><strong>公式提示：</strong></p>
+                <ul>
+                    <li>單位總成本 (F2)：<span class="formula">=(C2+D2)*(1+E2)</span> 或 <span class="formula">=(C2+D2)*(1+$E$2)</span></li>
+                    <li>解釋：(材料+人工) × (1+製造費用率) = (材料+人工) + (材料+人工)×20%</li>
+                    <li>總生產成本 (G2)：<span class="formula">=F2*B2</span></li>
+                    <li>良品數量 (I2)：<span class="formula">=B2*H2</span></li>
+                    <li>實際單位成本 (J2)：<span class="formula">=G2/I2</span></li>
+                    <li>總計 (G5)：<span class="formula">=SUM(G2:G4)</span></li>
+                </ul>
+                
+                <p><strong>格式要求：</strong></p>
+                <ul>
+                    <li>成本欄位顯示兩位小數及千位分隔符號</li>
+                    <li>製造費用率和良品率顯示為百分比，保留一位小數</li>
+                    <li>數量欄位使用千位分隔符號</li>
+                    <li>使用條件式格式設定：選取良品率欄位 (H2:H4) → 常用 → 設定格式化的條件 → 醒目提示儲存格規則 → 小於 → 98% → 黃色填滿</li>
+                    <li>總計列使用不同背景色</li>
+                </ul>
+                
+                <p><strong>💡 進階挑戰：</strong></p>
+                <ul>
+                    <li>新增一欄「不良品數量」= 生產數量 - 良品數量</li>
+                    <li>新增一欄「損失金額」= 不良品數量 × 單位總成本</li>
+                    <li>計算三種零件的總損失金額</li>
+                </ul>
+            </div>
+            
+			<div class="question">
+                <h3>練習題 4：庫存管理表</h3>
+                <p><strong>任務描述：</strong></p>
+                <p>某倉庫需要追蹤 4 種物料的庫存狀況：</p>
+                
+                <div class="tip-box">
+                    <strong>📖 專有名詞解釋：</strong><br>
+                    • <strong>期初庫存（Beginning Inventory）：</strong>會計期間開始時的庫存數量，是計算期末庫存與銷貨成本的基礎。<br><br>
+                    • <strong>本期進貨（Purchases）：</strong>在本期內採購進入倉庫的物料或商品數量。<br><br>
+                    • <strong>本期銷售（Sales / Issues）：</strong>本期內銷售出去或領用的物料數量。在製造業稱為「領用」，在零售業稱為「銷售」。<br><br>
+                    • <strong>期末庫存（Ending Inventory）：</strong>期間結束時的實際庫存數量。計算公式：期末庫存 = 期初庫存 + 本期進貨 - 本期銷售。<br><br>
+                    • <strong>庫存金額（Inventory Value）：</strong>庫存數量乘以單位成本的總值，反映企業資金占用情況。
+                </div>
+                
+                <table class="example-table" style="margin: 20px 0; background: white;">
+                    <thead>
+                        <tr>
+                            <th>物料編號</th>
+                            <th>物料名稱</th>
+                            <th>期初庫存</th>
+                            <th>本期進貨</th>
+                            <th>本期銷售</th>
+                            <th>期末庫存</th>
+                            <th>單位成本</th>
+                            <th>期末庫存金額</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>M-101</td>
+                            <td>螺絲 M5</td>
+                            <td>5,000</td>
+                            <td>10,000</td>
+                            <td>8,500</td>
+                            <td>(公式)</td>
+                            <td>2.50</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr>
+                            <td>M-102</td>
+                            <td>電阻 1KΩ</td>
+                            <td>15,000</td>
+                            <td>20,000</td>
+                            <td>18,000</td>
+                            <td>(公式)</td>
+                            <td>0.80</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr>
+                            <td>M-103</td>
+                            <td>LED 燈珠</td>
+                            <td>8,000</td>
+                            <td>15,000</td>
+                            <td>12,500</td>
+                            <td>(公式)</td>
+                            <td>5.20</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr>
+                            <td>M-104</td>
+                            <td>塑膠外殼</td>
+                            <td>3,500</td>
+                            <td>8,000</td>
+                            <td>6,800</td>
+                            <td>(公式)</td>
+                            <td>12.00</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr style="background: #fff3cd; font-weight: bold;">
+                            <td colspan="7">總庫存金額</td>
+                            <td>(公式)</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <p><strong>公式提示：</strong></p>
+                <ul>
+                    <li>期末庫存 (F2)：<span class="formula">=C2+D2-E2</span></li>
+                    <li>期末庫存金額 (H2)：<span class="formula">=F2*G2</span></li>
+                    <li>總庫存金額 (H6)：<span class="formula">=SUM(H2:H5)</span></li>
+                </ul>
+            </div>
+            
+            <div class="question">
+                <h3>練習題 5：貸款攤還計算表</h3>
+                <p><strong>任務描述：</strong></p>
+                <p>某人向銀行貸款購屋，請建立貸款攤還表：</p>
+                
+                <div class="tip-box">
+                    <strong>📖 專有名詞解釋：</strong><br>
+                    • <strong>貸款本金（Principal）：</strong>借款的原始金額，不包含利息。<br><br>
+                    • <strong>年利率（Annual Interest Rate）：</strong>一年期間的利率。例如年利率 2.4% 表示每年需支付貸款金額 2.4% 的利息。<br><br>
+                    • <strong>月利率（Monthly Interest Rate）：</strong>月利率 = 年利率 ÷ 12。<br><br>
+                    • <strong>本息平均攤還：</strong>每期償還固定金額，但本金與利息比例會變動。<br><br>
+                    • <strong>利息支出（Interest Payment）：</strong>本期應付的利息 = 期初餘額 × 月利率。<br><br>
+                    • <strong>本金攤還（Principal Repayment）：</strong>本期償還的本金 = 每月攤還 - 利息支出。
+                </div>
+                
+                <table class="example-table" style="margin: 20px 0; background: white;">
+                    <thead>
+                        <tr>
+                            <th>期數</th>
+                            <th>期初餘額</th>
+                            <th>每月攤還</th>
+                            <th>利息支出</th>
+                            <th>本金攤還</th>
+                            <th>期末餘額</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="6" style="background: #e7f3ff; font-weight: bold;">
+                                貸款條件：本金 5,000,000 元 | 年利率 2.4% | 月利率 0.2%
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>5,000,000</td>
+                            <td>25,444</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>(公式)</td>
+                            <td>25,444</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>(公式)</td>
+                            <td>25,444</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <p><strong>公式提示：</strong></p>
+                <ul>
+                    <li>利息支出 (D3)：<span class="formula">=B3*$B$1</span>（月利率 0.002 存在 B1）</li>
+                    <li>本金攤還 (E3)：<span class="formula">=C3-D3</span></li>
+                    <li>期末餘額 (F3)：<span class="formula">=B3-E3</span></li>
+                </ul>
+            </div>
+            
+            <div class="question">
+                <h3>練習題 6：員工績效考核表</h3>
+                <p><strong>任務描述：</strong></p>
+                <p>某公司對 6 名員工進行季度績效考核：</p>
+                
+                <div class="tip-box">
+                    <strong>📖 專有名詞解釋：</strong><br>
+                    • <strong>績效考核（Performance Appraisal）：</strong>企業定期評估員工工作表現的制度。<br><br>
+                    • <strong>加權平均（Weighted Average）：</strong>不同項目依其重要性給予不同權重後計算的平均值。
+                </div>
+                
+                <table class="example-table" style="margin: 20px 0; background: white;">
+                    <thead>
+                        <tr>
+                            <th>員工姓名</th>
+                            <th>工作品質(40%)</th>
+                            <th>工作效率(30%)</th>
+                            <th>團隊合作(30%)</th>
+                            <th>加權總分</th>
+                            <th>績效等級</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>張志明</td>
+                            <td>88</td>
+                            <td>92</td>
+                            <td>85</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr>
+                            <td>李雅婷</td>
+                            <td>95</td>
+                            <td>90</td>
+                            <td>93</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr>
+                            <td>王建國</td>
+                            <td>78</td>
+                            <td>82</td>
+                            <td>80</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <p><strong>公式提示：</strong></p>
+                <ul>
+                    <li>加權總分 (E2)：<span class="formula">=B2*0.4+C2*0.3+D2*0.3</span></li>
+                    <li>績效等級 (F2)：<span class="formula">=IF(E2>=90,"優秀",IF(E2>=80,"良好","尚可"))</span></li>
+                </ul>
+            </div>
+            
+            <div class="question">
+                <h3>練習題 7：投資報酬率分析表</h3>
+                <p><strong>任務描述：</strong></p>
+                <p>某公司評估 5 個投資專案：</p>
+                
+                <div class="tip-box">
+                    <strong>📖 專有名詞解釋：</strong><br>
+                    • <strong>初始投資額（Initial Investment）：</strong>專案開始時投入的總資金。<br><br>
+                    • <strong>年度收益（Annual Return）：</strong>專案每年產生的淨收入。<br><br>
+                    • <strong>累計收益（Cumulative Return）：</strong>整個投資期間的總收益 = 年度收益 × 投資年限。<br><br>
+                    • <strong>淨利潤（Net Profit）：</strong>累計收益 - 初始投資額。<br><br>
+                    • <strong>投資報酬率 ROI：</strong>(淨利潤 ÷ 初始投資額) × 100%，衡量投資效益的指標。
+                </div>
+                
+                <table class="example-table" style="margin: 20px 0; background: white;">
+                    <thead>
+                        <tr>
+                            <th>專案名稱</th>
+                            <th>初始投資額</th>
+                            <th>年度收益</th>
+                            <th>投資年限</th>
+                            <th>累計收益</th>
+                            <th>淨利潤</th>
+                            <th>ROI</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>自動化產線</td>
+                            <td>8,000,000</td>
+                            <td>2,500,000</td>
+                            <td>5</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr>
+                            <td>倉儲系統升級</td>
+                            <td>3,500,000</td>
+                            <td>1,200,000</td>
+                            <td>4</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr>
+                            <td>新產品開發</td>
+                            <td>5,000,000</td>
+                            <td>1,800,000</td>
+                            <td>5</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <p><strong>公式提示：</strong></p>
+                <ul>
+                    <li>累計收益 (E2)：<span class="formula">=C2*D2</span></li>
+                    <li>淨利潤 (F2)：<span class="formula">=E2-B2</span></li>
+                    <li>ROI (G2)：<span class="formula">=F2/B2</span>（設為百分比）</li>
+                </ul>
+            </div>
+            
+			<div class="question">
+                <h3>練習題 8：匯率換算表</h3>
+                <p><strong>任務描述：</strong></p>
+                <p>某貿易公司需要將不同幣別的交易金額換算為台幣：</p>
+                
+                <div class="tip-box">
+                    <strong>📖 專有名詞解釋：</strong><br>
+                    • <strong>匯率（Exchange Rate）：</strong>一國貨幣兌換另一國貨幣的比率。例如 USD/TWD = 31.5 表示 1 美元可兌換 31.5 台幣。<br><br>
+                    • <strong>外幣金額（Foreign Currency Amount）：</strong>以外國貨幣計價的交易金額。<br><br>
+                    • <strong>本位幣（Base Currency）：</strong>企業記帳使用的主要貨幣，台灣公司通常使用台幣（TWD）作為本位幣。<br><br>
+                    • <strong>換算金額（Converted Amount）：</strong>外幣金額按匯率換算成本位幣的金額。計算公式：換算金額 = 外幣金額 × 匯率。
+                </div>
+                
+                <table class="example-table" style="margin: 20px 0; background: white;">
+                    <thead>
+                        <tr>
+                            <th>交易日期</th>
+                            <th>客戶名稱</th>
+                            <th>幣別</th>
+                            <th>外幣金額</th>
+                            <th>匯率</th>
+                            <th>台幣金額</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="6" style="background: #e7f3ff; font-weight: bold;">
+                                參考匯率（儲存於固定儲存格）：USD=31.50 | EUR=34.80 | JPY=0.22 | CNY=4.35
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>2024/12/01</td>
+                            <td>美國 ABC 公司</td>
+                            <td>USD</td>
+                            <td>15,000</td>
+                            <td>31.50</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr>
+                            <td>2024/12/03</td>
+                            <td>德國 XYZ GmbH</td>
+                            <td>EUR</td>
+                            <td>8,500</td>
+                            <td>34.80</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr>
+                            <td>2024/12/05</td>
+                            <td>日本商社</td>
+                            <td>JPY</td>
+                            <td>2,500,000</td>
+                            <td>0.22</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr>
+                            <td>2024/12/08</td>
+                            <td>中國供應商</td>
+                            <td>CNY</td>
+                            <td>120,000</td>
+                            <td>4.35</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr>
+                            <td>2024/12/10</td>
+                            <td>美國 DEF Corp</td>
+                            <td>USD</td>
+                            <td>28,000</td>
+                            <td>31.50</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr style="background: #fff3cd; font-weight: bold;">
+                            <td colspan="5">台幣總額</td>
+                            <td>(公式)</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <p><strong>公式提示：</strong></p>
+                <ul>
+                    <li>台幣金額 (F3)：<span class="formula">=D3*E3</span></li>
+                    <li>如果匯率儲存在固定儲存格（如 USD 在 $H$2），可用：<span class="formula">=D3*$H$2</span></li>
+                    <li>台幣總額 (F8)：<span class="formula">=SUM(F3:F7)</span></li>
+                </ul>
+                
+                <p><strong>進階挑戰：</strong></p>
+                <ul>
+                    <li>使用 VLOOKUP 函數從匯率表自動查詢匯率</li>
+                    <li>新增「手續費率」欄位（如 1%），計算實際收款金額</li>
+                </ul>
+            </div>
+            
+			<div class="question">
+                <h3>練習題 9:專案預算追蹤表</h3>
+                <p><strong>任務描述:</strong></p>
+                <p>某軟體開發公司需要追蹤專案預算執行情況:</p>
+                
+                <div class="tip-box">
+                    <strong>📖 專有名詞解釋:</strong><br>
+                    • <strong>預算金額(Budget Amount):</strong>專案規劃階段核定的支出上限。<br><br>
+                    • <strong>實際支出(Actual Spending):</strong>專案執行過程中已經發生的實際費用。<br><br>
+                    • <strong>預算執行率(Budget Execution Rate):</strong>實際支出占預算金額的百分比,反映預算使用程度。<br><br>
+                    • <strong>預算差異(Budget Variance):</strong>預算金額與實際支出的差額,正值表示結餘,負值表示超支。<br><br>
+                    • <strong>差異率(Variance Rate):</strong>預算差異占預算金額的百分比,用於評估預算控制效果。
+                </div>
+                
+                <table class="example-table" style="margin: 20px 0; background: white;">
+                    <thead>
+                        <tr>
+                            <th>費用項目</th>
+                            <th>預算金額</th>
+                            <th>實際支出</th>
+                            <th>預算執行率</th>
+                            <th>預算差異</th>
+                            <th>差異率</th>
+                            <th>狀態</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>人力成本</td>
+                            <td>2,500,000</td>
+                            <td>2,350,000</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr>
+                            <td>設備採購</td>
+                            <td>800,000</td>
+                            <td>850,000</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr>
+                            <td>軟體授權</td>
+                            <td>450,000</td>
+                            <td>420,000</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr>
+                            <td>行銷推廣</td>
+                            <td>650,000</td>
+                            <td>680,000</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr>
+                            <td>辦公費用</td>
+                            <td>300,000</td>
+                            <td>285,000</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr style="background: #fff3cd; font-weight: bold;">
+                            <td>合計</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>-</td>
+                            <td>-</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <p><strong>公式提示:</strong></p>
+                <ul>
+                    <li>預算執行率 (D2):<span class="formula">=C2/B2</span>(設為百分比)</li>
+                    <li>預算差異 (E2):<span class="formula">=B2-C2</span></li>
+                    <li>差異率 (F2):<span class="formula">=E2/B2</span>(設為百分比)</li>
+                    <li>狀態 (G2):<span class="formula">=IF(E2<0,"超支",IF(E2>B2*0.1,"結餘多","正常"))</span></li>
+                    <li>💡 狀態判斷邏輯:差異<0為超支,差異>預算10%為結餘多,其他為正常</li>
+                    <li>合計列 (B7):<span class="formula">=SUM(B2:B6)</span></li>
+                </ul>
+                
+                <p><strong>格式要求:</strong></p>
+                <ul>
+                    <li>金額欄位使用貨幣格式或數值格式(千位分隔符號)</li>
+                    <li>執行率與差異率顯示為百分比,保留一位小數</li>
+                    <li>使用條件式格式設定:選取差異欄 (E2:E6) → 設定格式化的條件 → 小於 → 0 → 紅色填滿</li>
+                    <li>狀態欄使用不同顏色標示(超支-紅色,正常-綠色,結餘多-藍色)</li>
+                </ul>
+            </div>
+            
+            <div class="question">
+                <h3>練習題 10:多產品損益分析表(綜合應用)</h3>
+                <p><strong>任務描述:</strong></p>
+                <p>某製造商生產三種產品,需要進行完整的損益分析:</p>
+                
+                <div class="tip-box">
+                    <strong>📖 專有名詞解釋:</strong><br>
+                    • <strong>銷售收入(Sales Revenue):</strong>銷售數量 × 售價的總金額。<br><br>
+                    • <strong>變動成本(Variable Cost):</strong>隨產量變化的成本,如原料、人工等。計算為:變動成本 = 銷售數量 × 單位變動成本。<br><br>
+                    • <strong>固定成本(Fixed Cost):</strong>不隨產量變化的成本,如租金、折舊等,需分攤至各產品。<br><br>
+                    • <strong>邊際貢獻(Contribution Margin):</strong>銷售收入 - 變動成本,表示產品對固定成本與利潤的貢獻。<br><br>
+                    • <strong>邊際貢獻率(Contribution Margin Ratio):</strong>邊際貢獻 ÷ 銷售收入,衡量產品獲利能力的指標。<br><br>
+                    • <strong>營業利益(Operating Income):</strong>邊際貢獻 - 固定成本分攤,即產品的淨利潤。<br><br>
+                    • <strong>利益率(Profit Margin):</strong>營業利益 ÷ 銷售收入,反映最終獲利能力。
+                </div>
+                
+                <table class="example-table" style="margin: 20px 0; background: white;">
+                    <thead>
+                        <tr>
+                            <th>產品名稱</th>
+                            <th>售價</th>
+                            <th>銷售數量</th>
+                            <th>銷售收入</th>
+                            <th>單位變動成本</th>
+                            <th>變動成本</th>
+                            <th>邊際貢獻</th>
+                            <th>邊際貢獻率</th>
+                            <th>固定成本分攤</th>
+                            <th>營業利益</th>
+                            <th>利益率</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="11" style="background: #e7f3ff; font-weight: bold;">
+                                固定成本總額:1,200,000 元(依銷售收入比例分攤)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>高階款 A</td>
+                            <td>3,500</td>
+                            <td>850</td>
+                            <td>(公式)</td>
+                            <td>2,100</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr>
+                            <td>中階款 B</td>
+                            <td>2,200</td>
+                            <td>1,500</td>
+                            <td>(公式)</td>
+                            <td>1,400</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr>
+                            <td>入門款 C</td>
+                            <td>1,500</td>
+                            <td>2,200</td>
+                            <td>(公式)</td>
+                            <td>950</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr style="background: #fff3cd; font-weight: bold;">
+                            <td colspan="2">合計</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>-</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>1,200,000</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <p><strong>公式提示:</strong></p>
+                <ul>
+                    <li>銷售收入 (D3):<span class="formula">=B3*C3</span></li>
+                    <li>變動成本 (F3):<span class="formula">=E3*C3</span></li>
+                    <li>邊際貢獻 (G3):<span class="formula">=D3-F3</span></li>
+                    <li>邊際貢獻率 (H3):<span class="formula">=G3/D3</span>(設為百分比)</li>
+                    <li>固定成本分攤 (I3):<span class="formula">=D3/$D$6*$I$6</span>
+                        <br>解釋:該產品銷售收入占比 × 固定成本總額($I$6 = 1,200,000)</li>
+                    <li>營業利益 (J3):<span class="formula">=G3-I3</span></li>
+                    <li>利益率 (K3):<span class="formula">=J3/D3</span>(設為百分比)</li>
+                    <li>合計列使用 SUM 函數,例如 C6:<span class="formula">=SUM(C3:C5)</span></li>
+                    <li>💡 關鍵:固定成本分攤必須使用絕對參照 $D$6 和 $I$6</li>
+                </ul>
+                
+                <p><strong>格式要求:</strong></p>
+                <ul>
+                    <li>金額欄位使用數值格式,千位分隔符號,保留兩位小數</li>
+                    <li>百分比欄位保留一位小數</li>
+                    <li>使用條件式格式:邊際貢獻率 > 50% 顯示綠色,< 30% 顯示黃色</li>
+                    <li>使用條件式格式:營業利益 < 0 顯示紅色粗體</li>
+                    <li>合計列使用不同背景色並加粗</li>
+                </ul>
+                
+                <p><strong>💡 進階分析:</strong></p>
+                <ul>
+                    <li>計算各產品的銷售占比 = 該產品銷售收入 ÷ 總銷售收入</li>
+                    <li>找出邊際貢獻率最高的產品(可用 MAX 函數)</li>
+                    <li>計算損益平衡點:固定成本 ÷ 加權平均邊際貢獻率</li>
+                    <li>思考:如果要提升整體利益率,應該調整哪個產品的策略?</li>
+                </ul>
+                
+                <p><strong>📊 商業洞察:</strong></p>
+                <p>此練習整合了本週所有核心技能:相對與絕對參照、格式設定、條件判斷、統計函數等。
+                完成後你將能夠獨立製作專業的商業分析報表,這是 Excel 在企業中最常見的應用場景之一!</p>
+            </div>
+			
+			
+            <div style="margin-top: 30px; padding: 20px; background: rgba(255,255,255,0.2); border-radius: 8px;">                
+                <h3 style="color: white; margin-top: 25px; margin-bottom: 15px;">🎓 學習重點回顧</h3>
+                <ul>
+                    <li><strong>相對參照 (A1)：</strong>複製公式時自動調整，適合一般計算</li>
+                    <li><strong>絕對參照 ($A$1)：</strong>複製公式時保持不變，適合固定值（如稅率、基準值）</li>
+                    <li><strong>混合參照 ($A1 或 A$1)：</strong>部分固定，適合特殊表格結構</li>
+                    <li><strong>快速鍵 F4：</strong>快速在不同參照類型間切換</li>
+                    <li><strong>格式設定：</strong>讓數據更專業、更易讀</li>
+                    <li><strong>IF 函數：</strong>根據條件做出判斷，是商業邏輯的基礎</li>
+                    <li><strong>SUM、AVERAGE：</strong>基本統計函數，廣泛應用於各種分析</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文字與日期時間函數教學</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: "Microsoft JhengHei", "微軟正黑體", Arial, sans-serif;
+            line-height: 1.8;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
+        }
+        
+        .section h2 {
+            color: #1e3c72;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section h3 {
+            color: #2a5298;
+            margin: 20px 0 15px 0;
+            font-size: 1.3em;
+        }
+        
+        .icon {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+            background: #667eea;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .function-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .function-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        
+        .function-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+        
+        .function-card h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+        
+        .function-card .syntax {
+            background: #f0f0f0;
+            padding: 8px;
+            border-radius: 4px;
+            font-family: "Consolas", monospace;
+            font-size: 0.9em;
+            margin: 10px 0;
+            color: #333;
+        }
+        
+        .example-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .example-table th {
+            background: #667eea;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+        }
+        
+        .example-table td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            color: black;
+        }
+        
+        .example-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        
+        .example-table tr:hover {
+            background: #e9ecef;
+        }
+        
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: "Consolas", "Monaco", monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+            white-space: pre;
+        }
+        
+        .formula {
+            background: #fff3cd;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: "Consolas", "Monaco", monospace;
+            color: #856404;
+            font-weight: bold;
+        }
+        
+        .tip-box {
+            background: #d1ecf1;
+            border-left: 4px solid #0c5460;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            color: black;
+        }
+        
+        .tip-box strong {
+            color: #0c5460;
+        }
+        
+        .warning-box {
+            background: #fff3cd;
+            border-left: 4px solid #856404;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            color: black;
+        }
+        
+        .warning-box strong {
+            color: #856404;
+        }
+        
+        .practice-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            margin-top: 40px;
+            border-radius: 10px;
+        }
+        
+        .practice-section h2 {
+            color: white;
+            margin-bottom: 30px;
+        }
+        
+        .question {
+            background: rgba(255,255,255,0.1);
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border-left: 5px solid white;
+        }
+        
+        .question h3 {
+            color: white;
+            margin-bottom: 15px;
+        }
+        
+        .question ul {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+        
+        .question li {
+            margin: 8px 0;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            margin: 20px 0;
+        }
+        
+        .comparison-table td {
+            padding: 15px;
+            vertical-align: top;
+        }
+        
+        .comparison-table td:first-child {
+            background: #e7f3ff;
+            border-right: 3px solid #667eea;
+            font-weight: bold;
+            width: 30%;
+        }
+        
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 6px;
+            border-radius: 3px;
+			color: black;
+        }
+        
+        ul, ol {
+            margin-left: 25px;
+            margin-top: 10px;
+        }
+        
+        li {
+            margin: 8px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📝 文字與日期時間函數</h1>
+            <p>靈活應用資料擷取與時間計算</p>
+        </div>
+        
+        <div class="content">
+            <!-- 文字函數概述 -->
+            <div class="section">
+                <h2><span class="icon">1</span>文字函數基礎</h2>
+                
+                <p>文字函數用於處理和操作文字資料，在實務中常用於從混合編碼中提取資訊、格式化輸出或合併多個欄位。</p>
+                
+                <div class="function-grid">
+                    <div class="function-card">
+                        <h4>🔤 LEFT 函數</h4>
+                        <p>從文字字串的左側擷取指定數量的字元。</p>
+                        <div class="syntax">=LEFT(文字, 字元數)</div>
+                        <p><strong>範例：</strong><br>
+                        =LEFT("IC-2024-A001", 2)<br>
+                        結果：<span class="highlight">IC</span></p>
+                    </div>
+                    
+                    <div class="function-card">
+                        <h4>🔤 RIGHT 函數</h4>
+                        <p>從文字字串的右側擷取指定數量的字元。</p>
+                        <div class="syntax">=RIGHT(文字, 字元數)</div>
+                        <p><strong>範例：</strong><br>
+                        =RIGHT("IC-2024-A001", 4)<br>
+                        結果：<span class="highlight">A001</span></p>
+                    </div>
+                    
+                    <div class="function-card">
+                        <h4>🔤 MID 函數</h4>
+                        <p>從文字字串的指定位置開始擷取指定數量的字元。</p>
+                        <div class="syntax">=MID(文字, 起始位置, 字元數)</div>
+                        <p><strong>範例：</strong><br>
+                        =MID("IC-2024-A001", 4, 4)<br>
+                        結果：<span class="highlight">2024</span></p>
+                    </div>
+                    
+                    <div class="function-card">
+                        <h4>🔗 CONCATENATE / & 運算子</h4>
+                        <p>將多個文字字串合併成一個字串。</p>
+                        <div class="syntax">=CONCATENATE(文字1, 文字2, ...)<br>或 =文字1 & 文字2 & ...</div>
+                        <p><strong>範例：</strong><br>
+                        =A2 & "-" & B2<br>
+                        結果：<span class="highlight">IC-2024</span></p>
+                    </div>
+                    
+                    <div class="function-card">
+                        <h4>🎨 TEXT 函數</h4>
+                        <p>將數值按指定格式轉換為文字。</p>
+                        <div class="syntax">=TEXT(數值, 格式代碼)</div>
+                        <p><strong>範例：</strong><br>
+                        =TEXT(TODAY(), "YYYY-MM-DD")<br>
+                        結果：<span class="highlight">2024-12-23</span></p>
+                    </div>
+                    
+                    <div class="function-card">
+                        <h4>📏 LEN 函數</h4>
+                        <p>傳回文字字串的字元數。</p>
+                        <div class="syntax">=LEN(文字)</div>
+                        <p><strong>範例：</strong><br>
+                        =LEN("IC-2024-A001")<br>
+                        結果：<span class="highlight">12</span></p>
+                    </div>
+                </div>
+                
+                <div class="tip-box">
+                    <strong>💡 重要提醒：</strong>在 Excel 中，字元位置從 1 開始計數，不是從 0 開始。例如 "ABCD" 的第一個字元 "A" 位於位置 1。
+                </div>
+            </div>
+            
+            <!-- 日期時間函數 -->
+            <div class="section">
+                <h2><span class="icon">2</span>日期時間函數</h2>
+                
+                <div class="function-grid">
+                    <div class="function-card">
+                        <h4>📅 DATE 函數</h4>
+                        <p>建立指定年月日的日期值。</p>
+                        <div class="syntax">=DATE(年, 月, 日)</div>
+                        <p><strong>範例：</strong><br>
+                        =DATE(2024, 12, 25)<br>
+                        結果：<span class="highlight">2024/12/25</span></p>
+                    </div>
+                    
+                    <div class="function-card">
+                        <h4>📆 YEAR / MONTH / DAY 函數</h4>
+                        <p>從日期值中擷取年份、月份或日期。</p>
+                        <div class="syntax">=YEAR(日期)<br>=MONTH(日期)<br>=DAY(日期)</div>
+                        <p><strong>範例：</strong><br>
+                        =YEAR("2024/12/25") → 2024<br>
+                        =MONTH("2024/12/25") → 12</p>
+                    </div>
+                    
+                    <div class="function-card">
+                        <h4>⏰ TODAY / NOW 函數</h4>
+                        <p>取得目前的日期或日期時間。</p>
+                        <div class="syntax">=TODAY()<br>=NOW()</div>
+                        <p><strong>範例：</strong><br>
+                        =TODAY() → 2024/12/23<br>
+                        =NOW() → 2024/12/23 14:30</p>
+                    </div>
+                    
+                    <div class="function-card">
+                        <h4>📊 NETWORKDAYS 函數</h4>
+                        <p>計算兩個日期之間的工作天數（排除週末及假日）。</p>
+                        <div class="syntax">=NETWORKDAYS(開始日期, 結束日期, [假日])</div>
+                        <p><strong>範例：</strong><br>
+                        =NETWORKDAYS("2024/12/1", "2024/12/31")<br>
+                        結果：<span class="highlight">22 天</span></p>
+                    </div>
+                    
+                    <div class="function-card">
+                        <h4>🔢 DAYS 函數</h4>
+                        <p>計算兩個日期之間的天數差。</p>
+                        <div class="syntax">=DAYS(結束日期, 開始日期)</div>
+                        <p><strong>範例：</strong><br>
+                        =DAYS("2024/12/31", "2024/12/1")<br>
+                        結果：<span class="highlight">30 天</span></p>
+                    </div>
+                    
+                    <div class="function-card">
+                        <h4>📅 WEEKDAY 函數</h4>
+                        <p>傳回日期對應的星期幾（1=星期日，7=星期六）。</p>
+                        <div class="syntax">=WEEKDAY(日期, [類型])</div>
+                        <p><strong>範例：</strong><br>
+                        =WEEKDAY("2024/12/25")<br>
+                        結果：<span class="highlight">4</span>（星期三）</p>
+                    </div>
+                </div>
+                
+                <div class="tip-box">
+                    <strong>💡 日期計算技巧：</strong>在 Excel 中，日期本質上是數字，1900/1/1 是第 1 天。因此可以直接對日期進行加減運算，例如 =TODAY()+7 表示一週後的日期。
+                </div>
+                
+                <div class="warning-box">
+                    <strong>⚠️ NETWORKDAYS 注意事項：</strong>NETWORKDAYS 函數預設週六日為非工作日。如果需要自訂工作日，可以使用 NETWORKDAYS.INTL 函數，它允許指定哪幾天是週末。
+                </div>
+            </div>
+            
+            <!-- TEXT 函數格式代碼 -->
+            <div class="section">
+                <h2><span class="icon">3</span>TEXT 函數格式代碼詳解</h2>
+                
+                <p>TEXT 函數是格式化輸出的強大工具，常用於將日期、數字轉換為特定格式的文字。</p>
+                
+                <h3>📅 日期格式代碼</h3>
+                <table class="example-table">
+                    <thead>
+                        <tr>
+                            <th>格式代碼</th>
+                            <th>說明</th>
+                            <th>範例公式</th>
+                            <th>結果</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>YYYY 或 yyyy</td>
+                            <td>四位數年份</td>
+                            <td>=TEXT(TODAY(), "YYYY")</td>
+                            <td>2024</td>
+                        </tr>
+                        <tr>
+                            <td>YY 或 yy</td>
+                            <td>兩位數年份</td>
+                            <td>=TEXT(TODAY(), "YY")</td>
+                            <td>24</td>
+                        </tr>
+                        <tr>
+                            <td>MM 或 mm</td>
+                            <td>兩位數月份</td>
+                            <td>=TEXT(TODAY(), "MM")</td>
+                            <td>12</td>
+                        </tr>
+                        <tr>
+                            <td>M 或 m</td>
+                            <td>一位或兩位數月份</td>
+                            <td>=TEXT("2024/3/5", "M")</td>
+                            <td>3</td>
+                        </tr>
+                        <tr>
+                            <td>DD 或 dd</td>
+                            <td>兩位數日期</td>
+                            <td>=TEXT(TODAY(), "DD")</td>
+                            <td>23</td>
+                        </tr>
+                        <tr>
+                            <td>YYYY-MM-DD</td>
+                            <td>ISO 標準日期格式</td>
+                            <td>=TEXT(TODAY(), "YYYY-MM-DD")</td>
+                            <td>2024-12-23</td>
+                        </tr>
+                        <tr>
+                            <td>YYYY年MM月DD日</td>
+                            <td>中文日期格式</td>
+                            <td>=TEXT(TODAY(), "YYYY年MM月DD日")</td>
+                            <td>2024年12月23日</td>
+                        </tr>
+                        <tr>
+                            <td>AAAA</td>
+                            <td>星期幾（中文全名）</td>
+                            <td>=TEXT(TODAY(), "AAAA")</td>
+                            <td>星期二</td>
+                        </tr>
+                        <tr>
+                            <td>AAA</td>
+                            <td>星期幾（中文簡寫）</td>
+                            <td>=TEXT(TODAY(), "AAA")</td>
+                            <td>週二</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h3>🔢 數值格式代碼</h3>
+                <table class="example-table">
+                    <thead>
+                        <tr>
+                            <th>格式代碼</th>
+                            <th>說明</th>
+                            <th>範例公式</th>
+                            <th>結果</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>0</td>
+                            <td>固定位數，不足補 0</td>
+                            <td>=TEXT(5, "000")</td>
+                            <td>005</td>
+                        </tr>
+                        <tr>
+                            <td>#</td>
+                            <td>可變位數，不補 0</td>
+                            <td>=TEXT(5, "###")</td>
+                            <td>5</td>
+                        </tr>
+                        <tr>
+                            <td>0.00</td>
+                            <td>兩位小數</td>
+                            <td>=TEXT(12.5, "0.00")</td>
+                            <td>12.50</td>
+                        </tr>
+                        <tr>
+                            <td>#,##0</td>
+                            <td>千位分隔符號</td>
+                            <td>=TEXT(1234567, "#,##0")</td>
+                            <td>1,234,567</td>
+                        </tr>
+                        <tr>
+                            <td>0%</td>
+                            <td>百分比格式</td>
+                            <td>=TEXT(0.85, "0%")</td>
+                            <td>85%</td>
+                        </tr>
+                        <tr>
+                            <td>0.00%</td>
+                            <td>百分比（兩位小數）</td>
+                            <td>=TEXT(0.8567, "0.00%")</td>
+                            <td>85.67%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- 實務範例 1: 產品編碼解析 -->
+            <div class="section">
+                <h2><span class="icon">4</span>實務範例：電子零件編碼解析系統</h2>
+                
+                <div class="tip-box">
+                    <strong>📖 專有名詞解釋：</strong><br>
+                    • <strong>產品編碼（Product Code）：</strong>企業為方便管理和識別產品而制定的唯一代碼，通常包含產品類別、年份、序號等資訊。<br><br>
+                    • <strong>類別代碼（Category Code）：</strong>產品編碼中用於識別產品類別的部分，例如 IC（積體電路）、RS（電阻）等。<br><br>
+                    • <strong>批次代碼（Batch Code）：</strong>標識產品生產批次的代碼，用於品質追溯和庫存管理。
+                </div>
+                
+                <p><strong>情境說明：</strong>某電子元件公司使用結構化編碼系統，格式為：<span class="highlight">類別-年份-批次-序號</span></p>
+                <p>範例：<span class="formula">IC-2024-B03-A001</span> 表示 2024 年 B03 批次的第 A001 號積體電路產品。</p>
+                
+                <table class="example-table">
+                    <thead>
+                        <tr>
+                            <th>完整編碼</th>
+                            <th>產品類別</th>
+                            <th>生產年份</th>
+                            <th>批次代碼</th>
+                            <th>產品序號</th>
+                            <th>編碼長度</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>IC-2024-B03-A001</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr>
+                            <td>RS-2024-C15-B256</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr>
+                            <td>CP-2023-A08-C099</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr>
+                            <td>LED-2024-D22-A512</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h3>📝 公式說明</h3>
+                <p>假設完整編碼在 A2 儲存格：</p>
+                <ul>
+                    <li><strong>產品類別 (B2)：</strong><span class="formula">=LEFT(A2, 2)</span> 或 <span class="formula">=LEFT(A2, FIND("-", A2)-1)</span>
+                        <br>• 第一個公式：直接取前 2 個字元（適用於類別固定 2 字元）
+                        <br>• 第二個公式：取第一個 "-" 之前的所有字元（適用於類別長度不固定）</li>
+                    <li><strong>生產年份 (C2)：</strong><span class="formula">=MID(A2, 4, 4)</span>
+                        <br>• 從第 4 個位置開始，取 4 個字元</li>
+                    <li><strong>批次代碼 (D2)：</strong><span class="formula">=MID(A2, 9, 3)</span>
+                        <br>• 從第 9 個位置開始，取 3 個字元</li>
+                    <li><strong>產品序號 (E2)：</strong><span class="formula">=RIGHT(A2, 4)</span>
+                        <br>• 從右側取 4 個字元</li>
+                    <li><strong>編碼長度 (F2)：</strong><span class="formula">=LEN(A2)</span>
+                        <br>• 計算編碼總字元數，可用於驗證格式正確性</li>
+                </ul>
+                
+                <div class="tip-box">
+                    <strong>💡 進階技巧：</strong>如果編碼格式不固定（例如類別代碼可能是 2-4 個字元），可以使用 FIND 或 SEARCH 函數找到 "-" 的位置，再配合 LEFT、MID 等函數進行動態擷取。
+                </div>
+                
+                <h3>🔍 實務應用情境</h3>
+                <ul>
+                    <li>✅ 從混合編碼中篩選特定類別產品（如所有 IC 類產品）</li>
+                    <li>✅ 統計各批次的產品數量</li>
+                    <li>✅ 驗證編碼格式是否正確（透過長度檢查）</li>
+                    <li>✅ 建立年度生產報表（按年份分組）</li>
+                </ul>
+            </div>
+            
+            <!-- 實務範例 2: 專案工期計算 -->
+            <div class="section">
+                <h2><span class="icon">5</span>實務範例：專案工期管理系統</h2>
+                
+                <div class="tip-box">
+                    <strong>📖 專有名詞解釋：</strong><br>
+                    • <strong>專案工期（Project Duration）：</strong>專案從開始到結束所需的總時間，通常以工作天數計算。<br><br>
+                    • <strong>工作天（Working Days / Business Days）：</strong>排除週末及國定假日後的實際工作日，用於更準確地估算專案時程。<br><br>
+                    • <strong>里程碑（Milestone）：</strong>專案中的重要檢查點或階段性目標，用於追蹤專案進度。<br><br>
+                    • <strong>延遲天數（Delay Days）：</strong>實際完成日期與計畫完成日期之間的差異，正值表示延遲，負值表示提前。
+                </div>
+                
+                <p><strong>情境說明：</strong>某工程公司需要管理多個專案的時程，計算工期並監控進度。</p>
+                
+                <table class="example-table">
+                    <thead>
+                        <tr>
+                            <th>專案名稱</th>
+                            <th>開始日期</th>
+                            <th>預計完成日期</th>
+                            <th>實際完成日期</th>
+                            <th>總天數</th>
+                            <th>工作天數</th>
+                            <th>已用天數</th>
+                            <th>進度百分比</th>
+                            <th>延遲天數</th>
+                            <th>狀態</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>工廠自動化系統</td>
+                            <td>2024/01/15</td>
+                            <td>2024/06/30</td>
+                            <td>2024/07/05</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr>
+                            <td>辦公大樓裝修</td>
+                            <td>2024/03/01</td>
+                            <td>2024/08/31</td>
+                            <td>2024/08/28</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr>
+                            <td>IT系統升級</td>
+                            <td>2024/05/10</td>
+                            <td>2024/09/15</td>
+                            <td></td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h3>📝 公式說明</h3>
+                <p>假設資料從第2列開始：</p>
+                <ul>
+                    <li><strong>總天數 (E2)：</strong><span class="formula">=DAYS(C2, B2)</span>
+                        <br>• 計算從開始到預計完成的總天數（包含週末）</li>
+                    <li><strong>工作天數 (F2)：</strong><span class="formula">=NETWORKDAYS(B2, C2)</span>
+                        <br>• 計算實際工作天數（排除週末，不含假日）</li>
+                    <li><strong>已用天數 (G2)：</strong><span class="formula">=IF(D2="", DAYS(TODAY(), B2), DAYS(D2, B2))</span>
+                        <br>• 如果尚未完成，計算至今天；如果已完成，計算至實際完成日期</li>
+                    <li><strong>進度百分比 (H2)：</strong><span class="formula">=TEXT(G2/E2, "0.0%")</span>
+                        <br>• 已用天數除以總天數，並格式化為百分比</li>
+                    <li><strong>延遲天數 (I2)：</strong><span class="formula">=IF(D2="", "", DAYS(D2, C2))</span>
+                        <br>• 實際完成日期減去預計完成日期，正值表示延遲，負值表示提前</li>
+                    <li><strong>狀態 (J2)：</strong><span class="formula">=IF(D2<>"", "已完成", IF(TODAY()>C2, "逾期", "進行中"))</span>
+                        <br>• 根據實際完成日期和當前日期判斷專案狀態</li>
+                </ul>
+                
+                <div class="tip-box">
+                    <strong>💡 實務技巧：</strong>可以配合條件格式化，將逾期的專案標記為紅色，提前完成的標記為綠色，讓專案管理更直觀。
+                </div>
+                
+                <h3>🎯 實務應用情境</h3>
+                <ul>
+                    <li>✅ 監控多個專案的進度狀況</li>
+                    <li>✅ 自動計算專案延遲天數</li>
+                    <li>✅ 統計專案按時完成率</li>
+                    <li>✅ 預測專案完成時間</li>
+                    <li>✅ 生成專案進度報表</li>
+                </ul>
+            </div>
+            
+            <!-- 綜合練習 -->
+            <div class="practice-section">
+                <h2>🎯 綜合練習題</h2>
+                
+                <div class="question">
+					<h3>練習 1：員工編號系統</h3>
+					
+					<p>某公司員工編號格式為：<span class="highlight">部門代碼-入職年份-流水號</span>，部門代碼固定2字元，年份固定4位數，流水號固定4位數（不足補0）。</p>
+					<p>例如：<span class="formula">HR-2023-0156</span> 表示人力資源部 2023 年入職的第 156 號員工。</p>
+					
+					<table class="example-table">
+						<thead>
+							<tr>
+								<th>A: 完整編號</th>
+								<th>B: 部門代碼</th>
+								<th>C: 入職年份</th>
+								<th>D: 流水號</th>
+								<th>E: 在職年資(年)</th>
+								<th>F: 資深員工</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>HR-2023-0156</td>
+								<td>(公式)</td>
+								<td>(公式)</td>
+								<td>(公式)</td>
+								<td>(公式)</td>
+								<td>(公式)</td>
+							</tr>
+							<tr>
+								<td>IT-2022-0321</td>
+								<td>(公式)</td>
+								<td>(公式)</td>
+								<td>(公式)</td>
+								<td>(公式)</td>
+								<td>(公式)</td>
+							</tr>
+							<tr>
+								<td>SA-2021-0897</td>
+								<td>(公式)</td>
+								<td>(公式)</td>
+								<td>(公式)</td>
+								<td>(公式)</td>
+								<td>(公式)</td>
+							</tr>
+							<tr>
+								<td>AC-2020-1123</td>
+								<td>(公式)</td>
+								<td>(公式)</td>
+								<td>(公式)</td>
+								<td>(公式)</td>
+								<td>(公式)</td>
+							</tr>
+							<tr>
+								<td>HR-2024-0005</td>
+								<td>(公式)</td>
+								<td>(公式)</td>
+								<td>(公式)</td>
+								<td>(公式)</td>
+								<td>(公式)</td>
+							</tr>
+						</tbody>
+					</table>
+
+					<h3>📝 公式說明（假設資料從 A2 開始）</h3>
+					<ul>
+						<li><strong>部門代碼 (B2)：</strong><span class="formula">=LEFT(A2,2)</span></li>
+						<li><strong>入職年份 (C2)：</strong><span class="formula">=MID(A2,4,4)</span></li>
+						<li><strong>流水號 (D2)：</strong><span class="formula">=RIGHT(A2,4)</span></li>
+						<li><strong>在職年資 (E2)：</strong><span class="formula">=YEAR(TODAY())-VALUE(C2)</span>
+							<br><strong>💡 提示：</strong>使用 VALUE() 將文字年份轉為數字</li>
+						<li><strong>資深員工 (F2)：</strong><span class="formula">=IF(E2>=5,"✅ 資深","❌ 一般")</span></li>
+						<li><strong>驗證編碼長度 (G2，可選)：</strong><span class="formula">=IF(LEN(A2)=12,"格式正確","格式錯誤")</span></li>
+					</ul>
+					
+					<h3>🎯 挑戰任務</h3>
+					<ul>
+						<li>統計各部門資深員工數量</li>
+						<li>找出今年入職員工總人數</li>
+						<li>建立篩選條件：只顯示資深員工</li>
+					</ul>
+				</div>
+                
+                <div class="question">
+					<h3>練習 2：發票號碼驗證</h3>
+					
+					<p>統一發票號碼標準格式為：<span class="highlight">兩個英文字母 - 八位數字</span></p>
+					<p>正確範例：<span class="formula">AB-12345678</span>（總長度11個字元，包含1個「-」）</p>
+					<p>錯誤範例：AB12345678（無「-」）、ABC-12345678（字母超過2位）、AB-1234567（數字不足8位）</p>
+					
+					<table class="example-table">
+						<thead>
+							<tr>
+								<th>A: 發票號碼</th>
+								<th>B: 長度檢查</th>
+								<th>C: 字母部分</th>
+								<th>D: 數字部分</th>
+								<th>E: 格式是否正確</th>
+								<th>F: 驗證結果</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>AB-12345678</td>
+								<td>(公式)</td>
+								<td>(公式)</td>
+								<td>(公式)</td>
+								<td>(公式)</td>
+								<td>(公式)</td>
+							</tr>
+							<tr>
+								<td>XY-98765432</td>
+								<td>(公式)</td>
+								<td>(公式)</td>
+								<td>(公式)</td>
+								<td>(公式)</td>
+								<td>(公式)</td>
+							</tr>
+							<tr>
+								<td>AB12345678</td>
+								<td>(公式)</td>
+								<td>(公式)</td>
+								<td>(公式)</td>
+								<td>(公式)</td>
+								<td>(公式)</td>
+							</tr>
+							<tr>
+								<td>ABC-12345678</td>
+								<td>(公式)</td>
+								<td>(公式)</td>
+								<td>(公式)</td>
+								<td>(公式)</td>
+								<td>(公式)</td>
+							</tr>
+							<tr>
+								<td>CD-12345</td>
+								<td>(公式)</td>
+								<td>(公式)</td>
+								<td>(公式)</td>
+								<td>(公式)</td>
+								<td>(公式)</td>
+							</tr>
+							<tr>
+								<td>EF-123456789</td>
+								<td>(公式)</td>
+								<td>(公式)</td>
+								<td>(公式)</td>
+								<td>(公式)</td>
+								<td>(公式)</td>
+							</tr>
+						</tbody>
+					</table>
+
+					<h3>📝 公式說明（假設資料從 A2 開始）</h3>
+					<ul>
+						<li><strong>長度檢查 (B2)：</strong><span class="formula">=LEN(A2)</span></li>
+						<li><strong>字母部分 (C2)：</strong><span class="formula">=LEFT(A2,2)</span></li>
+						<li><strong>數字部分 (D2)：</strong><span class="formula">=RIGHT(A2,8)</span></li>
+						<li><strong>格式是否正確 (E2)：</strong><span class="formula">=AND(
+							LEN(A2)=11,
+							MID(A2,3,1)="-",
+							ISNUMBER(VALUE(RIGHT(A2,8))),
+							CODE(UPPER(LEFT(A2,1)))>=65,
+							CODE(UPPER(LEFT(A2,1)))<=90,
+							CODE(UPPER(MID(A2,2,1)))>=65,
+							CODE(UPPER(MID(A2,2,1)))<=90
+						  )</span>
+						  <br><strong>說明：</strong>檢查：總長11、第三個字元為「-」、後8位是純數字、前2位是英文字母（A-Z）</li>
+						<li><strong>驗證結果 (F2)：</strong><span class="formula">=IF(E2,"✅ 格式正確","❌ 格式錯誤")</span></li>
+					</ul>
+
+					<div class="tip-box">
+						<strong>💡 進階挑戰（可選）：</strong><br>
+						• 加入檢查：第一個字母不能是「O」或「I」（避免與數字0、1混淆）<br>
+						• 檢查數字部分不能全部為0（00000000無效）<br>
+						• 統計目前清單中有幾張發票格式正確
+					</div>
+					
+					<h3>🎯 實務應用情境</h3>
+					<ul>
+						<li>大量發票資料匯入時自動驗證格式</li>
+						<li>篩選出格式錯誤的發票進行修正</li>
+						<li>統計有效發票張數與無效張數</li>
+						<li>建立發票資料清理流程</li>
+					</ul>
+				</div>
+                
+                <div class="question">
+					<h3>練習 3：課程時數統計</h3>
+					
+					<p>某培訓機構開設一門長期課程，相關資訊如下：</p>
+					<ul>
+						<li><strong>課程開始日期：</strong>2024年10月1日（星期二）</li>
+						<li><strong>課程結束日期：</strong>2024年12月20日（星期五）</li>
+						<li><strong>上課規律：</strong>每週上課3天（星期一、三、五）</li>
+						<li><strong>每日上課時數：</strong>6小時</li>
+						<li><strong>特殊情況：</strong>不考慮國定假日影響（為簡化計算）</li>
+					</ul>
+
+					<table class="example-table">
+						<thead>
+							<tr>
+								<th>計算項目</th>
+								<th>結果儲存格</th>
+								<th>預期計算方式</th>
+								<th>參考答案（2025年12月23日計算）</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>總日曆天數</td>
+								<td>(公式)</td>
+								<td>結束日期 - 開始日期 + 1</td>
+								<td>81 天</td>
+							</tr>
+							<tr>
+								<td>總上課天數</td>
+								<td>(公式)</td>
+								<td>計算期間內所有星期一、三、五的總天數</td>
+								<td>35 天</td>
+							</tr>
+							<tr>
+								<td>總上課時數</td>
+								<td>(公式)</td>
+								<td>總上課天數 × 每日時數</td>
+								<td>210 小時</td>
+							</tr>
+							<tr>
+								<td>平均每週上課時數</td>
+								<td>(公式)</td>
+								<td>總上課時數 ÷ 課程總週數</td>
+								<td>約18小時/週</td>
+							</tr>
+							<tr>
+								<td>課程完成進度</td>
+								<td>(公式)</td>
+								<td>已過天數 ÷ 總日曆天數（格式化為百分比）</td>
+								<td>約100%（已結束）</td>
+							</tr>
+						</tbody>
+					</table>
+
+					<h3>📝 建議公式參考（假設開始日期在 B2，結束日期在 B3）</h3>
+					<ul>
+						<li><strong>總日曆天數：</strong><span class="formula">=B3-B2+1</span></li>
+						<li><strong>總上課天數（進階版）：</strong>
+							<span class="formula">=NETWORKDAYS.INTL(B2,B3,"0101011")</span>
+							<br><strong>說明：</strong>NETWORKDAYS.INTL 的第三參數 "0101011" 表示只把星期一、三、五視為工作日，其餘為假日</li>
+						<li><strong>簡易但較不精確版（約略計算）：</strong>
+							<span class="formula">=INT((B3-B2+1)/7)*3 + 額外調整（手動計算頭尾週）</span></li>
+						<li><strong>總上課時數：</strong><span class="formula">=總上課天數 × 6</span></li>
+						<li><strong>課程總週數：</strong><span class="formula">=ROUND((B3-B2+1)/7,1)</span></li>
+						<li><strong>平均每週上課時數：</strong><span class="formula">=總上課時數 / 課程總週數</span></li>
+						<li><strong>課程完成進度（截至今日）：</strong>
+							<span class="formula">=TEXT(MIN(TODAY(),B3)-B2+1,"0.0%")/(B3-B2+1)</span></li>
+					</ul>
+
+					<div class="tip-box">
+						<strong>💡 挑戰與進階：</strong><br>
+						• 如果需要扣除國定假日，請額外建立假日清單並使用 NETWORKDAYS 或 NETWORKDAYS.INTL 的第四參數<br>
+						• 試著用陣列公式或更精確的方式計算特定星期幾的總天數<br>
+						• 計算「距離課程結束還有幾個上課日」（若尚未結束）
+					</div>				
+
+					<h3>🎯 實務應用情境</h3>
+					<ul>
+						<li>培訓機構排課與講師鐘點費計算</li>
+						<li>學員學習時數證明開立</li>
+						<li>比較不同課程的學習強度與總時數</li>
+						<li>預估長期課程的總成本與資源需求</li>
+					</ul>
+				</div>
+                
+                <div class="question">
+					<h3>練習 4：動態報表標題</h3>
+					
+					<p>請設計一個「動態報表標題」，當使用者打開 Excel 檔案時，標題會自動根據當前月份與公司名稱更新，格式如下：</p>
+					<p style="font-size:1.3em; font-weight:bold; color:#9cacff; text-align:center;">
+						「公司名稱 - YYYY年MM月 銷售報表」
+					</p>
+					
+					<p>範例（假設今天是 2025年12月23日，公司名稱為「宏達科技」）：</p>
+					<p style="font-size:1.4em; color:#2a5298; text-align:center; background:#f8f9fa; padding:15px; border-radius:8px;">
+						「宏達科技 - 2025年12月 銷售報表」
+					</p>
+
+					<table class="example-table">
+						<thead>
+							<tr>
+								<th>儲存格位置</th>
+								<th>內容說明</th>
+								<th>建議公式</th>
+								<th>說明</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>A1</td>
+								<td>公司名稱（可手動輸入或從其他表單帶入）</td>
+								<td>例如：宏達科技</td>
+								<td>使用者可自行修改的公司名稱</td>
+							</tr>
+							<tr>
+								<td>A2（或報表標題位置）</td>
+								<td>完整動態標題</td>
+								<td>(待填寫公式)</td>
+								<td>使用 & 串接與 TEXT 函數格式化</td>
+							</tr>
+							<tr>
+								<td>B2（可選）</td>
+								<td>當前年份（單獨顯示）</td>
+								<td>(公式)</td>
+								<td>方便單獨使用年份</td>
+							</tr>
+							<tr>
+								<td>C2（可選）</td>
+								<td>當前月份（中文）</td>
+								<td>(公式)</td>
+								<td>顯示「12月」等格式</td>
+							</tr>
+						</tbody>
+					</table>
+
+					<h3>📝 公式挑戰（請填入 A2 的完整標題公式）</h3>
+					<ul>
+						<li>公司名稱從 <strong>A1</strong> 儲存格取得</li>
+						<li>使用 <strong>TODAY()</strong> 取得當前日期</li>
+						<li>年份顯示四位數（YYYY）</li>
+						<li>月份顯示兩位數並加上「月」（如 12月）</li>
+						<li>前後加上「「」」與「 - 銷售報表」</li>
+					</ul>
+
+					<div class="tip-box">
+						<strong>參考答案公式（A2）：</strong><br>
+						<span class="formula">
+							="「" & A1 & " - " & TEXT(TODAY(),"YYYY") & "年" & TEXT(TODAY(),"MM") & "月 銷售報表」"
+						</span>
+						<br><br>
+						<strong>進階版（自動判斷是否需要「份」）：</strong><br>
+						<span class="formula">
+							="「" & A1 & " - " & TEXT(TODAY(),"YYYY年MM月") & " 銷售報表」"
+						</span>
+						（更簡潔，TEXT 函數會自動處理「年」「月」格式）
+					</div>
+
+					<div class="tip-box">
+						<strong>進階挑戰（選做）：</strong><br>
+						1. 讓標題能根據使用者指定的「報表月份」動態變化（例如在 B1 輸入 2025/8）<br>
+						2. 如果是當月，顯示「本月銷售報表」；如果不是當月，顯示「YYYY年MM月 銷售報表」<br>
+						3. 加入「第X季」資訊（例如「2025年第4季 銷售報表」）
+					</div>
+
+
+					<h3>🎯 實務應用情境</h3>
+					<ul>
+						<li>每月自動產生當月銷售報表，標題永遠正確</li>
+						<li>多公司/多部門共用同一份報表模板</li>
+						<li>製作月報、季報、年報的統一標題格式</li>
+						<li>搭配 Power Query 或不同資料來源時保持標題一致性</li>
+					</ul>
+				</div>
+            </div>
+            
+            <!-- 常見錯誤與解決 -->
+            <div class="section">
+                <h2><span class="icon">6</span>常見錯誤與解決方法</h2>
+                
+                <table class="example-table">
+                    <thead>
+                        <tr>
+                            <th>錯誤類型</th>
+                            <th>原因</th>
+                            <th>解決方法</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>#VALUE!</td>
+                            <td>函數參數類型錯誤，例如將文字當作數字處理</td>
+                            <td>檢查儲存格內容格式，確保數值欄位不含文字</td>
+                        </tr>
+                        <tr>
+                            <td>#NUM!</td>
+                            <td>數值計算超出 Excel 範圍或日期不合法</td>
+                            <td>檢查日期格式，確保結束日期大於開始日期</td>
+                        </tr>
+                        <tr>
+                            <td>#NAME?</td>
+                            <td>函數名稱拼寫錯誤或不存在</td>
+                            <td>檢查函數名稱拼寫，確認是否為有效函數</td>
+                        </tr>
+                        <tr>
+                            <td>日期顯示為數字</td>
+                            <td>儲存格格式設定為「一般」或「數值」</td>
+                            <td>將儲存格格式改為「日期」或使用 TEXT 函數格式化</td>
+                        </tr>
+                        <tr>
+                            <td>LEFT/RIGHT 提取錯誤</td>
+                            <td>字元數計算錯誤或位置判斷失誤</td>
+                            <td>使用 LEN 函數檢查字串長度，確認提取位置</td>
+                        </tr>
+                        <tr>
+                            <td>NETWORKDAYS 計算不準</td>
+                            <td>未考慮假日或週末設定錯誤</td>
+                            <td>使用 NETWORKDAYS.INTL 自訂工作日，或提供假日清單</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+			
+            <!-- 學習總結 -->
+            <div class="section">                
+                <h2>🎓 核心概念回顧</h2>
+                <table class="comparison-table">
+                    <tr>
+                        <td><strong>文字函數</strong></td>
+                        <td>
+                            • LEFT, RIGHT, MID 用於提取文字<br>
+                            • CONCATENATE 和 & 用於合併文字<br>
+                            • TEXT 用於格式化輸出<br>
+                            • LEN 用於計算長度
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>日期時間函數</strong></td>
+                        <td>
+                            • DATE 建立日期值<br>
+                            • YEAR, MONTH, DAY 提取日期元素<br>
+                            • TODAY 和 NOW 取得當前時間<br>
+                            • DAYS 和 NETWORKDAYS 計算天數差
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>實務應用</strong></td>
+                        <td>
+                            • 產品編碼解析與分類<br>
+                            • 專案工期計算與進度追蹤<br>
+                            • 動態報表標題生成<br>
+                            • 資料驗證與格式檢查
+                        </td>
+                    </tr>
+                </table>
+                
+                <h3>💪 關鍵技能掌握</h3>
+                <ul>
+                    <li>✅ 能夠從複雜編碼中提取所需資訊</li>
+                    <li>✅ 熟練使用 TEXT 函數格式化各種數據</li>
+                    <li>✅ 準確計算工作天數和日期差異</li>
+                    <li>✅ 設計動態公式處理不同格式的資料</li>
+                    <li>✅ 結合多個函數解決實務問題</li>
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</body>
+</html>

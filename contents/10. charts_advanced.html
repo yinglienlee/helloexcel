@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>進階圖表類型與應用</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: "Microsoft JhengHei", "微軟正黑體", Arial, sans-serif;
+            line-height: 1.8;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
+        }
+        
+        .section h2 {
+            color: #1e3c72;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section h3 {
+            color: #2a5298;
+            margin: 20px 0 15px 0;
+            font-size: 1.3em;
+        }
+        
+        .icon {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+            background: #667eea;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .example-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .example-table th {
+            background: #667eea;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+        }
+        
+        .example-table td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            color: black;
+        }
+        
+        .example-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        
+        .example-table tr:hover {
+            background: #e9ecef;
+        }
+        
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: "Consolas", "Monaco", monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+            white-space: pre;
+        }
+        
+        .formula {
+            background: #fff3cd;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: "Consolas", "Monaco", monospace;
+            color: #856404;
+            font-weight: bold;
+        }
+        
+        .tip-box {
+            background: #d1ecf1;
+            border-left: 4px solid #0c5460;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            color: black;
+        }
+        
+        .tip-box strong {
+            color: #0c5460;
+        }
+        
+        .warning-box {
+            background: #fff3cd;
+            border-left: 4px solid #856404;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .warning-box strong {
+            color: #856404;
+        }
+        
+        .practice-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            margin-top: 40px;
+            border-radius: 10px;
+        }
+        
+        .practice-section h2 {
+            color: white;
+            margin-bottom: 30px;
+        }
+        
+        .question {
+            background: rgba(255,255,255,0.1);
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border-left: 5px solid white;
+        }
+        
+        .question h3 {
+            color: white;
+            margin-bottom: 15px;
+        }
+        
+        .question ul {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+        
+        .question li {
+            margin: 8px 0;
+        }
+        
+        .step-box {
+            background: #e7f3ff;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+            border-left: 4px solid #0066cc;
+        }
+        
+        .step-box strong {
+            color: #0066cc;
+        }
+        
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        
+        ul, ol {
+            margin-left: 25px;
+            margin-top: 10px;
+        }
+        
+        li {
+            margin: 8px 0;
+        }
+        
+        .chart-demo {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .feature-item {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        
+        .feature-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+        
+        .feature-item h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 進階圖表類型與應用</h1>
+            <p>掌握雙座標軸圖表與複合圖表，提升數據視覺化專業度</p>
+        </div>
+        
+        <div class="content">
+            <!-- 雙座標軸圖表基礎 -->
+            <div class="section">
+                <h2><span class="icon">1</span>雙座標軸圖表（次要座標軸）</h2>
+                
+                <div class="tip-box">
+                    <strong>📖 專有名詞解釋：</strong><br>
+                    • <strong>主要座標軸（Primary Axis）：</strong>圖表左側（或底部）的座標軸，用於顯示第一組數據的刻度範圍。<br><br>
+                    • <strong>次要座標軸（Secondary Axis）：</strong>圖表右側（或頂部）的座標軸，用於顯示第二組數據的刻度範圍。當兩組數據的數值範圍差異很大時使用。<br><br>
+                    • <strong>雙座標軸圖表（Dual-Axis Chart）：</strong>同時使用主要和次要座標軸的圖表，讓數值範圍差異大的數據能在同一張圖表中清晰呈現。<br><br>
+                    • <strong>數據系列（Data Series）：</strong>圖表中的一組相關數據點，例如「銷售額」或「成長率」就是不同的數據系列。
+                </div>
+                
+                <h3>🎯 使用時機</h3>
+                <p>當您需要在同一張圖表中比較兩組<strong>數值範圍差異很大</strong>的數據時，就需要使用雙座標軸圖表。</p>
+                
+                <div class="feature-grid">
+                    <div class="feature-item">
+                        <h4>📈 經濟指標分析</h4>
+                        <p>利率（1-5%）與通貨膨脹率（-2% 至 8%）對比。</p>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <h4>💰 財務分析</h4>
+                        <p>營收金額（數百萬）與利潤率（百分比）比較。</p>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <h4>📊 銷售績效</h4>
+                        <p>銷售額（大數值）與客戶滿意度（1-10分）追蹤。</p>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <h4>🏭 生產管理</h4>
+                        <p>產量（數千件）與良品率（百分比）監控。</p>
+                    </div>
+                </div>
+                
+                <h3>📋 範例數據：月度銷售分析</h3>
+                <table class="example-table">
+                    <thead>
+                        <tr>
+                            <th>月份</th>
+                            <th>銷售額（萬元）</th>
+                            <th>成長率（%）</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1月</td>
+                            <td>850</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>2月</td>
+                            <td>920</td>
+                            <td>8.2%</td>
+                        </tr>
+                        <tr>
+                            <td>3月</td>
+                            <td>1,050</td>
+                            <td>14.1%</td>
+                        </tr>
+                        <tr>
+                            <td>4月</td>
+                            <td>980</td>
+                            <td>-6.7%</td>
+                        </tr>
+                        <tr>
+                            <td>5月</td>
+                            <td>1,120</td>
+                            <td>14.3%</td>
+                        </tr>
+                        <tr>
+                            <td>6月</td>
+                            <td>1,280</td>
+                            <td>14.3%</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h3>🔧 建立步驟</h3>
+                <div class="step-box">
+                    <strong>步驟 1：選取數據範圍</strong><br>
+                    選取包含月份、銷售額和成長率的完整數據範圍（包括標題列）。
+                </div>
+                
+                <div class="step-box">
+                    <strong>步驟 2：插入基本圖表</strong><br>
+                    插入 → 圖表 → 選擇「組合圖」→ 建議的圖表 → 或選擇「自訂組合圖」
+                </div>
+                
+                <div class="step-box">
+                    <strong>步驟 3：設定次要座標軸</strong><br>
+                    • 在圖表設計中，點擊「變更圖表類型」<br>
+                    • 將「銷售額」設為「直條圖」，使用主要座標軸<br>
+                    • 將「成長率」設為「折線圖」，勾選「次要座標軸」
+                </div>
+                
+                <div class="step-box">
+                    <strong>步驟 4：格式化圖表</strong><br>
+                    • 調整座標軸標題：左側「銷售額（萬元）」，右側「成長率（%）」<br>
+                    • 設定數據標籤顯示<br>
+                    • 調整色彩配置，使兩組數據容易區分
+                </div>
+                
+                <div class="warning-box">
+                    <strong>⚠️ 常見錯誤：</strong>不當使用雙座標軸可能造成數據誤導。避免在兩組數據沒有關聯性或數值範圍相近時使用雙座標軸，這會讓圖表變得複雜且難以解讀。
+                </div>
+            </div>
+            
+            <!-- 柏拉圖 -->
+            <div class="section">
+                <h2><span class="icon">2</span>柏拉圖（Pareto Chart）</h2>
+                
+                <div class="tip-box">
+                    <strong>📖 專有名詞解釋：</strong><br>
+                    • <strong>柏拉圖法則（Pareto Principle）：</strong>又稱「80/20法則」，指出約80%的結果來自20%的原因。在品質管理中，通常80%的問題來自20%的不良原因。<br><br>
+                    • <strong>柏拉圖（Pareto Chart）：</strong>結合直條圖和折線圖的複合圖表，直條圖顯示各項目的數量（由大到小排序），折線圖顯示累積百分比，用於識別最重要的問題。<br><br>
+                    • <strong>累積百分比（Cumulative Percentage）：</strong>將各項目的百分比依序累加，最終達到100%。用於判斷前幾項問題佔整體問題的比例。<br><br>
+                    • <strong>關鍵少數（Vital Few）：</strong>在柏拉圖分析中，造成大部分問題的少數原因，通常是改善的優先目標。
+                </div>
+                
+                <h3>🎯 柏拉圖的應用</h3>
+                <p>柏拉圖廣泛應用於品質管理、問題分析和決策優化：</p>
+                
+                <ul>
+                    <li><strong>品質管理：</strong>找出主要不良原因，優先改善影響最大的問題</li>
+                    <li><strong>客戶抱怨分析：</strong>識別最常見的客訴類型</li>
+                    <li><strong>成本控制：</strong>找出主要成本來源</li>
+                    <li><strong>庫存管理：</strong>識別高週轉率產品（ABC分析）</li>
+                    <li><strong>銷售分析：</strong>找出貢獻最大營收的產品或客戶</li>
+                </ul>
+                
+                <h3>📋 範例數據：電子零件不良原因分析</h3>
+                <table class="example-table">
+                    <thead>
+                        <tr>
+                            <th>不良原因</th>
+                            <th>不良數量</th>
+                            <th>百分比</th>
+                            <th>累積百分比</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>焊接不良</td>
+                            <td>245</td>
+                            <td>42.5%</td>
+                            <td>42.5%</td>
+                        </tr>
+                        <tr>
+                            <td>零件偏移</td>
+                            <td>138</td>
+                            <td>23.9%</td>
+                            <td>66.4%</td>
+                        </tr>
+                        <tr>
+                            <td>污染</td>
+                            <td>87</td>
+                            <td>15.1%</td>
+                            <td>81.5%</td>
+                        </tr>
+                        <tr>
+                            <td>刮傷</td>
+                            <td>52</td>
+                            <td>9.0%</td>
+                            <td>90.5%</td>
+                        </tr>
+                        <tr>
+                            <td>其他</td>
+                            <td>55</td>
+                            <td>9.5%</td>
+                            <td>100.0%</td>
+                        </tr>
+                        <tr style="background: #fff3cd; font-weight: bold;">
+                            <td>總計</td>
+                            <td>577</td>
+                            <td>100.0%</td>
+                            <td>-</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h3>📐 數據準備公式</h3>
+                <ul>
+                    <li><strong>百分比 (C2)：</strong><span class="formula">=B2/$B$7</span>（設為百分比格式）</li>
+                    <li><strong>累積百分比 (D2)：</strong><span class="formula">=SUM($C$2:C2)</span>（設為百分比格式）</li>
+                    <li><strong>💡 重點：</strong>數據必須先依「不良數量」由大到小排序</li>
+                </ul>
+                
+                <h3>🔧 建立步驟</h3>
+                <div class="step-box">
+                    <strong>步驟 1：數據排序</strong><br>
+                    將不良原因按「不良數量」由大到小排序（排除總計列）。
+                </div>
+                
+                <div class="step-box">
+                    <strong>步驟 2：計算百分比</strong><br>
+                    • 百分比 = 該項數量 ÷ 總數量<br>
+                    • 累積百分比 = 從第一項累加到當前項的百分比總和
+                </div>
+                
+                <div class="step-box">
+                    <strong>步驟 3：插入組合圖</strong><br>
+                    • 選取「不良原因」、「不良數量」和「累積百分比」三欄<br>
+                    • 插入 → 圖表 → 組合圖 → 自訂組合圖<br>
+                    • 「不良數量」設為「群組直條圖」，主要座標軸<br>
+                    • 「累積百分比」設為「含有資料標記的折線圖」，次要座標軸
+                </div>
+                
+                <div class="step-box">
+                    <strong>步驟 4：格式化圖表</strong><br>
+                    • 左側 Y 軸標題：「不良數量（件）」<br>
+                    • 右側 Y 軸標題：「累積百分比（%）」，範圍設為 0% - 100%<br>
+                    • 在累積百分比線上顯示數據標籤<br>
+                    • 可添加 80% 參考線以標示關鍵少數
+                </div>
+                
+                <h3>🔍 分析解讀</h3>
+                <p>從上述範例可以看出：</p>
+                <ul>
+                    <li><strong>前兩項原因（焊接不良、零件偏移）佔 66.4%</strong> 的不良品</li>
+                    <li><strong>前三項原因佔 81.5%</strong> 的不良品，符合柏拉圖法則</li>
+                    <li><strong>改善建議：</strong>優先改善焊接製程和零件定位機制，可消除大部分不良品</li>
+                </ul>
+                
+                <div class="tip-box">
+                    <strong>💡 專業技巧：</strong>在柏拉圖上添加一條 80% 的水平參考線，可以快速識別出「關鍵少數」原因。這些原因應該是品質改善的優先目標。
+                </div>
+            </div>
+            
+            <!-- 其他複合圖表 -->
+            <div class="section">
+                <h2><span class="icon">3</span>其他複合圖表應用</h2>
+                
+                <h3>📊 複合圖表類型</h3>
+                <div class="feature-grid">
+                    <div class="feature-item">
+                        <h4>📈 柱狀圖 + 折線圖</h4>
+                        <p>最常見的組合，用於顯示實際數值（柱狀）和趨勢或比率（折線）。</p>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <h4>📊 堆疊柱狀圖 + 折線圖</h4>
+                        <p>顯示組成結構（堆疊柱）和整體趨勢（折線）的關係。</p>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <h4>📉 區域圖 + 折線圖</h4>
+                        <p>強調數量的累積效果（區域）和關鍵指標（折線）。</p>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <h4>📊 多組折線圖（雙軸）</h4>
+                        <p>比較不同單位或範圍的多個趨勢指標。</p>
+                    </div>
+                </div>
+                
+                <h3>🎨 圖表美化技巧</h3>
+                <ul>
+                    <li><strong>色彩選擇：</strong>使用對比色區分不同座標軸的數據系列</li>
+                    <li><strong>圖例位置：</strong>清楚標示哪個系列對應哪個座標軸</li>
+                    <li><strong>數據標籤：</strong>關鍵數據點可顯示數值，避免過度標記</li>
+                    <li><strong>網格線：</strong>適度使用網格線輔助讀取，但不要過於突兀</li>
+                    <li><strong>標題說明：</strong>清楚的圖表標題和座標軸標題是專業圖表的必備要素</li>
+                </ul>
+                
+                <div class="warning-box">
+                    <strong>⚠️ 設計原則：</strong>複合圖表的目的是讓數據更容易理解，而不是展示技術。避免使用過多的圖表類型組合，以免造成視覺混亂。一般建議同一張圖表最多使用 2-3 種圖表類型。
+                </div>
+            </div>
+            
+            <!-- 實務範例 -->
+            <div class="section">
+                <h2><span class="icon">4</span>實務範例：經濟指標雙軸趨勢分析</h2>
+                
+                <h3>📋 範例數據：利率與通膨率月度追蹤</h3>
+                <table class="example-table">
+                    <thead>
+                        <tr>
+                            <th>月份</th>
+                            <th>基準利率（%）</th>
+                            <th>通貨膨脹率（%）</th>
+                            <th>實質利率（%）</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>2024/01</td>
+                            <td>3.50</td>
+                            <td>2.1</td>
+                            <td>1.4</td>
+                        </tr>
+                        <tr>
+                            <td>2024/02</td>
+                            <td>3.50</td>
+                            <td>2.3</td>
+                            <td>1.2</td>
+                        </tr>
+                        <tr>
+                            <td>2024/03</td>
+                            <td>3.75</td>
+                            <td>2.6</td>
+                            <td>1.2</td>
+                        </tr>
+                        <tr>
+                            <td>2024/04</td>
+                            <td>3.75</td>
+                            <td>2.8</td>
+                            <td>1.0</td>
+                        </tr>
+                        <tr>
+                            <td>2024/05</td>
+                            <td>4.00</td>
+                            <td>3.1</td>
+                            <td>0.9</td>
+                        </tr>
+                        <tr>
+                            <td>2024/06</td>
+                            <td>4.00</td>
+                            <td>2.9</td>
+                            <td>1.1</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="tip-box">
+                    <strong>📖 名詞解釋：</strong><br>
+                    • <strong>基準利率（Benchmark Interest Rate）：</strong>中央銀行設定的政策利率，影響整體經濟的借貸成本。<br><br>
+                    • <strong>通貨膨脹率（Inflation Rate）：</strong>一般物價水準上漲的速度，通常以消費者物價指數（CPI）年增率表示。<br><br>
+                    • <strong>實質利率（Real Interest Rate）：</strong>名目利率減去通貨膨脹率，反映扣除物價上漲後的實際報酬率。公式：實質利率 ≈ 名目利率 - 通貨膨脹率。
+                </div>
+                
+                <h3>📐 計算公式</h3>
+                <ul>
+                    <li><strong>實質利率 (D2)：</strong><span class="formula">=B2-C2</span></li>
+                </ul>
+                
+                <h3>📊 圖表設計建議</h3>
+                <p>建立三條折線的雙軸圖表：</p>
+                <ul>
+                    <li><strong>主要座標軸（左側）：</strong>基準利率、實質利率（範圍 0-5%）</li>
+                    <li><strong>次要座標軸（右側）：</strong>通貨膨脹率（範圍 0-5%）</li>
+                    <li><strong>分析重點：</strong>觀察利率調整與通膨率的互動關係，以及實質利率的變化趨勢</li>
+                </ul>
+                
+                <div class="tip-box">
+                    <strong>💡 分析洞察：</strong>當通膨率上升時，央行通常會提高利率以抑制通膨。觀察實質利率的變化，可以判斷貨幣政策的緊縮程度。實質利率為正表示存款實際購買力增加，為負則表示減少。
+                </div>
+            </div>
+        </div>
+        
+        <!-- 練習題 -->
+        <div class="practice-section">
+            <h2>📝 課後練習題</h2>
+            
+            <div class="question">
+                <h3>練習題 1：零售業績分析（雙座標軸）</h3>
+                <p><strong>任務描述：</strong></p>
+                <p>某連鎖零售店需要分析月度業績表現，建立雙座標軸圖表：</p>
+                
+                <table class="example-table" style="margin: 20px 0; background: white;">
+                    <thead>
+                        <tr>
+                            <th>月份</th>
+                            <th>來客數（人）</th>
+                            <th>營業額（萬元）</th>
+                            <th>客單價（元）</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1月</td>
+                            <td>3,200</td>
+                            <td>256</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr>
+                            <td>2月</td>
+                            <td>2,850</td>
+                            <td>228</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr>
+                            <td>3月</td>
+                            <td>3,600</td>
+                            <td>306</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr>
+                            <td>4月</td>
+                            <td>3,450</td>
+                            <td>296</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr>
+                            <td>5月</td>
+                            <td>3,800</td>
+                            <td>342</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr>
+                            <td>6月</td>
+                            <td>4,100</td>
+                            <td>385</td>
+                            <td>(公式)</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <p><strong>任務要求：</strong></p>
+                <ul>
+                    <li>計算客單價公式 (D2)：<span class="formula">=C2*10000/B2</span>（營業額萬元轉換為元後除以來客數）</li>
+                    <li>建立組合圖表，將「來客數」和「營業額」設為直條圖（主要座標軸）</li>
+                    <li>將「客單價」設為折線圖（次要座標軸）</li>
+                    <li>分析：觀察來客數、營業額與客單價之間的關係</li>
+                </ul>
+                
+                <p><strong>圖表設計要點：</strong></p>
+                <ul>
+                    <li>左側 Y 軸：來客數（人）和營業額（萬元）</li>
+                    <li>右側 Y 軸：客單價（元）</li>
+                    <li>使用不同顏色區分來客數與營業額的直條</li>
+                    <li>客單價折線使用醒目顏色並顯示數據標籤</li>
+                </ul>
+            </div>
+            
+            <div class="question">
+                <h3>練習題 2：製造業不良原因柏拉圖分析</h3>
+                <p><strong>任務描述：</strong></p>
+                <p>某塑膠射出成型工廠統計了一個月的不良品數據，請建立柏拉圖：</p>
+                
+                <table class="example-table" style="margin: 20px 0; background: white;">
+                    <thead>
+                        <tr>
+                            <th>不良原因</th>
+                            <th>不良數量</th>
+                            <th>百分比</th>
+                            <th>累積百分比</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>尺寸超差</td>
+                            <td>385</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr>
+                            <td>表面氣泡</td>
+                            <td>268</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr>
+                            <td>色差</td>
+                            <td>142</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr>
+                            <td>毛邊</td>
+                            <td>98</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr>
+                            <td>變形</td>
+                            <td>76</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr>
+                            <td>其他</td>
+                            <td>54</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr style="background: #fff3cd; font-weight: bold;">
+                            <td>總計</td>
+                            <td>(公式)</td>
+                            <td>100.0%</td>
+                            <td>-</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <p><strong>任務要求：</strong></p>
+                <ul>
+                    <li>先將數據按「不良數量」由大到小排序</li>
+                    <li>計算總計 (B8)：<span class="formula">=SUM(B2:B7)</span></li>
+                    <li>計算百分比 (C2)：<span class="formula">=B2/$B$8</span></li>
+                    <li>計算累積百分比 (D2)：<span class="formula">=SUM($C$2:C2)</span></li>
+                    <li>建立柏拉圖，直條圖顯示不良數量，折線圖顯示累積百分比</li>
+                    <li>在圖表上添加 80% 水平參考線</li>
+                </ul>
+                
+                <p><strong>分析問題：</strong></p>
+                <ul>
+                    <li>前幾項不良原因佔了總不良數的 80%？</li>
+                    <li>應優先改善哪些製程問題？</li>
+                    <li>如果要將不良率降低 50%，應該聚焦在哪些項目？</li>
+                </ul>
+            </div>
+            
+            <div class="question">
+                <h3>練習題 3：企業財務績效儀表板（進階綜合）</h3>
+                <p><strong>任務描述：</strong></p>
+                <p>某科技公司需要建立年度財務績效儀表板，整合多個關鍵指標：</p>
+                
+                <table class="example-table" style="margin: 20px 0; background: white;">
+                    <thead>
+                        <tr>
+                            <th>季度</th>
+                            <th>營收（億元）</th>
+                            <th>營業成本（億元）</th>
+                            <th>毛利（億元）</th>
+                            <th>毛利率（%）</th>
+                            <th>研發費用率（%）</th>
+                            <th>員工人數</th>
+                            <th>人均產值（萬元）</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Q1</td>
+                            <td>12.5</td>
+                            <td>7.8</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>8.5%</td>
+                            <td>520</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr>
+                            <td>Q2</td>
+                            <td>14.2</td>
+                            <td>8.5</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>9.2%</td>
+                            <td>548</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr>
+                            <td>Q3</td>
+                            <td>15.8</td>
+                            <td>9.2</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>8.8%</td>
+                            <td>565</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr>
+                            <td>Q4</td>
+                            <td>16.5</td>
+                            <td>9.6</td>
+                            <td>(公式)</td>
+                            <td>(公式)</td>
+                            <td>9.5%</td>
+                            <td>580</td>
+                            <td>(公式)</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <p><strong>公式提示：</strong></p>
+                <ul>
+                    <li>毛利 (D2)：<span class="formula">=B2-C2</span></li>
+                    <li>毛利率 (E2)：<span class="formula">=D2/B2</span>（設為百分比格式）</li>
+                    <li>人均產值 (H2)：<span class="formula">=B2*10000/G2</span>（億元轉萬元後除以員工人數）</li>
+                </ul>
+                
+                <p><strong>圖表任務：</strong></p>
+                <ul>
+                    <li><strong>圖表 1：</strong>建立「營收與毛利率」雙軸圖
+                        <br>→ 營收用直條圖（主要座標軸），毛利率用折線圖（次要座標軸）</li>
+                    <li><strong>圖表 2：</strong>建立「員工人數與人均產值」雙軸圖
+                        <br>→ 員工人數用區域圖（主要座標軸），人均產值用折線圖（次要座標軸）</li>
+                    <li><strong>圖表 3：</strong>建立堆疊直條圖顯示「營收組成」
+                        <br>→ 將營業成本和毛利堆疊顯示，折線圖顯示研發費用率（次要座標軸）</li>
+                </ul>
+                
+                <p><strong>💡 進階挑戰：</strong></p>
+                <ul>
+                    <li>在所有圖表中使用一致的色彩方案</li>
+                    <li>添加趨勢線分析毛利率變化</li>
+                    <li>計算年度平均值並在圖表上標示參考線</li>
+                    <li>思考：人均產值上升但員工人數也在增加，這對公司意味著什麼？</li>
+                    <li>分析：研發費用率與毛利率之間是否有關聯性？</li>
+                </ul>
+                
+                <p><strong>📊 商業洞察：</strong></p>
+                <p>這個練習整合了雙座標軸圖表的多種應用場景，完成後你將能夠：</p>
+                <ul>
+                    <li>靈活運用不同圖表類型組合來呈現複雜的商業數據</li>
+                    <li>理解如何選擇適當的座標軸配置來突顯數據關係</li>
+                    <li>掌握財務儀表板的設計原則與最佳實踐</li>
+                    <li>培養從數據視覺化中發現商業洞察的能力</li>
+                </ul>
+            </div>
+            
+            <div style="margin-top: 30px; padding: 20px; background: rgba(255,255,255,0.2); border-radius: 8px;">
+                <h3 style="color: white; margin-top: 25px; margin-bottom: 15px;">🎓 學習重點回顧</h3>
+                <ul>
+                    <li><strong>雙座標軸圖表：</strong>用於比較數值範圍差異大的兩組數據，讓不同單位的指標能在同一圖表中清晰呈現</li>
+                    <li><strong>柏拉圖：</strong>結合 80/20 法則的品質管理工具，快速識別「關鍵少數」問題</li>
+                    <li><strong>複合圖表：</strong>靈活組合不同圖表類型，最常見的是柱狀圖配合折線圖</li>
+                    <li><strong>座標軸選擇：</strong>主要座標軸通常用於數量指標，次要座標軸用於比率或趨勢指標</li>
+                    <li><strong>累積百分比：</strong>柏拉圖分析的核心，使用 SUM($C$2:C2) 混合參照計算</li>
+                    <li><strong>圖表美化：</strong>適當的色彩、標籤和參考線能大幅提升圖表的專業度和可讀性</li>
+                    <li><strong>商業應用：</strong>進階圖表廣泛應用於品質管理、財務分析、經濟指標追蹤等領域</li>
+                </ul>
+                
+                <h3 style="color: white; margin-top: 25px; margin-bottom: 15px;">🚀 下一步學習建議</h3>
+                <ul>
+                    <li>探索更多 Excel 圖表類型：瀑布圖、漏斗圖、旭日圖等</li>
+                    <li>學習使用樞紐分析圖表進行動態數據分析</li>
+                    <li>掌握圖表範本的建立與重複使用</li>
+                    <li>研究數據視覺化的設計原則與最佳實踐</li>
+                    <li>練習將複雜數據轉化為清晰、有洞察力的視覺呈現</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

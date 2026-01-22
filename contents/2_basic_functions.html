@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>基礎函數與數據統計</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: "Microsoft JhengHei", "微軟正黑體", Arial, sans-serif;
+            line-height: 1.8;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
+        }
+        
+        .section h2 {
+            color: #1e3c72;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section h3 {
+            color: #2a5298;
+            margin: 20px 0 15px 0;
+            font-size: 1.3em;
+        }
+        
+        .icon {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+            background: #667eea;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .interface-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .interface-item {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        
+        .interface-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+        
+        .interface-item h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .example-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .example-table th {
+            background: #667eea;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+        }
+        
+        .example-table td {
+            padding: 12px;
+            border: 1px solid #ddd;
+			color: black;
+        }
+        
+        .example-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        
+        .example-table tr:hover {
+            background: #e9ecef;
+        }
+        
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: "Consolas", "Monaco", monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+			white-space: pre; 
+        }
+        
+        .formula {
+            background: #fff3cd;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: "Consolas", "Monaco", monospace;
+            color: #856404;
+            font-weight: bold;
+        }
+        
+        .tip-box {
+            background: #d1ecf1;
+            border-left: 4px solid #0c5460;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+			color: black;
+        }
+
+        
+        .tip-box strong {
+            color: #0c5460;
+        }
+        
+        .warning-box {
+            background: #fff3cd;
+            border-left: 4px solid #856404;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+			color: black;
+        }
+        
+        .warning-box strong {
+            color: #856404;
+        }
+        
+        .practice-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            margin-top: 40px;
+            border-radius: 10px;
+        }
+        
+        .practice-section h2 {
+            color: white;
+            margin-bottom: 30px;
+        }
+        
+        .question {
+            background: rgba(255,255,255,0.1);
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border-left: 5px solid white;
+        }
+        
+        .question h3 {
+            color: white;
+            margin-bottom: 15px;
+        }
+        
+        .question ul {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+        
+        .question li {
+            margin: 8px 0;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            margin: 20px 0;
+        }
+        
+        .comparison-table td {
+            padding: 15px;
+            vertical-align: top;
+        }
+        
+        .comparison-table td:first-child {
+            background: #e7f3ff;
+            border-right: 3px solid #667eea;
+            font-weight: bold;
+        }
+        
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        
+        ul, ol {
+            margin-left: 25px;
+            margin-top: 10px;
+        }
+        
+        li {
+            margin: 8px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔢 基礎函數與數據統計</h1>
+            <p>學習 SUM、AVERAGE、MAX 等常用統計函數</p>
+        </div>
+        
+        <div class="content">
+            <div class="section">
+                <h2><span class="icon">1</span>函數的結構與輸入</h2>
+                
+                <h3>什麼是函數 (Function)?</h3>
+                <p><strong>函數</strong>是 Excel 預先定義的公式，能夠接受一個或多個輸入值 (稱為<strong>引數/Argument</strong>)，並執行特定運算後傳回結果。使用函數可以大幅簡化複雜的計算。</p>
+                
+                <div class="tip-box">
+                    <strong>💡 函數的基本結構：</strong><br>
+                    所有函數都以等號 <span class="formula">=</span> 開頭，接著是<strong>函數名稱</strong>，引數則以<strong>括號</strong> <span class="formula">()</span> 包裹，並用<strong>逗號</strong> <span class="formula">,</span> 分隔。
+                </div>
+                
+                <div class="code-block">
+=函數名稱(引數1, 引數2, ...)
+
+例如：=SUM(A1, B5, C10:C20)
+                </div>
+                
+                <h3>函數輸入技巧</h3>
+                <ul>
+                    <li><strong>自動完成：</strong>在儲存格中輸入 <span class="formula">=</span> 和函數開頭字母（如 <span class="formula">=SU</span>），Excel 會自動顯示建議清單，按 <span class="formula">Tab</span> 鍵快速選取。</li>
+                    <li><strong>函數精靈：</strong>點擊資料編輯列旁的 <span class="formula">fx</span> 圖示，可開啟「插入函數」對話框，有助於瞭解函數的引數和用途。</li>
+                    <li><strong>滑鼠拖曳選取：</strong>輸入引數時，可以直接用滑鼠拖曳選取連續或不連續的儲存格範圍。</li>
+                </ul>
+            </div>
+            
+            <div class="section">
+                <h2><span class="icon">2</span>常用統計函數：總和、平均、極值</h2>
+                
+                <p>這組函數在數據分析中最常使用，能快速掌握數據集的概況。</p>
+                
+                <table class="example-table">
+                    <thead>
+                        <tr>
+                            <th>函數名稱</th>
+                            <th>用途說明</th>
+                            <th>語法範例</th>
+                            <th>結果</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="formula">SUM</span></td>
+                            <td>計算所選儲存格或範圍中<strong>數值</strong>的總和。</td>
+                            <td><span class="formula">=SUM(A1:A5)</span></td>
+                            <td>計算 A1 到 A5 儲存格的數字總和。</td>
+                        </tr>
+                        <tr>
+                            <td><span class="formula">AVERAGE</span></td>
+                            <td>計算所選儲存格或範圍中<strong>數值</strong>的算術平均數。</td>
+                            <td><span class="formula">=AVERAGE(B1, B5)</span></td>
+                            <td>計算 B1 和 B5 兩個儲存格的平均值。</td>
+                        </tr>
+                        <tr>
+                            <td><span class="formula">MAX</span></td>
+                            <td>找出所選儲存格或範圍中<strong>最大</strong>的數值。</td>
+                            <td><span class="formula">=MAX(C1:C10)</span></td>
+                            <td>找出 C1 到 C10 範圍中的最大值。</td>
+                        </tr>
+                        <tr>
+                            <td><span class="formula">MIN</span></td>
+                            <td>找出所選儲存格或範圍中<strong>最小</strong>的數值。</td>
+                            <td><span class="formula">=MIN(D:D)</span></td>
+                            <td>找出 D 欄所有儲存格中的最小值。</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="tip-box">
+                    <strong>💡 自動求和 (AutoSum)：</strong><br>
+                    選取欲計算數值下方的空白儲存格，點擊「常用」或「公式」分頁中的「自動求和」按鈕 <span class="highlight">Σ</span>，Excel 會自動判斷計算範圍並輸入 <span class="formula">=SUM(...)</span> 公式。
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2><span class="icon">3</span>計數函數：計算儲存格數量</h2>
+                
+                <p>計數函數用於統計特定範圍內包含不同類型資料的儲存格數量。</p>
+                
+                <table class="comparison-table">
+                    <tr>
+                        <td><span class="formula">COUNT</span></td>
+                        <td>
+                            <strong>計算包含「數值」的儲存格數量。</strong><br>
+                            - <span class="highlight">數值</span>、<span class="highlight">日期/時間</span>、<span class="highlight">公式結果為數值</span>的儲存格會被計數。<br>
+                            - <span class="highlight">文字</span>、<span class="highlight">空白儲存格</span>會被忽略。
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="formula">COUNTA</span></td>
+                        <td>
+                            <strong>計算包含「非空白值」的儲存格數量。</strong><br>
+                            - <span class="highlight">數值</span>、<span class="highlight">文字</span>、<span class="highlight">錯誤值</span>、<span class="highlight">公式結果為空白文字 ("")</span> 的儲存格都會被計數。<br>
+                            - 僅<span class="highlight">完全空白</span>的儲存格會被忽略。
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="formula">COUNTBLANK</span></td>
+                        <td>
+                            <strong>計算所選範圍中「空白」儲存格的數量。</strong><br>
+                            - 僅計算沒有任何內容的儲存格。
+                        </td>
+                    </tr>
+                </table>
+                
+                <div class="code-block">
+假設 A1="Apple", A2=10, A3=" ", A4=空白
+
+=COUNT(A1:A4)  →  結果：1 (只計算 A2 的數值 10)
+=COUNTA(A1:A4) →  結果：3 (計算 A1, A2, A3 的非空白值)
+=COUNTBLANK(A1:A4) →  結果：1 (只計算 A4 的空白儲存格)
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2><span class="icon">4</span>實務範例：生產線日均產量與極值分析</h2>
+                
+                <p>以下是某產品線一週的每日生產量數據：</p>
+                
+                <table class="example-table">
+                    <thead>
+                        <tr>
+                            <th>日期 (A 欄)</th>
+                            <th>當日產量 (B 欄)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>2024/10/01</td>
+                            <td>12,500</td>
+                        </tr>
+                        <tr>
+                            <td>2024/10/02</td>
+                            <td>13,200</td>
+                        </tr>
+                        <tr>
+                            <td>2024/10/03</td>
+                            <td>11,800</td>
+                        </tr>
+                        <tr>
+                            <td>2024/10/04</td>
+                            <td>14,100</td>
+                        </tr>
+                        <tr>
+                            <td>2024/10/05</td>
+                            <td>13,000</td>
+                        </tr>
+                        <tr>
+                            <td>2024/10/06</td>
+                            <td>停線維修</td>
+                        </tr>
+                        <tr>
+                            <td>2024/10/07</td>
+                            <td>12,800</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h3>數據分析應用</h3>
+                <ul>
+                    <li><strong>計算總產量 (C2)：</strong><span class="formula">=SUM(B2:B8)</span>
+                        <br>結果：77,400 (會忽略 B7 的文字「停線維修」)
+                    </li>
+                    <li><strong>計算生產天數 (C3)：</strong><span class="formula">=COUNT(B2:B8)</span>
+                        <br>結果：6 (只計算有數值的天數)
+                    </li>
+                    <li><strong>計算日均產量 (C4)：</strong><span class="formula">=AVERAGE(B2:B8)</span>
+                        <br>結果：12,900 (總和 77,400 / 天數 6)
+                    </li>
+                    <li><strong>找出最高產量 (C5)：</strong><span class="formula">=MAX(B2:B8)</span>
+                        <br>結果：14,100
+                    </li>
+                    <li><strong>找出最低產量 (C6)：</strong><span class="formula">=MIN(B2:B8)</span>
+                        <br>結果：11,800
+                    </li>
+                    <li><strong>總記錄筆數 (C7)：</strong><span class="formula">=COUNTA(A2:A8)</span>
+                        <br>結果：7 (計算所有非空白的記錄筆數)
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="section">
+                <h2><span class="icon">5</span>實務範例：財務交易數據分析</h2>
+                
+                <p>以下是某月度的客戶交易記錄：</p>
+                
+                <table class="example-table">
+                    <thead>
+                        <tr>
+                            <th>交易編號 (A 欄)</th>
+                            <th>交易金額 (B 欄)</th>
+                            <th>備註 (C 欄)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>T-001</td>
+                            <td>15,000</td>
+                            <td>已收款</td>
+                        </tr>
+                        <tr>
+                            <td>T-002</td>
+                            <td>8,500</td>
+                            <td>已收款</td>
+                        </tr>
+                        <tr>
+                            <td>T-003</td>
+                            <td>-500</td>
+                            <td>退款</td>
+                        </tr>
+                        <tr>
+                            <td>T-004</td>
+                            <td>22,000</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>T-005</td>
+                            <td>14,000</td>
+                            <td>已收款</td>
+                        </tr>
+                        <tr>
+                            <td>T-006</td>
+                            <td>-</td>
+                            <td>交易取消</td>
+                        </tr>
+                        <tr>
+                            <td>T-007</td>
+                            <td>18,000</td>
+                            <td>已收款</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h3>財務數據應用</h3>
+                <ul>
+                    <li><strong>總交易收入：</strong><span class="formula">=SUM(B2:B8)</span>
+                        <br>結果：77,000 (交易取消的 <span class="formula">-</span> 會被忽略)
+                    </li>
+                    <li><strong>平均交易金額：</strong><span class="formula">=AVERAGE(B2:B8)</span>
+                        <br>結果：12,833.33 (總和除以 6 筆有數值的交易)
+                    </li>
+                    <li><strong>總交易筆數 (含取消)：</strong><span class="formula">=COUNTA(A2:A8)</span>
+                        <br>結果：7 (所有交易編號都被計數)
+                    </li>
+                    <li><strong>備註為空的筆數：</strong><span class="formula">=COUNTBLANK(C2:C8)</span>
+                        <br>結果：1 (T-004 備註為空)
+                    </li>
+                    <li><strong>最高單筆交易金額：</strong><span class="formula">=MAX(B2:B8)</span>
+                        <br>結果：22,000
+                    </li>
+                    <li><strong>最小單筆交易金額（退款）：</strong><span class="formula">=MIN(B2:B8)</span>
+                        <br>結果：-500
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="practice-section">
+            <h2>📝 課後練習題</h2>
+            
+            <div class="question">
+                <h3>練習題 1：員工薪資統計表</h3>
+                <p><strong>任務描述：</strong></p>
+                <p>請根據下表，計算出員工的薪資統計數據：</p>
+                
+                <table class="example-table" style="margin: 20px 0; background: white;">
+                    <thead>
+                        <tr>
+                            <th>員工編號</th>
+                            <th>部門</th>
+                            <th>底薪 (A)</th>
+                            <th>績效獎金 (B)</th>
+                            <th>總薪資 (C=A+B)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>E001</td><td>業務</td><td>45,000</td><td>8,000</td><td>(公式)</td></tr>
+                        <tr><td>E002</td><td>研發</td><td>58,000</td><td>12,500</td><td>(公式)</td></tr>
+                        <tr><td>E003</td><td>行政</td><td>38,000</td><td>5,000</td><td>(公式)</td></tr>
+                        <tr><td>E004</td><td>研發</td><td>65,000</td><td>15,000</td><td>(公式)</td></tr>
+                        <tr><td>E005</td><td>業務</td><td>42,000</td><td>10,000</td><td>(公式)</td></tr>
+                    </tbody>
+                </table>
+                
+                <p><strong>統計項目：</strong></p>
+                <ol>
+                    <li>計算總薪資 (E2)：<span class="formula">=C2+D2</span>，並向下複製。</li>
+                    <li>計算<strong>公司總薪資支出</strong> (總薪資欄的總和)：<span class="formula">=SUM(...)</span></li>
+                    <li>計算<strong>平均底薪</strong>：<span class="formula">=AVERAGE(...)</span></li>
+                    <li>計算<strong>最高</strong>的總薪資：<span class="formula">=MAX(...)</span></li>
+                    <li>計算<strong>最低</strong>的績效獎金：<span class="formula">=MIN(...)</span></li>
+                    <li>計算<strong>員工總人數</strong>：<span class="formula">=COUNTA(...)</span> (可選員工編號欄)</li>
+                    <li>計算<strong>底薪超過 50,000 元</strong>的人數 (進階：使用 <span class="formula">COUNTIF</span> 函數，下週課程會教，先試著手動計算)</li>
+                </ol>
+            </div>
+            
+            <div class="question">
+                <h3>練習題 2：網站流量數據分析</h3>
+                <p><strong>任務描述：</strong></p>
+                <p>請分析以下網站流量數據，計算關鍵指標：</p>
+                
+                <table class="example-table" style="margin: 20px 0; background: white;">
+                    <thead>
+                        <tr>
+                            <th>日期 (A 欄)</th>
+                            <th>訪客人數 (B 欄)</th>
+                            <th>點擊率 (C 欄)</th>
+                            <th>轉換率 (D 欄)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>2024/11/01</td><td>8,500</td><td>2.1%</td><td>0.5%</td></tr>
+                        <tr><td>2024/11/02</td><td>9,200</td><td>2.3%</td><td>0.7%</td></tr>
+                        <tr><td>2024/11/03</td><td>7,800</td><td>1.9%</td><td>0.4%</td></tr>
+                        <tr><td>2024/11/04</td><td>10,500</td><td>2.5%</td><td>0.8%</td></tr>
+                        <tr><td>2024/11/05</td><td>6,900</td><td>1.8%</td><td>0.3%</td></tr>
+                        <tr><td>2024/11/06</td><td>休假</td><td>-</td><td>-</td></tr>
+                        <tr><td>2024/11/07</td><td>8,800</td><td>2.2%</td><td>0.6%</td></tr>
+                    </tbody>
+                </table>
+                
+                <p><strong>分析計算：</strong></p>
+                <ol>
+                    <li>計算<strong>總訪客人數</strong>：<span class="formula">=SUM(...)</span></li>
+                    <li>計算<strong>平均每日訪客人數</strong>：<span class="formula">=AVERAGE(...)</span></li>
+                    <li>找出<strong>最高訪客人數</strong>的一天：<span class="formula">=MAX(...)</span></li>
+                    <li>找出<strong>最低點擊率</strong>：<span class="formula">=MIN(...)</span></li>
+                    <li>計算<strong>有數據紀錄</strong>的天數：<span class="formula">=COUNT(...)</span> (計算 B 欄)</li>
+                    <li>計算<strong>總共紀錄</strong>的筆數：<span class="formula">=COUNTA(...)</span> (計算 A 欄)</li>
+                </ol>
+                
+                <div class="warning-box">
+                    <strong>⚠️ 注意：</strong><span class="formula">AVERAGE</span> 和 <span class="formula">SUM</span> 函數在計算時，會<strong>忽略</strong>儲存格中的「文字」或「空白」，因此「休假」那天的數據不會納入計算，這通常符合平均值的商業邏輯 (只算有工作的日子)。
+                </div>
+            </div>
+            
+            <div class="question">
+                <h3>練習題 3：多產品銷售極值報告</h3>
+                <p><strong>任務描述：</strong></p>
+                <p>某零售商需要分析三個產品的銷售數據，找出極端值。</p>
+                
+                <table class="example-table" style="margin: 20px 0; background: white;">
+                    <thead>
+                        <tr>
+                            <th>月份</th>
+                            <th>產品 A 銷量</th>
+                            <th>產品 B 銷量</th>
+                            <th>產品 C 銷量</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>一月</td><td>1,200</td><td>850</td><td>2,500</td></tr>
+                        <tr><td>二月</td><td>1,500</td><td>920</td><td>2,800</td></tr>
+                        <tr><td>三月</td><td>1,100</td><td>1,100</td><td>2,100</td></tr>
+                        <tr><td>四月</td><td>1,800</td><td>780</td><td>3,100</td></tr>
+                    </tbody>
+                </table>
+                
+                <p><strong>分析計算：</strong></p>
+                <ul>
+                    <li>計算<strong>產品 A 的總銷量</strong>：<span class="formula">=SUM(...)</span></li>
+                    <li>計算<strong>產品 B 的月平均銷量</strong>：<span class="formula">=AVERAGE(...)</span></li>
+                    <li>找出<strong>所有產品中單月最高銷量</strong> (可選取整個 B2:D5 範圍)：<span class="formula">=MAX(...)</span></li>
+                    <li>找出<strong>所有產品中單月最低銷量</strong> (可選取整個 B2:D5 範圍)：<span class="formula">=MIN(...)</span></li>
+                    <li><strong>💡 進階挑戰：</strong>計算產品 C 銷量與產品 A 銷量之間的<strong>差異平均值</strong>：<span class="formula">=AVERAGE(D2-B2, D3-B3, ...)</span></li>
+                </ul>
+            </div>
+			
+			<div class="question">
+				<h3>練習題 4：跨部門專案時程與資源分析</h3>
+				<p><strong>任務描述：</strong></p>
+				<p>你負責管理一個跨部門的專案，請根據下表的部門工時紀錄，分析專案資源的投入情況。</p>
+				
+				<table class="example-table" style="margin: 20px 0; background: white;">
+					<thead>
+						<tr>
+							<th>階段 (A 欄)</th>
+							<th>設計部工時 (B 欄)</th>
+							<th>開發部工時 (C 欄)</th>
+							<th>測試部工時 (D 欄)</th>
+							<th>備註 (E 欄)</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr><td>規劃</td><td>80</td><td>50</td><td>20</td><td>文件審核</td></tr>
+						<tr><td>執行 1</td><td>120</td><td>200</td><td>80</td><td></td></tr>
+						<tr><td>執行 2</td><td>60</td><td>150</td><td>100</td><td></td></tr>
+						<tr><td>測試</td><td>10</td><td>50</td><td>150</td><td>功能驗證</td></tr>
+						<tr><td>上線</td><td>5</td><td>15</td><td>10</td><td></td></tr>
+						<tr><td>總計</td><td>(公式)</td><td>(公式)</td><td>(公式)</td><td></td></tr>
+						<tr><td>平均</td><td>(公式)</td><td>(公式)</td><td>(公式)</td><td></td></tr>
+					</tbody>
+				</table>
+				
+				<p><strong>分析計算：</strong></p>
+				<ol>
+					<li>計算每個部門的<strong>總投入工時</strong> (總計列)：<span class="formula">=SUM(...)</span></li>
+					<li>計算每個部門在各階段的<strong>平均工時</strong> (平均列)：<span class="formula">=AVERAGE(...)</span></li>
+					<li>計算專案<strong>總工時</strong> (所有部門總投入的總和)：<span class="formula">=SUM(B7:D7)</span></li>
+					<li>找出單一階段中，<strong>最高工時</strong>的部門投入量：<span class="formula">=MAX(B2:D6)</span> (可選取整個工時範圍)</li>
+					<li>找出單一階段中，<strong>最低工時</strong>的部門投入量：<span class="formula">=MIN(B2:D6)</span></li>
+					<li>計算有<strong>備註說明</strong>的階段數量：<span class="formula">=COUNTA(...)</span> (選取 E 欄的備註範圍)</li>
+					<li>計算<strong>沒有備註說明</strong>的階段數量：<span class="formula">=COUNTBLANK(...)</span> (選取 E 欄的備註範圍)</li>
+				</ol>
+			</div>
+			
+			<div class="question">
+                <h3>練習題 5：新產品上市損益分析</h3>
+                <p><strong>任務描述：</strong></p>
+                <p>某公司計劃推出新產品，需要分析其銷售表現與成本結構。請利用下方數據表進行計算和分析。</p>
+                
+                <table class="example-table" style="margin: 20px 0; background: white;">
+                    <thead>
+                        <tr>
+                            <th>月份 (A 欄)</th>
+                            <th>銷售數量 (B 欄)</th>
+                            <th>銷售單價 (C 欄)</th>
+                            <th>變動成本 (D 欄)</th>
+                            <th>備註 (E 欄)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>第一月</td><td>12,000</td><td>50</td><td>25</td><td></td></tr>
+                        <tr><td>第二月</td><td>15,500</td><td>50</td><td>25</td><td></td></tr>
+                        <tr><td>第三月</td><td>18,000</td><td>52</td><td>26</td><td>單價/成本上調</td></tr>
+                        <tr><td>第四月</td><td>22,000</td><td>52</td><td>26</td><td></td></tr>
+                        <tr><td>第五月</td><td>16,500</td><td>55</td><td>27</td><td>新促銷活動</td></tr>
+                        <tr><td>第六月</td><td>無數據</td><td>55</td><td>27</td><td>市場調研中</td></tr>
+                    </tbody>
+                </table>
+                
+				<div class="tip-box">
+					<strong>💡 專有名詞解釋：</strong>
+					<ul>
+						<li>變動成本 (Variable Cost)： 隨產量或銷量變化而變動的成本，例如原料費、直接人工費。</li>
+						<li>固定成本 (Fixed Cost)： 不隨產量或銷量變化而變動的成本，例如租金、設備折舊。</li>
+						<li>邊際貢獻 (Contribution Margin)： 銷售收入扣除變動成本後的餘額，用於彌補固定成本並產生利潤。公式為：銷售收入 - 變動成本。</li>
+						<li>營業利益 (Operating Income)： 邊際貢獻扣除固定成本後的利潤。公式為：邊際貢獻 - 固定成本。</li>
+					</ul>
+				</div>
+
+                <p style="margin-top: 15px;">已知條件：<br>
+                固定成本 (F1 儲存格)： 50,000 元/月</p>
+                
+                <p><strong>計算目標欄位：</strong></p>
+                <ul>
+                    <li>銷售收入 (F 欄)：<span class="formula">=B欄 * C欄</span></li>
+                    <li>邊際貢獻 (G 欄)：<span class="formula">=B欄 * (C欄 - D欄)</span></li>
+                    <li>營業利益 (H 欄)：<span class="formula">=邊際貢獻 - $F$1</span> (注意要使用絕對參照 <span class="formula">$F$1</span>)</li>
+                </ul>
+                
+                <p><strong>統計與分析：</strong></p>
+                <ol>
+                    <li>計算<strong>總銷售數量</strong> (忽略無數據的月份)：<span class="formula">=SUM(B2:B7)</span></li>
+                    <li>計算有紀錄月份的<strong>平均銷售單價</strong>：<span class="formula">=AVERAGE(C2:C7)</span></li>
+                    <li>找出<strong>最高營業利益</strong>的月份數值：<span class="formula">=MAX(H2:H7)</span></li>
+                    <li>找出<strong>最低營業利益</strong>的月份數值：<span class="formula">=MIN(H2:H7)</span></li>
+                    <li>計算有<strong>銷售數據 (非文字/空白)</strong> 的月份數量：<span class="formula">=COUNT(B2:B7)</span></li>
+                    <li>計算所有交易紀錄 (非空白) 的總筆數：<span class="formula">=COUNTA(A2:A7)</span></li>
+                </ol>
+            </div>
+            
+			
+			<div class="question">
+				<h3>練習題 6：倉儲庫存與補貨分析</h3>
+				<p><strong>任務描述：</strong></p>
+				<p>一家零售公司需要分析各產品的庫存狀況，以規劃補貨量並評估銷售熱度。請根據下列庫存紀錄完成計算與分析。</p>
+
+				<table class="example-table" style="margin: 20px 0; background: white;">
+					<thead>
+						<tr>
+							<th>產品名稱 (A 欄)</th>
+							<th>目前庫存量 (B 欄)</th>
+							<th>安全庫存量 (C 欄)</th>
+							<th>月銷售量 (D 欄)</th>
+							<th>補貨建議 (E 欄)</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr><td>筆記型電腦</td><td>120</td><td>150</td><td>80</td><td>(公式)</td></tr>
+						<tr><td>藍牙耳機</td><td>300</td><td>200</td><td>260</td><td>(公式)</td></tr>
+						<tr><td>滑鼠</td><td>90</td><td>100</td><td>70</td><td>(公式)</td></tr>
+						<tr><td>鍵盤</td><td>110</td><td>130</td><td>95</td><td>(公式)</td></tr>
+						<tr><td>螢幕</td><td>50</td><td>80</td><td>40</td><td>(公式)</td></tr>
+						<tr><td>喇叭</td><td>缺貨</td><td>100</td><td>60</td><td>(公式)</td></tr>
+					</tbody>
+				</table>
+
+				<div class="tip-box">
+					<strong>💡 專有名詞解釋：</strong>
+					<ul>
+						<li><strong>安全庫存量 (Safety Stock)：</strong> 為避免缺貨風險所需保留的最低庫存。</li>
+						<li><strong>補貨量：</strong> 若目前庫存低於安全庫存，通常需補貨至至少「安全庫存 + 預計銷量」。</li>
+					</ul>
+				</div>
+
+				<p><strong>補貨建議欄位公式：</strong></p>
+				<ul>
+					<li>E 欄：<span class="formula">=IF(B欄 &lt; C欄, C欄 + D欄 - B欄, 0)</span></li>
+				</ul>
+
+				<p><strong>分析與計算：</strong></p>
+				<ol>
+					<li>計算<strong>目前庫存總量</strong>：<span class="formula">=SUM(B2:B7)</span>（會自動忽略「缺貨」文字）</li>
+					<li>計算<strong>安全庫存總量</strong>：<span class="formula">=SUM(C2:C7)</span></li>
+					<li>找出<strong>月銷售量最高</strong>的產品：<span class="formula">=MAX(D2:D7)</span></li>
+					<li>找出<strong>月銷售量最低</strong>的產品：<span class="formula">=MIN(D2:D7)</span></li>
+					<li>計算<strong>具有有效庫存數據</strong>的產品數量（排除「缺貨」文字）：<span class="formula">=COUNT(B2:B7)</span></li>
+					<li>計算<strong>所有產品記錄筆數</strong>：<span class="formula">=COUNTA(A2:A7)</span></li>
+					<li><strong>進階挑戰：</strong>計算庫存不足（B 欄 &lt; C 欄）的產品數量（可使用下週會教授的 <span class="formula">COUNTIF</span>）。</li>
+				</ol>
+			</div>
+
+			<div class="question">
+				<h3>練習題 7：行銷活動成效評估</h3>
+				<p><strong>任務描述：</strong></p>
+				<p>某公司在一個月內進行了多場行銷活動（包括線上與線下），希望分析各活動的效益，作為下次活動預算配置的依據。請使用下列表格的數據進行計算與分析。</p>
+
+				<table class="example-table" style="margin: 20px 0; background: white;">
+					<thead>
+						<tr>
+							<th>活動名稱 (A 欄)</th>
+							<th>曝光人數 (B 欄)</th>
+							<th>參與人數 (C 欄)</th>
+							<th>活動成本 (D 欄)</th>
+							<th>轉換訂單數 (E 欄)</th>
+							<th>備註 (F 欄)</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr><td>線上廣告 A</td><td>50,000</td><td>2,300</td><td>15,000</td><td>180</td><td></td></tr>
+						<tr><td>線上廣告 B</td><td>30,000</td><td>1,200</td><td>8,000</td><td>75</td><td></td></tr>
+						<tr><td>電商合作活動</td><td>65,000</td><td>3,800</td><td>20,000</td><td>320</td><td>流量導入成效佳</td></tr>
+						<tr><td>門市快閃活動</td><td>12,000</td><td>950</td><td>10,000</td><td>110</td><td></td></tr>
+						<tr><td>社群合作貼文</td><td>25,000</td><td>1,650</td><td>5,000</td><td>95</td><td></td></tr>
+						<tr><td>特殊活動</td><td>無數據</td><td>500</td><td>12,000</td><td>40</td><td>無曝光紀錄</td></tr>
+					</tbody>
+				</table>
+
+				<div class="tip-box">
+					<strong>💡 專有名詞解釋：</strong>
+					<ul>
+						<li><strong>轉換率 (Conversion Rate)：</strong> 活動參與者中成功下單者的比例。可用 <span class="formula">=E 欄 / C 欄</span> 計算。</li>
+						<li><strong>CPC (Cost per Conversion)：</strong> 每筆成功訂單的成本，計算公式：<span class="formula">=活動成本 ÷ 訂單數</span>。</li>
+						<li><strong>曝光人數：</strong> 看過活動素材或廣告的人數，常用於評估活動觸及度。</li>
+					</ul>
+				</div>
+
+				<p><strong>分析欄位（需新增兩欄）：</strong></p>
+				<ul>
+					<li><strong>轉換率 (G 欄)：</strong><span class="formula">=E欄 / C欄</span></li>
+					<li><strong>CPC (H 欄)：</strong><span class="formula">=D欄 / E欄</span></li>
+				</ul>
+
+				<p><strong>分析與計算：</strong></p>
+				<ol>
+					<li>計算所有活動的<strong>總曝光人數</strong>（忽略文字「無數據」）：<span class="formula">=SUM(B2:B7)</span></li>
+					<li>計算所有活動的<strong>總參與人數</strong>：<span class="formula">=SUM(C2:C7)</span></li>
+					<li>計算整體活動的<strong>總轉換訂單</strong>：<span class="formula">=SUM(E2:E7)</span></li>
+					<li>找出<strong>轉換率最高</strong>的活動：<span class="formula">=MAX(G2:G7)</span></li>
+					<li>找出<strong>轉換率最低</strong>的活動：<span class="formula">=MIN(G2:G7)</span></li>
+					<li>計算有效曝光數據的活動筆數：<span class="formula">=COUNT(B2:B7)</span></li>
+					<li>計算所有活動紀錄筆數：<span class="formula">=COUNTA(A2:A7)</span></li>
+					<li><strong>進階挑戰：</strong>找出 CPC 最低（成本效益最好的）活動：<span class="formula">=MIN(H2:H7)</span></li>
+				</ol>
+			</div>
+
+			<div class="question">
+				<h3>練習題 8：部門月度預算與支出分析</h3>
+				<p><strong>任務描述：</strong></p>
+				<p>公司財務部需要對各部門的月度預算與實際支出進行分析，以檢視成本控管成效。請根據下列部門資料表完成相關計算與分析。</p>
+
+				<table class="example-table" style="margin: 20px 0; background: white;">
+					<thead>
+						<tr>
+							<th>部門名稱 (A 欄)</th>
+							<th>預算金額 (B 欄)</th>
+							<th>實際支出 (C 欄)</th>
+							<th>差異金額 (D 欄 = B - C)</th>
+							<th>備註 (E 欄)</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr><td>研發部</td><td>300,000</td><td>280,000</td><td>(公式)</td><td></td></tr>
+						<tr><td>行銷部</td><td>200,000</td><td>220,000</td><td>(公式)</td><td>支出超預算</td></tr>
+						<tr><td>行政部</td><td>150,000</td><td>140,000</td><td>(公式)</td><td></td></tr>
+						<tr><td>業務部</td><td>250,000</td><td>260,000</td><td>(公式)</td><td>支出超預算</td></tr>
+						<tr><td>客服部</td><td>120,000</td><td>110,000</td><td>(公式)</td><td></td></tr>
+						<tr><td>法務部</td><td>100,000</td><td>無數據</td><td>(公式)</td><td>資料缺失</td></tr>
+					</tbody>
+				</table>
+
+				<div class="tip-box">
+					<strong>💡 專有名詞解釋：</strong>
+					<ul>
+						<li><strong>差異金額：</strong> 預算與實際支出之差，用來評估成本是否控制良好。計算公式：<span class="formula">=預算金額 - 實際支出</span></li>
+						<li><strong>超預算：</strong> 若差異金額為負數，代表支出超出原先計畫。</li>
+					</ul>
+				</div>
+
+				<p><strong>計算欄位公式：</strong></p>
+				<ul>
+					<li>D 欄 差異金額：<span class="formula">=B欄 - C欄</span></li>
+				</ul>
+
+				<p><strong>分析與計算：</strong></p>
+				<ol>
+					<li>計算所有部門的<strong>預算總額</strong>：<span class="formula">=SUM(B2:B7)</span></li>
+					<li>計算所有部門的<strong>實際支出總額</strong>（忽略「無數據」）：<span class="formula">=SUM(C2:C7)</span></li>
+					<li>計算<strong>最大差異金額</strong>（預算最充裕）：<span class="formula">=MAX(D2:D7)</span></li>
+					<li>計算<strong>最小差異金額</strong>（超支最嚴重）：<span class="formula">=MIN(D2:D7)</span></li>
+					<li>計算<strong>支出有紀錄</strong>的部門筆數（數值）：<span class="formula">=COUNT(C2:C7)</span></li>
+					<li>計算<strong>所有部門記錄數</strong>：<span class="formula">=COUNTA(A2:A7)</span></li>
+					<li><strong>進階挑戰：</strong>計算超出預算的部門總數（未來將使用 <span class="formula">COUNTIF</span> 函數）。</li>
+				</ol>
+			</div>
+
+			<div class="question">
+				<h3>練習題 9：醫院門診紀錄統計分析</h3>
+				<p><strong>任務描述：</strong></p>
+				<p>醫院的行政部門希望分析某週的門診數據，以了解各科室的看診量、平均等候時間與病患分布狀況。請依據下列表格進行計算與統計。</p>
+
+				<table class="example-table" style="margin: 20px 0; background: white;">
+					<thead>
+						<tr>
+							<th>日期 (A 欄)</th>
+							<th>科別 (B 欄)</th>
+							<th>看診人數 (C 欄)</th>
+							<th>平均等候時間(分鐘) (D 欄)</th>
+							<th>初診人數 (E 欄)</th>
+							<th>備註 (F 欄)</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr><td>2024/12/01</td><td>內科</td><td>120</td><td>35</td><td>40</td><td></td></tr>
+						<tr><td>2024/12/01</td><td>外科</td><td>80</td><td>50</td><td>25</td><td>高峰時段</td></tr>
+						<tr><td>2024/12/01</td><td>小兒科</td><td>150</td><td>45</td><td>70</td><td></td></tr>
+						<tr><td>2024/12/02</td><td>內科</td><td>100</td><td>30</td><td>30</td><td></td></tr>
+						<tr><td>2024/12/02</td><td>外科</td><td>90</td><td>55</td><td>28</td><td>人力不足</td></tr>
+						<tr><td>2024/12/02</td><td>小兒科</td><td>缺資料</td><td>40</td><td>60</td><td>系統異常</td></tr>
+					</tbody>
+				</table>
+
+				<div class="tip-box">
+					<strong>💡 專有名詞解釋：</strong>
+					<ul>
+						<li><strong>初診人數：</strong> 第一次來該科就診的病患，用於分析新進病患流量。</li>
+						<li><strong>等候時間：</strong> 病患從報到到看診的平均等待時間，醫療效率的重要指標。</li>
+					</ul>
+				</div>
+
+				<p><strong>分析與計算：</strong></p>
+				<ol>
+					<li>計算<strong>總看診人數</strong>（忽略文字「缺資料」）：  
+						<span class="formula">=SUM(C2:C7)</span>
+					</li>
+					<li>計算<strong>各科的平均等候時間</strong>（例如計算全部 D 欄）：  
+						<span class="formula">=AVERAGE(D2:D7)</span>
+					</li>
+					<li>找出<strong>最高看診人數</strong>的紀錄：  
+						<span class="formula">=MAX(C2:C7)</span>
+					</li>
+					<li>找出<strong>最低等候時間</strong>：  
+						<span class="formula">=MIN(D2:D7)</span>
+					</li>
+					<li>計算<strong>具有有效看診數據</strong>的筆數（只計算數值）：  
+						<span class="formula">=COUNT(C2:C7)</span>
+					</li>
+					<li>計算<strong>所有紀錄筆數（非空白）</strong>：  
+						<span class="formula">=COUNTA(A2:A7)</span>
+					</li>
+					<li><strong>進階挑戰：</strong>計算該週的<strong>初診比例</strong>（初診總人數 ÷ 總看診人數）。  
+						<br>可以使用：<span class="formula">=SUM(E2:E7) / SUM(C2:C7)</span>
+					</li>
+				</ol>
+			</div>
+
+			<div class="question">
+				<h3>練習題 10：物流配送效率與成本分析</h3>
+				<p><strong>任務描述：</strong></p>
+				<p>某物流公司希望檢視不同配送路線的效率與成本，以協助改善配送策略並降低總成本。請使用下列配送紀錄進行運算與分析。</p>
+
+				<table class="example-table" style="margin: 20px 0; background: white;">
+					<thead>
+						<tr>
+							<th>路線代碼 (A 欄)</th>
+							<th>配送距離 (公里) (B 欄)</th>
+							<th>配送時長 (小時) (C 欄)</th>
+							<th>油耗 (公升) (D 欄)</th>
+							<th>貨件數量 (E 欄)</th>
+							<th>司機評分 (F 欄)</th>
+							<th>備註 (G 欄)</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr><td>R-01</td><td>120</td><td>3.5</td><td>18</td><td>40</td><td>4.8</td><td></td></tr>
+						<tr><td>R-02</td><td>95</td><td>2.8</td><td>14</td><td>35</td><td>4.5</td><td></td></tr>
+						<tr><td>R-03</td><td>80</td><td>無數據</td><td>12</td><td>30</td><td>4.6</td><td>系統異常</td></tr>
+						<tr><td>R-04</td><td>150</td><td>4.2</td><td>20</td><td>45</td><td>4.9</td><td></td></tr>
+						<tr><td>R-05</td><td>65</td><td>2.0</td><td>9</td><td>28</td><td>4.3</td><td></td></tr>
+						<tr><td>R-06</td><td>無數據</td><td>1.5</td><td>8</td><td>26</td><td>4.1</td><td>缺距離紀錄</td></tr>
+					</tbody>
+				</table>
+
+				<div class="tip-box">
+					<strong>💡 專有名詞解釋：</strong>
+					<ul>
+						<li><strong>配送效率：</strong> 常用配送距離、耗時與貨件數量三者比較來判定配送表現。</li>
+						<li><strong>油耗：</strong> 每趟配送行程所消耗的燃油量，是運輸成本的重要項目。</li>
+						<li><strong>司機評分：</strong> 以 1–5 分呈現，反映服務品質。</li>
+					</ul>
+				</div>
+
+				<p><strong>分析與計算：</strong></p>
+				<ol>
+					<li>計算<strong>總配送距離</strong>（忽略文字「無數據」）：  
+						<span class="formula">=SUM(B2:B7)</span>
+					</li>
+
+					<li>計算<strong>所有路線平均配送時長</strong>：  
+						<span class="formula">=AVERAGE(C2:C7)</span>
+					</li>
+
+					<li>找出<strong>最高油耗</strong>的路線油耗值：  
+						<span class="formula">=MAX(D2:D7)</span>
+					</li>
+
+					<li>找出<strong>貨件數量最少</strong>的紀錄：  
+						<span class="formula">=MIN(E2:E7)</span>
+					</li>
+
+					<li>計算<strong>有有效距離紀錄</strong>的筆數：  
+						<span class="formula">=COUNT(B2:B7)</span>
+					</li>
+
+					<li>計算<strong>所有配送紀錄筆數（非空白）</strong>：  
+						<span class="formula">=COUNTA(A2:A7)</span>
+					</li>
+
+					<li><strong>進階挑戰：</strong>計算每條路線的<strong>單位距離油耗</strong>：  
+						<span class="formula">=D欄 / B欄</span>  
+						並找出油耗效率最低（油耗最高）的路線：  
+						<span class="formula">=MAX(新欄位範圍)</span>
+					</li>
+				</ol>
+			</div>
+
+				
+			
+            <div style="margin-top: 30px; padding: 20px; background: rgba(255,255,255,0.2); border-radius: 8px;">                
+                <h3 style="color: white; margin-top: 25px; margin-bottom: 15px;">🎓 學習重點回顧</h3>
+                <ul>
+                    <li><strong>函數結構：</strong><span class="formula">=函數名稱(引數,...)</span></li>
+                    <li><strong>SUM / AVERAGE：</strong>用於計算總和與平均，忽略文字和空白。</li>
+                    <li><strong>MAX / MIN：</strong>用於找出範圍內的最高值與最低值。</li>
+                    <li><strong>COUNT：</strong>只計算範圍內的<strong>數值</strong>儲存格數量。</li>
+                    <li><strong>COUNTA：</strong>計算範圍內所有的<strong>非空白</strong>儲存格數量（數值和文字都算）。</li>
+                    <li><strong>COUNTBLANK：</strong>計算範圍內<strong>空白</strong>儲存格的數量。</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

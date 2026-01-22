@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>圖表基礎與設計原則</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: "Microsoft JhengHei", "微軟正黑體", Arial, sans-serif;
+            line-height: 1.8;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
+        }
+        
+        .section h2 {
+            color: #1e3c72;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section h3 {
+            color: #2a5298;
+            margin: 20px 0 15px 0;
+            font-size: 1.3em;
+        }
+        
+        .icon {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+            background: #667eea;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .chart-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .chart-item {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        
+        .chart-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+        
+        .chart-item h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+        
+        .chart-icon {
+            font-size: 3em;
+            text-align: center;
+            margin: 15px 0;
+        }
+        
+        .example-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .example-table th {
+            background: #667eea;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+        }
+        
+        .example-table td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            color: black;
+        }
+        
+        .example-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        
+        .example-table tr:hover {
+            background: #e9ecef;
+        }
+        
+        .tip-box {
+            background: #d1ecf1;
+            border-left: 4px solid #0c5460;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            color: black;
+        }
+        
+        .tip-box strong {
+            color: #0c5460;
+        }
+        
+        .warning-box {
+            background: #fff3cd;
+            border-left: 4px solid #856404;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            color: black;
+        }
+        
+        .warning-box strong {
+            color: #856404;
+        }
+        
+        .success-box {
+            background: #d4edda;
+            border-left: 4px solid #155724;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            color: black;
+        }
+        
+        .success-box strong {
+            color: #155724;
+        }
+        
+        .practice-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            margin-top: 40px;
+            border-radius: 10px;
+        }
+        
+        .practice-section h2 {
+            color: white;
+            margin-bottom: 30px;
+        }
+        
+        .question {
+            background: rgba(255,255,255,0.1);
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border-left: 5px solid white;
+        }
+        
+        .question h3 {
+            color: white;
+            margin-bottom: 15px;
+        }
+        
+        .question ul {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+        
+        .question li {
+            margin: 8px 0;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            margin: 20px 0;
+        }
+        
+        .comparison-table td {
+            padding: 15px;
+            vertical-align: top;
+        }
+        
+        .comparison-table td:first-child {
+            background: #e7f3ff;
+            border-right: 3px solid #667eea;
+            font-weight: bold;
+            width: 25%;
+        }
+        
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        
+        .steps-list {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        
+        .steps-list ol {
+            margin-left: 25px;
+        }
+        
+        .steps-list li {
+            margin: 12px 0;
+            color: #2d3748;
+        }
+        
+        .steps-list li strong {
+            color: #667eea;
+        }
+        
+        ul, ol {
+            margin-left: 25px;
+            margin-top: 10px;
+        }
+        
+        li {
+            margin: 8px 0;
+        }
+        
+        .formula {
+            background: #fff3cd;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: "Consolas", "Monaco", monospace;
+            color: #856404;
+            font-weight: bold;
+        }
+        
+        .design-principles {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .principle-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .principle-card h4 {
+            color: #667eea;
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 圖表基礎與設計原則</h1>
+            <p>掌握數據視覺化技巧,讓數據說話更有力</p>
+        </div>
+        
+        <div class="content">
+            <!-- 圖表類型介紹 -->
+            <div class="section">
+                <h2><span class="icon">1</span>圖表類型選擇指南</h2>
+                
+                <p>選擇正確的圖表類型是數據視覺化的第一步。不同的圖表類型適合呈現不同性質的數據。</p>
+                
+                <div class="chart-grid">
+                    <div class="chart-item">
+                        <h4>📊 柱狀圖 (Column/Bar Chart)</h4>
+                        <div class="chart-icon">▮▮▮</div>
+                        <p><strong>適用情境:</strong></p>
+                        <ul>
+                            <li>比較不同類別的數值</li>
+                            <li>顯示數量差異</li>
+                            <li>時間序列的離散數據</li>
+                        </ul>
+                        <p><strong>常見應用:</strong></p>
+                        <ul>
+                            <li>各部門銷售額比較</li>
+                            <li>不同產品的產量</li>
+                            <li>年度預算執行情況</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="chart-item">
+                        <h4>📈 折線圖 (Line Chart)</h4>
+                        <div class="chart-icon">╱╲╱</div>
+                        <p><strong>適用情境:</strong></p>
+                        <ul>
+                            <li>顯示趨勢變化</li>
+                            <li>連續時間序列數據</li>
+                            <li>多組數據的趨勢比較</li>
+                        </ul>
+                        <p><strong>常見應用:</strong></p>
+                        <ul>
+                            <li>股價走勢圖</li>
+                            <li>溫度變化曲線</li>
+                            <li>人口增長趨勢</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="chart-item">
+                        <h4>🥧 圓餅圖 (Pie Chart)</h4>
+                        <div class="chart-icon">◐</div>
+                        <p><strong>適用情境:</strong></p>
+                        <ul>
+                            <li>顯示部分與整體關係</li>
+                            <li>百分比構成</li>
+                            <li>類別不超過 5-7 個</li>
+                        </ul>
+                        <p><strong>常見應用:</strong></p>
+                        <ul>
+                            <li>市場佔有率</li>
+                            <li>預算分配比例</li>
+                            <li>成本結構分析</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="chart-item">
+                        <h4>📉 散佈圖 (Scatter Chart)</h4>
+                        <div class="chart-icon">∴∵∴</div>
+                        <p><strong>適用情境:</strong></p>
+                        <ul>
+                            <li>顯示兩變數間的關係</li>
+                            <li>相關性分析</li>
+                            <li>異常值識別</li>
+                        </ul>
+                        <p><strong>常見應用:</strong></p>
+                        <ul>
+                            <li>身高與體重關係</li>
+                            <li>廣告支出與銷售額</li>
+                            <li>溫度與能源消耗</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="tip-box">
+                    <strong>💡 圖表選擇原則:</strong>
+                    <ul style="margin-top: 10px;">
+                        <li><strong>比較數值 →</strong> 柱狀圖</li>
+                        <li><strong>顯示趨勢 →</strong> 折線圖</li>
+                        <li><strong>呈現占比 →</strong> 圓餅圖</li>
+                        <li><strong>分析相關性 →</strong> 散佈圖</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 圖表元件詳解 -->
+            <div class="section">
+                <h2><span class="icon">2</span>圖表元件與構成</h2>
+                
+                <p>了解圖表的各個元件,才能精確控制圖表的呈現效果。</p>
+                
+                <table class="comparison-table">
+                    <tr>
+                        <td><strong>圖表標題</strong></td>
+                        <td>
+                            說明圖表主題的文字,應簡潔明確。<br>
+                            <span class="highlight">位置:</span> 通常放在圖表上方<br>
+                            <span class="highlight">設定方式:</span> 圖表工具 → 圖表設計 → 新增圖表項目 → 圖表標題
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>座標軸標題</strong></td>
+                        <td>
+                            說明 X 軸(水平軸)和 Y 軸(垂直軸)代表的變數與單位。<br>
+                            <span class="highlight">X 軸:</span> 通常代表類別或時間<br>
+                            <span class="highlight">Y 軸:</span> 通常代表數值或測量值<br>
+                            <span class="highlight">重要性:</span> 必須標註單位(如:元、件、%)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>圖例 (Legend)</strong></td>
+                        <td>
+                            解釋圖表中不同顏色或符號代表的數據系列。<br>
+                            <span class="highlight">位置:</span> 可放置在上、下、左、右<br>
+                            <span class="highlight">建議:</span> 數據系列少時可放右側,多時可放底部
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>數據標籤</strong></td>
+                        <td>
+                            直接在圖表上顯示數值,提高可讀性。<br>
+                            <span class="highlight">格式:</span> 可顯示數值、百分比或類別名稱<br>
+                            <span class="highlight">注意:</span> 數據點太多時會顯得擁擠
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>格線</strong></td>
+                        <td>
+                            輔助讀取數值的參考線。<br>
+                            <span class="highlight">主要格線:</span> 對應主要刻度<br>
+                            <span class="highlight">次要格線:</span> 對應次要刻度<br>
+                            <span class="highlight">建議:</span> 不宜過多,以免干擾視覺
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>趨勢線</strong></td>
+                        <td>
+                            顯示數據的整體走勢,用於預測分析。<br>
+                            <span class="highlight">類型:</span> 線性、指數、對數、多項式等<br>
+                            <span class="highlight">應用:</span> 銷售預測、成長率分析
+                        </td>
+                    </tr>
+                </table>
+                
+                <div class="tip-box">
+                    <strong>📖 專有名詞解釋:</strong><br><br>
+                    • <strong>數據系列 (Data Series):</strong> 圖表中的一組相關數據點,通常用相同顏色或符號表示。例如在比較多個產品銷售額的圖表中,每個產品就是一個數據系列。<br><br>
+                    • <strong>趨勢線 (Trendline):</strong> 根據現有數據點繪製的曲線,用來顯示數據的整體趨勢方向,可用於預測未來走向。常見類型包括線性(直線)、指數(加速成長)、對數(減速成長)等。<br><br>
+                    • <strong>座標軸刻度 (Axis Scale):</strong> 座標軸上的數值間隔。主要刻度間隔較大,次要刻度間隔較小。適當的刻度設定能讓圖表更易讀。
+                </div>
+            </div>
+            
+            <!-- 建立圖表步驟 -->
+            <div class="section">
+                <h2><span class="icon">3</span>圖表建立步驟</h2>
+                
+                <h3>基本操作流程</h3>
+                
+                <div class="steps-list">
+                    <ol>
+                        <li><strong>選取數據範圍:</strong> 選取包含標題列和數據列的完整範圍</li>
+                        <li><strong>插入圖表:</strong> 點選「插入」分頁 → 選擇圖表類型 → 選擇子類型</li>
+                        <li><strong>調整圖表位置:</strong> 拖曳圖表到適當位置,調整大小</li>
+                        <li><strong>編輯圖表標題:</strong> 點選標題文字直接修改</li>
+                        <li><strong>新增軸標題:</strong> 圖表工具 → 新增圖表項目 → 座標軸標題</li>
+                        <li><strong>設定數據標籤:</strong> 圖表工具 → 新增圖表項目 → 資料標籤</li>
+                        <li><strong>格式美化:</strong> 調整顏色、字型、樣式等</li>
+                    </ol>
+                </div>
+                
+                <h3>快速鍵技巧</h3>
+                <ul>
+                    <li><strong>Alt + F1:</strong> 在工作表中建立預設圖表</li>
+                    <li><strong>F11:</strong> 在新工作表中建立圖表</li>
+                    <li><strong>Ctrl + 1:</strong> 開啟格式設定窗格</li>
+                </ul>
+                
+                <div class="warning-box">
+                    <strong>⚠️ 常見錯誤:</strong>
+                    <ul style="margin-top: 10px;">
+                        <li>選取數據範圍不完整,導致圖表缺少資訊</li>
+                        <li>使用不適當的圖表類型,無法清楚呈現數據特性</li>
+                        <li>圖表標題或軸標題過於簡略,讀者無法理解</li>
+                        <li>忘記標註單位,造成數值誤解</li>
+                        <li>使用過多格線或裝飾,干擾數據呈現</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 圖表格式設定 -->
+            <div class="section">
+                <h2><span class="icon">4</span>圖表格式設定技巧</h2>
+                
+                <h3>顏色配置原則</h3>
+                
+                <div class="design-principles">
+                    <div class="principle-card">
+                        <h4>對比清晰</h4>
+                        <p>使用對比色區分不同數據系列,避免相近顏色造成混淆。</p>
+                    </div>
+                    
+                    <div class="principle-card">
+                        <h4>色彩一致</h4>
+                        <p>同一主題的圖表使用一致的配色方案,建立視覺識別。</p>
+                    </div>
+                    
+                    <div class="principle-card">
+                        <h4>避免過度</h4>
+                        <p>不要使用過多顏色,一般建議不超過 5-7 種主色。</p>
+                    </div>
+                    
+                    <div class="principle-card">
+                        <h4>考慮列印</h4>
+                        <p>如需列印,確保黑白列印時仍能區分不同數據。</p>
+                    </div>
+                </div>
+                
+                <h3>字型與大小設定</h3>
+                <ul>
+                    <li><strong>標題:</strong> 14-18 pt,粗體,置中對齊</li>
+                    <li><strong>軸標題:</strong> 11-12 pt,粗體</li>
+                    <li><strong>軸標籤:</strong> 9-10 pt,一般</li>
+                    <li><strong>數據標籤:</strong> 8-9 pt,視圖表大小調整</li>
+                    <li><strong>圖例:</strong> 9-10 pt,一般</li>
+                </ul>
+                
+                <h3>趨勢線新增方法</h3>
+                
+                <div class="steps-list">
+                    <ol>
+                        <li>在圖表上點選數據系列(點或線)</li>
+                        <li>按右鍵選擇「新增趨勢線」</li>
+                        <li>在右側窗格選擇趨勢線類型:
+                            <ul>
+                                <li><strong>線性:</strong> 數據呈直線趨勢</li>
+                                <li><strong>指數:</strong> 數據呈加速成長</li>
+                                <li><strong>對數:</strong> 數據呈減速成長</li>
+                                <li><strong>多項式:</strong> 數據有起伏波動</li>
+                                <li><strong>移動平均:</strong> 平滑短期波動</li>
+                            </ul>
+                        </li>
+                        <li>勾選「顯示方程式」可顯示趨勢線公式</li>
+                        <li>勾選「顯示 R 平方值」可顯示擬合度</li>
+                    </ol>
+                </div>
+                
+                <div class="tip-box">
+                    <strong>📖 專有名詞解釋:</strong><br><br>
+                    • <strong>R 平方值 (R-squared):</strong> 又稱決定係數,用來衡量趨勢線與實際數據的擬合程度,範圍從 0 到 1。R² = 1 表示完美擬合,R² = 0 表示完全不相關。一般認為 R² > 0.7 代表擬合度良好。<br><br>
+                    • <strong>移動平均 (Moving Average):</strong> 取連續若干期數據的平均值,用來平滑短期波動,突顯長期趨勢。常用於股價分析、銷售預測等。<br><br>
+                    • <strong>多項式趨勢線 (Polynomial Trendline):</strong> 使用多項式方程式擬合數據,適合有多個轉折點的數據。階數越高曲線越彎曲,但階數過高可能造成過度擬合。
+                </div>
+            </div>
+            
+            <!-- 圖表設計原則 -->
+            <div class="section">
+                <h2><span class="icon">5</span>專業圖表設計原則</h2>
+                
+                <h3>📋 CLEAR 設計法則</h3>
+                
+                <table class="comparison-table">
+                    <tr>
+                        <td><strong>C - Clear<br>清晰明確</strong></td>
+                        <td>
+                            • 圖表目的一目了然<br>
+                            • 標題直接點出重點<br>
+                            • 避免不必要的裝飾元素<br>
+                            • 數據標示清楚易讀
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>L - Logical<br>邏輯合理</strong></td>
+                        <td>
+                            • 選擇適合的圖表類型<br>
+                            • 座標軸刻度合理<br>
+                            • 數據排序有意義(如由大到小)<br>
+                            • 時間序列保持正確順序
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>E - Economical<br>精簡有效</strong></td>
+                        <td>
+                            • 移除不必要的格線<br>
+                            • 避免 3D 效果(會扭曲視覺)<br>
+                            • 減少圖例項目(可直接標註)<br>
+                            • 一張圖表傳達一個重點
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>A - Accurate<br>精確誠實</strong></td>
+                        <td>
+                            • Y 軸從 0 開始(除非有特殊理由)<br>
+                            • 不扭曲比例關係<br>
+                            • 完整呈現數據,不隱藏不利資訊<br>
+                            • 標註數據來源與時間
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>R - Readable<br>易於閱讀</strong></td>
+                        <td>
+                            • 字體大小適中<br>
+                            • 顏色對比清晰<br>
+                            • 考慮色盲友善配色<br>
+                            • 圖表大小適合載體(螢幕/紙本)
+                        </td>
+                    </tr>
+                </table>
+                
+                <div class="success-box">
+                    <strong>✅ 專業圖表檢查清單:</strong>
+                    <ul style="margin-top: 10px;">
+                        <li>□ 圖表標題是否清楚說明主題?</li>
+                        <li>□ X 軸和 Y 軸都有標題和單位嗎?</li>
+                        <li>□ 圖例位置是否適當?</li>
+                        <li>□ 顏色選擇是否清晰易辨?</li>
+                        <li>□ 是否移除了不必要的格線和裝飾?</li>
+                        <li>□ 數據標籤是否清楚易讀?</li>
+                        <li>□ Y 軸比例是否合理?(一般從 0 開始)</li>
+                        <li>□ 圖表能否在 5 秒內理解重點?</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 實務範例 -->
+            <div class="section">
+                <h2><span class="icon">6</span>實務範例:人口增長趨勢分析</h2>
+                
+                <p>以下示範如何製作一個專業的人口增長趨勢圖,這是社會科學研究中常見的視覺化需求。</p>
+                
+                <h3>範例數據:台灣人口變化(千人)</h3>
+                
+                <table class="example-table">
+                    <thead>
+                        <tr>
+                            <th>年份</th>
+                            <th>總人口</th>
+                            <th>出生人數</th>
+                            <th>死亡人數</th>
+                            <th>自然增加率(%)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>2015</td>
+                            <td>23,492</td>
+                            <td>213</td>
+                            <td>163</td>
+                            <td>0.21</td>
+                        </tr>
+                        <tr>
+                            <td>2016</td>
+                            <td>23,539</td>
+                            <td>208</td>
+                            <td>172</td>
+                            <td>0.15</td>
+                        </tr>
+                        <tr>
+						<td>2017</td>
+                            <td>23,571</td>
+                            <td>193</td>
+                            <td>171</td>
+                            <td>0.09</td>
+                        </tr>
+                        <tr>
+                            <td>2018</td>
+                            <td>23,589</td>
+                            <td>181</td>
+                            <td>173</td>
+                            <td>0.03</td>
+                        </tr>
+                        <tr>
+                            <td>2019</td>
+                            <td>23,603</td>
+                            <td>177</td>
+                            <td>176</td>
+                            <td>0.00</td>
+                        </tr>
+                        <tr>
+                            <td>2020</td>
+                            <td>23,561</td>
+                            <td>165</td>
+                            <td>173</td>
+                            <td>-0.03</td>
+                        </tr>
+                        <tr>
+                            <td>2021</td>
+                            <td>23,375</td>
+                            <td>154</td>
+                            <td>183</td>
+                            <td>-0.12</td>
+                        </tr>
+                        <tr>
+                            <td>2022</td>
+                            <td>23,264</td>
+                            <td>138</td>
+                            <td>207</td>
+                            <td>-0.30</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+				<div class="tip-box">
+					<strong>📌 人口增加率小知識：</strong><br><br>
+					<strong>人口增加率（Natural Increase Rate）</strong>用來衡量一個地區人口「自然變動」的情況，
+					只考慮<strong>出生</strong>與<strong>死亡</strong>，不包含移民因素。<br><br>
+
+					<strong>計算公式：</strong><br>
+					<span class="formula">(出生人數 − 死亡人數) ÷ 總人口 × 100%</span><br><br>
+
+					<strong>判讀方式：</strong>
+					<ul>
+						<li>📈 <strong>正值：</strong>出生多於死亡，人口自然成長</li>
+						<li>➖ <strong>0：</strong>出生與死亡人數相近，人口持平</li>
+						<li>📉 <strong>負值：</strong>死亡多於出生，人口自然減少</li>
+					</ul>
+				</div>
+				
+                <h3>製作步驟</h3>
+                
+                <div class="steps-list">
+                    <ol>
+                        <li><strong>選取數據:</strong> 選取 A1:B9(年份和總人口)</li>
+                        <li><strong>插入折線圖:</strong> 插入 → 折線圖 → 含有資料標記的折線圖</li>
+                        <li><strong>設定標題:</strong> 點選標題改為「台灣人口變化趨勢(2015-2022)」</li>
+                        <li><strong>新增軸標題:</strong>
+                            <ul>
+                                <li>Y 軸:「人口數(千人)」</li>
+                                <li>X 軸:「年份」</li>
+                            </ul>
+                        </li>
+                        <li><strong>新增趨勢線:</strong> 點選數據系列 → 右鍵 → 新增趨勢線 → 線性</li>
+                        <li><strong>勾選選項:</strong> 顯示方程式、顯示 R 平方值</li>
+                        <li><strong>美化格式:</strong> 調整顏色、線條粗細、標記大小</li>
+                    </ol>
+                </div>
+                
+                <div class="tip-box">
+                    <strong>💡 分析要點:</strong>
+                    <ul style="margin-top: 10px;">
+                        <li>從折線圖可清楚看出人口在 2020 年達到高峰後開始下降</li>
+                        <li>趨勢線顯示整體呈現緩慢上升後下降的趨勢</li>
+                        <li>可搭配「自然增加率」製作雙軸圖表,分析人口變化原因</li>
+                        <li>建議使用柱狀圖呈現出生與死亡人數的對比</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 實務範例 2 -->
+            <div class="section">
+                <h2><span class="icon">7</span>實務範例:成本結構分析</h2>
+                
+                <p>圓餅圖最適合呈現成本結構與預算分配,以下為某製造業的成本分析範例。</p>
+                
+                <h3>範例數據:製造成本結構</h3>
+                
+                <table class="example-table">
+                    <thead>
+                        <tr>
+                            <th>成本項目</th>
+                            <th>金額(萬元)</th>
+                            <th>占比</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>原物料成本</td>
+                            <td>4,500</td>
+                            <td>45%</td>
+                        </tr>
+                        <tr>
+                            <td>人力成本</td>
+                            <td>2,800</td>
+                            <td>28%</td>
+                        </tr>
+                        <tr>
+                            <td>製造費用</td>
+                            <td>1,500</td>
+                            <td>15%</td>
+                        </tr>
+                        <tr>
+                            <td>折舊攤提</td>
+                            <td>700</td>
+                            <td>7%</td>
+                        </tr>
+                        <tr>
+                            <td>其他費用</td>
+                            <td>500</td>
+                            <td>5%</td>
+                        </tr>
+                        <tr style="background: #fff3cd; font-weight: bold;">
+                            <td>合計</td>
+                            <td>10,000</td>
+                            <td>100%</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h3>製作步驟</h3>
+                
+                <div class="steps-list">
+                    <ol>
+                        <li><strong>選取數據:</strong> 選取 A1:B6(成本項目和金額,不含合計列)</li>
+                        <li><strong>插入圓餅圖:</strong> 插入 → 圓形圖或環圈圖 → 圓形圖</li>
+                        <li><strong>設定標題:</strong>「2024 年製造成本結構分析」</li>
+                        <li><strong>新增數據標籤:</strong> 圖表工具 → 新增圖表項目 → 資料標籤 → 更多選項
+                            <ul>
+                                <li>勾選「類別名稱」</li>
+                                <li>勾選「百分比」</li>
+                                <li>取消勾選「值」(避免重複)</li>
+                            </ul>
+                        </li>
+                        <li><strong>調整圖例:</strong> 考慮移除圖例(因為數據標籤已包含類別名稱)</li>
+                        <li><strong>突顯重點:</strong> 點選「原物料成本」扇形 → 右鍵 → 格式化資料點 → 爆炸圖扇區偏移 10%</li>
+                        <li><strong>顏色配置:</strong> 使用商務配色,避免過於鮮豔</li>
+                    </ol>
+                </div>
+                
+                <div class="warning-box">
+                    <strong>⚠️ 圓餅圖使用注意事項:</strong>
+                    <ul style="margin-top: 10px;">
+                        <li>類別不宜超過 5-7 個,過多會難以閱讀</li>
+                        <li>避免使用 3D 圓餅圖,會扭曲視覺比例</li>
+                        <li>將最重要的類別放在 12 點鐘方向(Excel 會自動排序,可手動調整)</li>
+                        <li>如果有多個小比例項目,可合併為「其他」類別</li>
+                        <li>當需要比較多個圓餅圖時,建議改用堆疊柱狀圖</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 練習題 -->
+        <div class="practice-section">
+            <h2>📝 課後練習題</h2>
+            
+            <div class="question">
+                <h3>練習題 1:地區銷售業績比較圖</h3>
+                <p><strong>任務描述:</strong></p>
+                <p>某連鎖零售公司需要分析各地區分店的季度銷售表現,請製作適當的圖表呈現以下數據:</p>
+                
+                <table class="example-table" style="margin: 20px 0; background: white;">
+                    <thead>
+                        <tr>
+                            <th>地區</th>
+                            <th>Q1 銷售額</th>
+                            <th>Q2 銷售額</th>
+                            <th>Q3 銷售額</th>
+                            <th>Q4 銷售額</th>
+                            <th>全年總計</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>北部</td>
+                            <td>12,500</td>
+                            <td>13,800</td>
+                            <td>15,200</td>
+                            <td>18,600</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr>
+                            <td>中部</td>
+                            <td>8,600</td>
+                            <td>9,200</td>
+                            <td>10,500</td>
+                            <td>11,800</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr>
+                            <td>南部</td>
+                            <td>9,800</td>
+                            <td>10,500</td>
+                            <td>11,200</td>
+                            <td>13,500</td>
+                            <td>(公式)</td>
+                        </tr>
+                        <tr>
+                            <td>東部</td>
+                            <td>4,200</td>
+                            <td>4,800</td>
+                            <td>5,500</td>
+                            <td>6,200</td>
+                            <td>(公式)</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <p><strong>製作要求:</strong></p>
+                <ul>
+                    <li><strong>圖表 1 - 群組直條圖:</strong> 比較四個地區在各季度的銷售額
+                        <ul>
+                            <li>X 軸:季度(Q1-Q4)</li>
+                            <li>Y 軸:銷售額(千元)</li>
+                            <li>使用不同顏色區分地區</li>
+                            <li>標題:「2024 年各地區季度銷售額比較」</li>
+                        </ul>
+                    </li>
+                    <li><strong>圖表 2 - 圓餅圖:</strong> 呈現各地區全年銷售額占比
+                        <ul>
+                            <li>使用全年總計數據</li>
+                            <li>顯示百分比和類別名稱</li>
+                            <li>標題:「2024 年各地區銷售額占比」</li>
+                        </ul>
+                    </li>
+                </ul>
+                
+                <p><strong>分析任務:</strong></p>
+                <ul>
+                    <li>哪個地區的銷售額最高?成長趨勢如何?</li>
+                    <li>哪個季度整體銷售表現最好?</li>
+                    <li>如果要提升整體業績,應該重點關注哪個地區?</li>
+                </ul>
+                
+                <p><strong>進階挑戰:</strong></p>
+                <ul>
+                    <li>製作折線圖顯示各地區的季度成長趨勢</li>
+                    <li>計算每個地區的季度平均成長率</li>
+                    <li>在折線圖上新增線性趨勢線,觀察長期走向</li>
+                </ul>
+            </div>
+            
+            <div class="question">
+                <h3>練習題 2:學生成績分布分析圖</h3>
+                <p><strong>任務描述:</strong></p>
+                <p>某班級進行期末考試,教師需要分析成績分布情況與各科目表現,數據如下:</p>
+                
+                <table class="example-table" style="margin: 20px 0; background: white;">
+                    <thead>
+                        <tr>
+                            <th>分數區間</th>
+                            <th>國文</th>
+                            <th>英文</th>
+                            <th>數學</th>
+                            <th>自然</th>
+                            <th>社會</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>90-100</td>
+                            <td>5</td>
+                            <td>3</td>
+                            <td>2</td>
+                            <td>4</td>
+                            <td>6</td>
+                        </tr>
+                        <tr>
+                            <td>80-89</td>
+                            <td>12</td>
+                            <td>8</td>
+                            <td>7</td>
+                            <td>10</td>
+                            <td>11</td>
+                        </tr>
+                        <tr>
+                            <td>70-79</td>
+                            <td>15</td>
+                            <td>14</td>
+                            <td>12</td>
+                            <td>13</td>
+                            <td>14</td>
+                        </tr>
+                        <tr>
+                            <td>60-69</td>
+                            <td>8</td>
+                            <td>10</td>
+                            <td>13</td>
+                            <td>9</td>
+                            <td>7</td>
+                        </tr>
+                        <tr>
+                            <td>60以下</td>
+                            <td>2</td>
+                            <td>7</td>
+                            <td>8</td>
+                            <td>6</td>
+                            <td>4</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <p><strong>額外數據:各科平均分數</strong></p>
+                <table class="example-table" style="margin: 20px 0; background: white;">
+                    <thead>
+                        <tr>
+                            <th>科目</th>
+                            <th>本班平均</th>
+                            <th>全年級平均</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>國文</td><td>76.5</td><td>74.2</td></tr>
+                        <tr><td>英文</td><td>71.8</td><td>73.5</td></tr>
+                        <tr><td>數學</td><td>68.3</td><td>70.1</td></tr>
+                        <tr><td>自然</td><td>73.2</td><td>72.8</td></tr>
+                        <tr><td>社會</td><td>77.9</td><td>75.6</td></tr>
+                    </tbody>
+                </table>
+                
+                <p><strong>製作要求:</strong></p>
+                <ul>
+                    <li><strong>圖表 1 - 堆疊橫條圖:</strong> 顯示各科目的分數分布
+                        <ul>
+                            <li>Y 軸:科目名稱</li>
+                            <li>X 軸:學生人數</li>
+                            <li>使用不同顏色表示分數區間</li>
+                            <li>標題:「各科目成績分布情況」</li>
+                        </ul>
+                    </li>
+                    <li><strong>圖表 2 - 群組直條圖:</strong> 比較本班與全年級平均分數
+                        <ul>
+                            <li>X 軸:科目</li>
+                            <li>Y 軸:平均分數</li>
+                            <li>使用兩個數據系列(本班、全年級)</li>
+                            <li>標題:「本班與全年級平均分數比較」</li>
+                        </ul>
+                    </li>
+                </ul>
+                
+                <p><strong>分析任務:</strong></p>
+                <ul>
+                    <li>哪個科目的成績分布最集中?哪個最分散?</li>
+                    <li>哪些科目本班表現優於全年級?哪些需要加強?</li>
+                    <li>從分布圖判斷,哪個科目可能考題難度較高?</li>
+                </ul>
+                
+                <p><strong>格式要求:</strong></p>
+                <ul>
+                    <li>使用色彩漸層表示分數區間(高分用深色,低分用淺色)</li>
+                    <li>在比較圖中,為低於全年級平均的科目加上醒目標示</li>
+                    <li>新增數據標籤,顯示精確數值</li>
+                </ul>
+                
+                <div class="tip-box" style="background: rgba(255,255,255,0.2); border-left: 4px solid white; color: white;">
+                    <strong>💡 教學提示:</strong>堆疊橫條圖特別適合顯示組成結構,而群組直條圖適合多組數據的比較。這個練習結合了兩種圖表,能幫助你理解如何選擇最適當的視覺化方式。
+                </div>
+            </div>
+            
+            <div class="question">
+                <h3>練習題 3:產品生命週期與市場佔有率分析(綜合應用)</h3>
+                <p><strong>任務描述:</strong></p>
+                <p>某科技公司推出三款產品,需要分析產品生命週期與市場競爭情況:</p>
+                
+                <div class="tip-box" style="background: rgba(255,255,255,0.2); border-left: 4px solid white; color: white;">
+                    <strong>📖 專有名詞解釋:</strong><br><br>
+                    • <strong>產品生命週期 (Product Life Cycle):</strong> 產品從推出到退出市場的過程,通常分為導入期、成長期、成熟期、衰退期四個階段。不同階段有不同的銷售特徵和市場策略。<br><br>
+                    • <strong>市場佔有率 (Market Share):</strong> 某產品或公司的銷售額占整體市場銷售額的百分比,是衡量市場競爭力的重要指標。<br><br>
+                    • <strong>散佈圖氣泡大小:</strong> 在散佈圖中,除了 X、Y 座標外,還可以用氣泡大小表示第三個變數,形成三維數據視覺化。
+                </div>
+                
+                <p><strong>數據表 1:月銷售量趨勢(單位:千台)</strong></p>
+                <table class="example-table" style="margin: 20px 0; background: white;">
+                    <thead>
+                        <tr>
+                            <th>月份</th>
+                            <th>產品 A</th>
+                            <th>產品 B</th>
+                            <th>產品 C</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>1月</td><td>15</td><td>42</td><td>8</td></tr>
+                        <tr><td>2月</td><td>18</td><td>45</td><td>12</td></tr>
+                        <tr><td>3月</td><td>25</td><td>48</td><td>18</td></tr>
+                        <tr><td>4月</td><td>35</td><td>47</td><td>25</td></tr>
+                        <tr><td>5月</td><td>48</td><td>45</td><td>32</td></tr>
+                        <tr><td>6月</td><td>58</td><td>42</td><td>38</td></tr>
+                        <tr><td>7月</td><td>62</td><td>38</td><td>42</td></tr>
+                        <tr><td>8月</td><td>65</td><td>35</td><td>45</td></tr>
+                        <tr><td>9月</td><td>63</td><td>32</td><td>46</td></tr>
+                        <tr><td>10月</td><td>60</td><td>28</td><td>47</td></tr>
+                        <tr><td>11月</td><td>55</td><td>25</td><td>47</td></tr>
+                        <tr><td>12月</td><td>52</td><td>22</td><td>48</td></tr>
+                    </tbody>
+                </table>
+                
+                <p><strong>數據表 2:競爭分析</strong></p>
+                <table class="example-table" style="margin: 20px 0; background: white;">
+                    <thead>
+                        <tr>
+                            <th>產品</th>
+                            <th>上市月數</th>
+                            <th>市場佔有率(%)</th>
+                            <th>年銷售額(百萬)</th>
+                            <th>產品定位</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>產品 A</td><td>12</td><td>28</td><td>520</td><td>中階主力</td></tr>
+                        <tr><td>產品 B</td><td>36</td><td>22</td><td>410</td><td>經典款</td></tr>
+                        <tr><td>產品 C</td><td>6</td><td>18</td><td>350</td><td>新世代</td></tr>
+                        <tr><td>競爭者 X</td><td>24</td><td>32</td><td>600</td><td>市場領導</td></tr>
+                    </tbody>
+                </table>
+                
+                <p><strong>製作要求:</strong></p>
+                <ul>
+                    <li><strong>圖表 1 - 含趨勢線的折線圖:</strong> 產品生命週期分析
+                        <ul>
+                            <li>X 軸:月份(1-12)</li>
+                            <li>Y 軸:銷售量(千台)</li>
+                            <li>三條折線代表三款產品</li>
+                            <li>為每條線新增多項式趨勢線(2階)</li>
+                            <li>標題:「產品銷售趨勢與生命週期分析」</li>
+                        </ul>
+                    </li>
+                    <li><strong>圖表 2 - 氣泡圖(散佈圖):</strong> 市場競爭定位
+                        <ul>
+                            <li>X 軸:上市月數</li>
+                            <li>Y 軸:市場佔有率(%)</li>
+                            <li>氣泡大小:年銷售額</li>
+                            <li>包含我司三款產品與競爭者</li>
+                            <li>標題:「市場競爭定位分析」</li>
+                        </ul>
+                    </li>
+                </ul>
+                
+                <p><strong>分析任務:</strong></p>
+                <ul>
+                    <li>從折線圖判斷:
+                        <ul>
+                            <li>哪款產品處於成長期?哪款進入成熟期?哪款開始衰退?</li>
+                            <li>產品 A 的銷售高峰出現在第幾個月?</li>
+                            <li>根據趨勢線,預測未來三個月各產品的銷售走向</li>
+                        </ul>
+                    </li>
+                    <li>從氣泡圖分析:
+                        <ul>
+                            <li>哪款產品最具成長潛力?(考慮上市時間與市佔率)</li>
+                            <li>與競爭者 X 相比,我司產品的競爭優勢與劣勢?</li>
+                            <li>如果要追上市場領導者,應該採取什麼策略?</li>
+                        </ul>
+                    </li>
+                </ul>
+                
+                <p><strong>格式與設計要求:</strong></p>
+                <ul>
+                    <li>折線圖使用不同線條樣式(實線、虛線、點線)區分產品</li>
+                    <li>趨勢線使用較淺的顏色,避免干擾實際數據</li>
+                    <li>氣泡圖中為「競爭者 X」使用特殊顏色標示(如紅色)</li>
+                    <li>在氣泡圖上新增數據標籤,顯示產品名稱</li>
+                    <li>兩張圖表使用一致的配色方案</li>
+                    <li>新增文字方塊標註重要發現(如「產品 A 在第 8 月達到銷售高峰」)</li>
+                </ul>
+                
+                <p><strong>進階挑戰:</strong></p>
+                <ul>
+                    <li>計算每款產品的月均成長率,判斷成長動能</li>
+                    <li>製作組合圖(折線+柱狀)顯示銷售量與市佔率的關係</li>
+                    <li>使用條件格式在數據表中標示銷售量>50的儲存格</li>
+                    <li>撰寫簡短的市場分析報告(200字),整合兩張圖表的洞察</li>
+                </ul>
+                
+                <div class="tip-box" style="background: rgba(255,255,255,0.2); border-left: 4px solid white; color: white;">
+                    <strong>💡 實務應用提示:</strong>這個綜合練習模擬了企業產品經理的實際工作場景。在真實商業環境中,產品經理需要同時監控多個產品的表現,並根據數據做出策略決策。掌握這種多維度數據視覺化能力,是數據驅動決策的關鍵技能!
+                </div>
+            </div>
+            
+            <div style="margin-top: 30px; padding: 20px; background: rgba(255,255,255,0.2); border-radius: 8px;">
+                <h3 style="color: white; margin-top: 25px; margin-bottom: 15px;">🎓 學習重點回顧</h3>
+                <ul>
+                    <li><strong>圖表類型選擇:</strong> 比較用柱狀圖、趨勢用折線圖、占比用圓餅圖、相關性用散佈圖</li>
+                    <li><strong>圖表元件:</strong> 標題、軸標題、圖例、數據標籤、格線、趨勢線缺一不可</li>
+                    <li><strong>CLEAR 原則:</strong> 清晰、邏輯、精簡、精確、易讀是專業圖表的五大要素</li>
+                    <li><strong>趨勢線應用:</strong> 線性、指數、對數、多項式各有適用場景,R² 值反映擬合度</li>
+                    <li><strong>設計美學:</strong> 適當的配色、字型、留白能大幅提升圖表專業度</li>
+                    <li><strong>避免誤導:</strong> Y 軸從 0 開始、避免 3D 效果、不扭曲比例是誠實呈現數據的基本原則</li>
+                </ul>
+                
+                <h3 style="color: white; margin-top: 25px; margin-bottom: 15px;">📚 延伸學習</h3>
+                <ul>
+                    <li>研究 Edward Tufte 的數據視覺化理論</li>
+                    <li>學習進階圖表:瀑布圖、甘特圖、雷達圖</li>
+                    <li>探索互動式儀表板製作(Power BI、Tableau)</li>
+                    <li>練習用圖表說故事(Data Storytelling)</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
