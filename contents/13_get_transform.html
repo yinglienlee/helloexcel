@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>資料匯入與清理 (Get & Transform)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Microsoft JhengHei", "微軟正黑體", Arial, sans-serif;
+            line-height: 1.8;
+            background: linear-gradient(135deg, #1a6b3a 0%, #0e4a66 100%);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #0b3d1e 0%, #0e4a66 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+	    color: #fff;
+        }
+
+        .lesson-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 5px 18px;
+            border-radius: 20px;
+            font-size: 0.95em;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 5px solid #1a6b3a;
+        }
+
+        .section h2 {
+            color: #0b3d1e;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            display: flex;
+            align-items: center;
+        }
+
+        .section h3 {
+            color: #0e4a66;
+            margin: 20px 0 15px 0;
+            font-size: 1.3em;
+        }
+
+        .icon {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+            background: #1a6b3a;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            color: white;
+            font-weight: bold;
+        }
+
+        .interface-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .interface-item {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .interface-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+
+        .interface-item h4 {
+            color: #1a6b3a;
+            margin-bottom: 10px;
+        }
+
+        .example-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .example-table th {
+            background: #1a6b3a;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        .example-table td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            color: black;
+        }
+
+        .example-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .example-table tr:hover {
+            background: #e9ecef;
+        }
+
+        .code-block {
+            background: #1a1a2e;
+            color: #a8ff78;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: "Consolas", "Monaco", monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+            white-space: pre;
+            font-size: 0.92em;
+        }
+
+        .formula {
+            background: #e8f5e9;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: "Consolas", "Monaco", monospace;
+            color: #1b5e20;
+            font-weight: bold;
+        }
+
+        .tip-box {
+            background: #d1ecf1;
+            border-left: 4px solid #0c5460;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            color: black;
+        }
+
+        .tip-box strong {
+            color: #0c5460;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border-left: 4px solid #856404;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            color: black;
+        }
+
+        .warning-box strong {
+            color: #856404;
+        }
+
+        .step-box {
+            background: #e8f5e9;
+            border-left: 4px solid #1a6b3a;
+            padding: 15px 20px;
+            margin: 15px 0;
+            border-radius: 5px;
+            color: black;
+        }
+
+        .step-box strong {
+            color: #0b3d1e;
+        }
+
+        .practice-section {
+            background: linear-gradient(135deg, #0b3d1e 0%, #0e4a66 100%);
+            color: white;
+            padding: 40px;
+            margin-top: 40px;
+            border-radius: 10px;
+        }
+
+        .practice-section h2 {
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .question {
+            background: rgba(255,255,255,0.1);
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border-left: 5px solid #a8ff78;
+        }
+
+	.question p {
+	    color: #fff;
+	}
+
+        .question h3 {
+            color: #a8ff78;
+            margin-bottom: 15px;
+        }
+
+        .question ul {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+
+        .question li {
+            margin: 8px 0;
+        }
+
+        .question .tip-box {
+            background: rgba(255,255,255,0.15);
+            border-left: 4px solid #a8ff78;
+            color: white;
+        }
+
+        .question .tip-box strong {
+            color: #a8ff78;
+        }
+
+        .question .formula {
+            background: rgba(168,255,120,0.2);
+            color: #a8ff78;
+        }
+
+        .question .example-table th {
+            background: rgba(26,107,58,0.8);
+        }
+
+        .comparison-table {
+            width: 100%;
+            margin: 20px 0;
+        }
+
+        .comparison-table td {
+            padding: 15px;
+            vertical-align: top;
+        }
+
+        .comparison-table td:first-child {
+            background: #e8f5e9;
+            border-right: 3px solid #1a6b3a;
+            font-weight: bold;
+            min-width: 140px;
+            color: #0b3d1e;
+        }
+
+        .comparison-table td:not(:first-child) {
+            background: white;
+            color: black;
+        }
+
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+
+        ul, ol {
+            margin-left: 25px;
+            margin-top: 10px;
+        }
+
+        li {
+            margin: 8px 0;
+        }
+
+        .flow-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 10px;
+            margin: 20px 0;
+            align-items: center;
+        }
+
+        .flow-step {
+            background: white;
+            border: 2px solid #1a6b3a;
+            border-radius: 8px;
+            padding: 14px;
+            text-align: center;
+            position: relative;
+        }
+
+        .flow-step .step-num {
+            background: #1a6b3a;
+            color: white;
+            border-radius: 50%;
+            width: 26px;
+            height: 26px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.85em;
+            margin-bottom: 6px;
+        }
+
+        .flow-step p {
+            font-size: 0.9em;
+            color: #333;
+        }
+
+        .flow-arrow {
+            text-align: center;
+            font-size: 1.6em;
+            color: #1a6b3a;
+            font-weight: bold;
+        }
+
+        .source-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .source-card {
+            background: white;
+            border-radius: 10px;
+            padding: 18px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-top: 4px solid #1a6b3a;
+            transition: transform 0.2s;
+        }
+
+        .source-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .source-card .card-icon {
+            font-size: 2em;
+            margin-bottom: 8px;
+        }
+
+        .source-card h4 {
+            color: #0b3d1e;
+            margin-bottom: 6px;
+        }
+
+        .source-card p {
+            font-size: 0.88em;
+            color: #555;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #1a6b3a;
+            color: white;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            margin-right: 5px;
+        }
+
+        .badge.blue {
+            background: #0e4a66;
+        }
+
+        p {
+            margin-bottom: 10px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📥 資料匯入與清理</h1>
+            <p>Get & Transform — 以 Power Query 整合、清洗與整形外部資料</p>
+        </div>
+
+        <div class="content">
+
+            <!-- Section 1: 什麼是 Get & Transform / Power Query -->
+            <div class="section">
+                <h2><span class="icon">1</span>什麼是 Get & Transform？</h2>
+
+                <p><strong>Get & Transform</strong> 是 Excel 內建的資料整合功能，其核心引擎稱為 <strong>Power Query</strong>。它讓使用者能夠從各種外部來源匯入資料，並透過視覺化操作進行清洗、轉換和整形，全程<strong>不需撰寫 VBA 程式碼</strong>。</p>
+
+                <div class="tip-box">
+                    <strong>💡 專有名詞解釋：Power Query</strong><br>
+                    Power Query 是 Microsoft 開發的資料連接與轉換技術，內建於 Excel 2016 及以後版本（舊版可安裝增益集）。每一個匯入與轉換步驟都會被記錄為「查詢步驟 (Applied Steps)」，日後只需按「重新整理 (Refresh)」即可自動更新資料，大幅提升工作效率。
+                </div>
+
+                <h3>Power Query 的工作流程</h3>
+                <div class="flow-grid">
+                    <div class="flow-step">
+                        <div class="step-num">1</div>
+                        <p><strong>連接</strong><br>選擇資料來源</p>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step">
+                        <div class="step-num">2</div>
+                        <p><strong>轉換</strong><br>清洗與整形</p>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step">
+                        <div class="step-num">3</div>
+                        <p><strong>載入</strong><br>匯入 Excel 工作表</p>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step">
+                        <div class="step-num">4</div>
+                        <p><strong>重新整理</strong><br>自動更新資料</p>
+                    </div>
+                </div>
+
+                <h3>如何開啟 Power Query</h3>
+                <p>在 Excel 中，點擊上方功能列的 <span class="formula">資料 (Data)</span> 分頁，即可看到「<strong>取得及轉換資料</strong>」群組，其中包含「<strong>取得資料 (Get Data)</strong>」按鈕。</p>
+            </div>
+
+            <!-- Section 2: 外部資料匯入 -->
+            <div class="section">
+                <h2><span class="icon">2</span>外部資料匯入：CSV、Web、資料庫</h2>
+
+                <p>Power Query 支援多種外部資料來源。以下介紹最常見的三種：</p>
+
+                <div class="source-grid">
+                    <div class="source-card">
+                        <div class="card-icon">📄</div>
+                        <h4>CSV 檔案</h4>
+                        <p>最常見的純文字表格格式。路徑：<br>
+                        <strong>資料 → 取得資料 → 從檔案 → 從文字/CSV</strong></p>
+                    </div>
+                    <div class="source-card">
+                        <div class="card-icon">🌐</div>
+                        <h4>Web 網頁</h4>
+                        <p>從網頁 URL 抓取表格資料。路徑：<br>
+                        <strong>資料 → 取得資料 → 從其他來源 → 從 Web</strong></p>
+                    </div>
+                    <div class="source-card">
+                        <div class="card-icon">🗄️</div>
+                        <h4>資料庫</h4>
+                        <p>連接 SQL Server、Access 等資料庫系統。路徑：<br>
+                        <strong>資料 → 取得資料 → 從資料庫</strong></p>
+                    </div>
+                </div>
+
+                <h3>以 CSV 為例：匯入步驟</h3>
+                <div class="step-box">
+                    <strong>步驟 1：</strong> 點擊「資料」→「取得資料」→「從檔案」→「從文字/CSV」<br>
+                    <strong>步驟 2：</strong> 瀏覽並選取目標 CSV 檔案，點擊「匯入」<br>
+                    <strong>步驟 3：</strong> 預覽視窗出現後，確認分隔符號（通常為逗號）與編碼格式（建議 UTF-8）是否正確<br>
+                    <strong>步驟 4：</strong> 點擊「轉換資料 (Transform Data)」進入 Power Query 編輯器，或直接點擊「載入 (Load)」匯入工作表
+                </div>
+
+                <div class="tip-box">
+                    <strong>💡 專有名詞解釋：CSV (Comma-Separated Values)</strong><br>
+                    CSV 是一種以純文字儲存表格資料的格式，每一列為一筆紀錄，欄位之間以逗號（,）分隔。由於格式簡單，幾乎所有資料系統（ERP、資料庫、政府開放資料平台）都支援匯出為 CSV 格式。
+                </div>
+
+                <div class="warning-box">
+                    <strong>⚠️ 注意：中文編碼問題</strong><br>
+                    若 CSV 檔案出現亂碼，通常是因為編碼格式不符。請在「檔案原始碼 (File Origin)」下拉選單中，嘗試選取 <span class="highlight">65001: Unicode (UTF-8)</span> 或 <span class="highlight">950: 繁體中文 (Big5)</span>。
+                </div>
+            </div>
+
+            <!-- Section 3: Power Query 基礎操作 -->
+            <div class="section">
+                <h2><span class="icon">3</span>Power Query 基礎操作</h2>
+
+                <!-- 3.1 資料類型轉換 -->
+                <h3>3.1 資料類型轉換 (Change Data Type)</h3>
+                <p>匯入的資料欄位不一定帶有正確的資料類型（例如數字被存為文字、日期格式不正確）。在 Power Query 中，可以透過以下方式修正：</p>
+                <ul>
+                    <li>在欄位名稱旁的<strong>資料類型圖示</strong>（如 <span class="formula">ABC</span>、<span class="formula">1.2</span>、<span class="formula">📅</span>）上點擊，選擇正確類型。</li>
+                    <li>或在「常用」分頁中找到「資料類型」下拉選單進行設定。</li>
+                </ul>
+
+                <table class="example-table">
+                    <thead>
+                        <tr>
+                            <th>資料類型</th>
+                            <th>說明</th>
+                            <th>常見應用</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="formula">文字 (Text)</span></td>
+                            <td>純文字，無法進行數學運算</td>
+                            <td>姓名、國家代碼、備註</td>
+                        </tr>
+                        <tr>
+                            <td><span class="formula">整數 (Whole Number)</span></td>
+                            <td>不含小數點的數值</td>
+                            <td>人數、件數、年份</td>
+                        </tr>
+                        <tr>
+                            <td><span class="formula">小數 (Decimal Number)</span></td>
+                            <td>含小數點的浮點數值</td>
+                            <td>GDP、匯率、百分比</td>
+                        </tr>
+                        <tr>
+                            <td><span class="formula">日期 (Date)</span></td>
+                            <td>日期格式，可計算時間差</td>
+                            <td>發布日期、交易日期</td>
+                        </tr>
+                        <tr>
+                            <td><span class="formula">True/False</span></td>
+                            <td>布林值，只有真或假</td>
+                            <td>是否完成、是否有效</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="tip-box">
+                    <strong>💡 為什麼資料類型這麼重要？</strong><br>
+                    若欄位類型錯誤（如 GDP 數值被誤判為文字），後續的計算、排序、圖表將全部出錯。養成「匯入後立即檢查資料類型」的習慣，可避免許多下游分析錯誤。
+                </div>
+
+                <!-- 3.2 行與列的轉置 -->
+                <h3>3.2 行與列的轉置 (Transpose)</h3>
+                <p><strong>轉置</strong>是將資料表的行（列/橫向）與列（欄/縱向）互換的操作。當原始資料的欄位排列方向與分析需求不符時，轉置非常有用。</p>
+
+                <div class="tip-box">
+                    <strong>💡 專有名詞解釋：轉置 (Transpose)</strong><br>
+                    轉置是指將資料矩陣的行與列互換。例如：原本「每欄代表一個年度」的格式，轉置後會變成「每列代表一個年度」。在 Power Query 中，路徑為：<strong>轉換 → 轉置</strong>。
+                </div>
+
+                <p><strong>範例：</strong>下表是原始格式（年份為欄標題）：</p>
+                <table class="example-table">
+                    <thead>
+                        <tr><th>指標</th><th>2021</th><th>2022</th><th>2023</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>GDP 成長率 (%)</td><td>6.5</td><td>2.4</td><td>3.1</td></tr>
+                        <tr><td>通膨率 (%)</td><td>1.2</td><td>2.8</td><td>2.1</td></tr>
+                    </tbody>
+                </table>
+                <p>轉置後（年份成為列、指標成為欄），便於進行逐年趨勢分析：</p>
+                <table class="example-table">
+                    <thead>
+                        <tr><th>年份</th><th>GDP 成長率 (%)</th><th>通膨率 (%)</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>2021</td><td>6.5</td><td>1.2</td></tr>
+                        <tr><td>2022</td><td>2.4</td><td>2.8</td></tr>
+                        <tr><td>2023</td><td>3.1</td><td>2.1</td></tr>
+                    </tbody>
+                </table>
+
+                <!-- 3.3 Merge & Append -->
+                <h3>3.3 資料合併 (Merge) 與追加 (Append)</h3>
+
+                <p>當資料分散在多個來源時，Power Query 提供兩種整合方式：</p>
+
+                <table class="comparison-table">
+                    <tr>
+                        <td>🔗 合併 (Merge)<br><span style="font-weight:normal; font-size:0.88em;">橫向合併</span></td>
+                        <td>
+                            <strong>根據共同鍵值（Key），將兩個資料表以「欄」的方向合併。</strong><br>
+                            類似 SQL 的 <span class="formula">JOIN</span> 或 Excel 的 <span class="formula">VLOOKUP</span>。<br>
+                            例如：將「國家代碼」作為鍵值，把 GDP 資料表與人口資料表合併成一張表。<br><br>
+                            路徑：<span class="formula">常用 → 合併查詢 (Merge Queries)</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>📋 追加 (Append)<br><span style="font-weight:normal; font-size:0.88em;">縱向合併</span></td>
+                        <td>
+                            <strong>將結構相同的資料表以「列」的方向堆疊在一起。</strong><br>
+                            例如：將 2021、2022、2023 三年的月度 GDP 資料表（欄位相同）合併為一張完整的多年資料表。<br><br>
+                            路徑：<span class="formula">常用 → 附加查詢 (Append Queries)</span>
+                        </td>
+                    </tr>
+                </table>
+
+                <div class="tip-box">
+                    <strong>💡 Merge vs. Append：如何選擇？</strong><br>
+                    一個簡單的判斷方式：<br>
+                    ・如果你想<strong>增加更多欄位</strong>（新增屬性），使用 <strong>Merge（合併）</strong>。<br>
+                    ・如果你想<strong>增加更多筆資料</strong>（新增紀錄），使用 <strong>Append（追加）</strong>。
+                </div>
+
+                <h3>Merge 的連結類型 (Join Kind)</h3>
+                <table class="example-table">
+                    <thead>
+                        <tr>
+                            <th>連結類型</th>
+                            <th>說明</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="formula">Left Outer</span></td>
+                            <td>保留左側資料表所有列，右側無對應資料則填 null。最常用。</td>
+                        </tr>
+                        <tr>
+                            <td><span class="formula">Inner</span></td>
+                            <td>只保留兩個資料表中「鍵值都存在」的列。</td>
+                        </tr>
+                        <tr>
+                            <td><span class="formula">Full Outer</span></td>
+                            <td>保留兩個資料表的所有列，互缺的欄位填 null。</td>
+                        </tr>
+                        <tr>
+                            <td><span class="formula">Left Anti</span></td>
+                            <td>只保留在左側表格有、但在右側表格中找不到對應鍵值的列。常用於找出「未匹配的資料」。</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Section 4: 資料清洗常用技巧 -->
+            <div class="section">
+                <h2><span class="icon">4</span>資料清洗常用技巧</h2>
+
+                <p>Power Query 提供豐富的清洗功能，以下是處理經濟數據時最常用的操作：</p>
+
+                <div class="interface-grid">
+                    <div class="interface-item">
+                        <h4>🚫 移除空白列</h4>
+                        <p>路徑：常用 → 移除列 → 移除空白列<br>消除匯入時產生的空白行，保持資料整潔。</p>
+                    </div>
+                    <div class="interface-item">
+                        <h4>✂️ 修剪 (Trim)</h4>
+                        <p>路徑：轉換 → 格式 → 修剪<br>移除欄位文字前後多餘的空白字元，防止比對失敗。</p>
+                    </div>
+                    <div class="interface-item">
+                        <h4>🔤 第一列做為標題</h4>
+                        <p>路徑：常用 → 使用第一列作為標題<br>當 CSV 第一列是欄位名稱時，使用此功能設為標題列。</p>
+                    </div>
+                    <div class="interface-item">
+                        <h4>📌 取代值 (Replace Values)</h4>
+                        <p>路徑：常用 → 取代值<br>將特定值（如空值、"N/A"）批次替換為正確內容或 null。</p>
+                    </div>
+                    <div class="interface-item">
+                        <h4>🔢 分割欄位 (Split Column)</h4>
+                        <p>路徑：常用 → 分割欄位<br>將一個欄位依分隔符號（如「/」、「-」）拆分成多欄。</p>
+                    </div>
+                    <div class="interface-item">
+                        <h4>🔃 移除重複值</h4>
+                        <p>路徑：常用 → 移除列 → 移除重複項目<br>針對選取的欄位，刪除重複紀錄。</p>
+                    </div>
+                </div>
+
+                <div class="tip-box">
+                    <strong>💡 「套用的步驟 (Applied Steps)」面板</strong><br>
+                    Power Query 編輯器右側的「套用的步驟」面板，記錄了所有操作。你可以點擊任一步驟返回該狀態，也可以刪除或重新排列步驟，讓整個清洗流程完全可控、可重現。
+                </div>
+            </div>
+
+            <!-- Section 5: 實務範例 -->
+            <div class="section">
+                <h2><span class="icon">5</span>實務範例：匯入多年度 GDP 數據並清洗</h2>
+
+                <p>以下示範完整流程：從政府開放資料平台取得 2021–2023 年的年度 GDP 資料（CSV 格式），並使用 Power Query 進行清洗與格式化，最終產出一張可分析的整合表。</p>
+
+                <h3>情境說明</h3>
+                <p>你取得了三個 CSV 檔案，分別對應三個年度，每份格式相同，欄位如下：</p>
+
+                <table class="example-table">
+                    <thead>
+                        <tr>
+                            <th>國家代碼</th>
+                            <th>國家名稱</th>
+                            <th>年份</th>
+                            <th>GDP（百萬美元）</th>
+                            <th>GDP 成長率（%）</th>
+                            <th>人均 GDP（美元）</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>TWN</td><td>Taiwan</td><td>2023</td><td>751,930</td><td>1.31</td><td>32,028</td></tr>
+                        <tr><td>KOR</td><td>Korea, Rep.</td><td>2023</td><td>1,712,790</td><td>1.36</td><td>33,147</td></tr>
+                        <tr><td>JPN</td><td>Japan</td><td>2023</td><td>4,212,950</td><td>1.92</td><td>33,834</td></tr>
+                        <tr><td>SGP</td><td> Singapore</td><td>2023</td><td>497,350</td><td>1.10</td><td>84,500</td></tr>
+                        <tr><td>N/A</td><td></td><td>2023</td><td>缺資料</td><td></td><td></td></tr>
+                    </tbody>
+                </table>
+
+                <h3>清洗步驟示範（在 Power Query 中操作）</h3>
+
+                <div class="step-box">
+                    <strong>步驟 1：使用「追加 (Append)」合併三年資料</strong><br>
+                    分別匯入 gdp_2021.csv、gdp_2022.csv、gdp_2023.csv 後，對其中一個查詢執行「附加查詢」，將三年資料縱向堆疊成一張表。
+                </div>
+
+                <div class="step-box">
+                    <strong>步驟 2：移除無效列</strong><br>
+                    過濾掉「國家代碼」欄中值為 "N/A" 或空白的列，排除無效紀錄。
+                </div>
+
+                <div class="step-box">
+                    <strong>步驟 3：取代特殊值</strong><br>
+                    將「GDP（百萬美元）」欄中的文字 "缺資料" 取代為 <span class="formula">null</span>，確保該欄位可被設為數字類型。
+                </div>
+
+                <div class="step-box">
+                    <strong>步驟 4：修正資料類型</strong><br>
+                    將「年份」設為 <span class="formula">整數</span>，「GDP」與「人均 GDP」設為 <span class="formula">小數</span>，「國家代碼」設為 <span class="formula">文字</span>。
+                </div>
+
+                <div class="step-box">
+                    <strong>步驟 5：修剪國家名稱</strong><br>
+                    對「國家名稱」欄執行「修剪」操作，移除 Singapore 欄位前的多餘空格。
+                </div>
+
+                <div class="step-box">
+                    <strong>步驟 6：載入至 Excel</strong><br>
+                    點擊「常用 → 關閉並載入」，資料即匯入至一個新的工作表，並以 Excel 表格 (Table) 格式呈現。
+                </div>
+
+                <div class="code-block">
+【Power Query M 語言預覽（自動產生，不需手動輸入）】
+
+let
+    Source = Table.Combine({gdp_2021, gdp_2022, gdp_2023}),
+    RemovedNullRows = Table.SelectRows(Source, each [國家代碼] &lt;&gt; "N/A" and [國家代碼] &lt;&gt; null),
+    ReplacedErrors = Table.ReplaceValue(RemovedNullRows, "缺資料", null, Replacer.ReplaceValue, {"GDP（百萬美元）"}),
+    ChangedTypes = Table.TransformColumnTypes(ReplacedErrors, {
+        {"年份", Int64.Type},
+        {"GDP（百萬美元）", type number},
+        {"GDP 成長率（%）", type number}
+    }),
+    TrimmedNames = Table.TransformColumns(ChangedTypes, {{"國家名稱", Text.Trim}})
+in
+    TrimmedNames
+                </div>
+
+                <div class="tip-box">
+                    <strong>💡 M 語言 (Power Query Formula Language)</strong><br>
+                    Power Query 背後使用的腳本語言稱為 <strong>M 語言</strong>。雖然所有操作都可以透過 GUI 完成，但了解 M 語言語法有助於在進階情境下手動修改查詢邏輯。點擊「進階編輯器 (Advanced Editor)」可查看和編輯完整的 M 語言腳本。
+                </div>
+            </div>
+
+        </div><!-- end .content -->
+
+        <!-- 練習題 -->
+        <div class="practice-section">
+            <h2>✏️ 練習題</h2>
+
+            <!-- 練習題 1 -->
+            <div class="question">
+                <h3>練習題 1：匯入並追加三年失業率 CSV 資料</h3>
+                <p><strong>任務描述：</strong></p>
+                <p>主計總處提供了 2021、2022、2023 年三份 CSV 格式的各縣市失業率統計資料，格式完全相同。請使用 Power Query 將三份資料整合為一張完整的多年資料表，並進行基本清洗。</p>
+
+                <table class="example-table" style="margin: 20px 0; background: rgba(255,255,255,0.95);">
+                    <thead>
+                        <tr>
+                            <th>縣市代碼 (A 欄)</th>
+                            <th>縣市名稱 (B 欄)</th>
+                            <th>年份 (C 欄)</th>
+                            <th>失業率 (%) (D 欄)</th>
+                            <th>勞動力人口 (E 欄)</th>
+                            <th>備註 (F 欄)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>TPE</td><td>台北市</td><td>2021</td><td>3.45</td><td>1,289,000</td><td></td></tr>
+                        <tr><td>NTC</td><td>新北市</td><td>2021</td><td>3.78</td><td>1,953,000</td><td></td></tr>
+                        <tr><td>TCH</td><td>台中市</td><td>2021</td><td>3.21</td><td>1,415,000</td><td></td></tr>
+                        <tr><td>KHH</td><td>高雄市</td><td>2021</td><td>3.91</td><td>1,366,000</td><td>部分數據待確認</td></tr>
+                        <tr><td>N/A</td><td></td><td>2021</td><td></td><td></td><td>格式異常列</td></tr>
+                    </tbody>
+                </table>
+
+                <div class="tip-box">
+                    <strong>💡 專有名詞解釋：</strong>
+                    <ul>
+                        <li><strong>失業率 (Unemployment Rate)：</strong> 失業人口占勞動力人口的百分比，是衡量經濟景氣的重要指標之一。</li>
+                        <li><strong>勞動力人口 (Labor Force)：</strong> 年齡在勞動年齡範圍內、願意且能夠工作的人口總數，包含就業者與失業者。</li>
+                        <li><strong>追加 (Append)：</strong> Power Query 中將多個欄位結構相同的表格縱向堆疊的操作，等同於 SQL 的 UNION ALL。</li>
+                    </ul>
+                </div>
+
+                <p><strong>操作步驟與任務：</strong></p>
+                <ol>
+                    <li>分別匯入 <strong>unemployment_2021.csv</strong>、<strong>unemployment_2022.csv</strong>、<strong>unemployment_2023.csv</strong> 三個查詢。</li>
+                    <li>對第一個查詢執行「<strong>附加查詢 (Append Queries)</strong>」，選擇「三個以上的資料表」，將三年資料縱向合併為一張表（預期筆數 = 三年各縣市總和）。</li>
+                    <li>過濾並<strong>移除「縣市代碼」為 "N/A" 或空白的無效列</strong>。</li>
+                    <li>確認欄位資料類型：<strong>「年份」→ 整數、「失業率」→ 小數、「勞動力人口」→ 整數、其餘 → 文字</strong>。</li>
+                    <li>對「縣市名稱」欄執行<strong>「修剪 (Trim)」</strong>，移除前後多餘空白。</li>
+                    <li>將 "部分數據待確認" 的備註列保留，但在 Excel 中以<strong>條件式格式設定</strong>標記（選做）。</li>
+                    <li>載入後，在 Excel 中確認：<strong>合併後的總列數是否正確</strong>（應為三年資料加總去掉無效列後的數量）。</li>
+                </ol>
+            </div>
+
+            <!-- 練習題 2 -->
+            <div class="question">
+                <h3>練習題 2：合併 (Merge) GDP 資料與各國人口資料</h3>
+                <p><strong>任務描述：</strong></p>
+                <p>你手邊有兩份資料：一份是 2023 年各國 GDP 資料，另一份是各國人口數量資料。請使用 Power Query 的「合併 (Merge)」功能，以「國家代碼」為共同鍵值，將人口數欄位併入 GDP 資料表，並計算各國的人均 GDP。</p>
+
+                <p><strong>資料表 A：gdp_2023.csv（GDP 資料）</strong></p>
+                <table class="example-table" style="margin: 15px 0; background: rgba(255,255,255,0.95);">
+                    <thead>
+                        <tr>
+                            <th>國家代碼</th>
+                            <th>國家名稱</th>
+                            <th>GDP（百萬美元）</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>TWN</td><td>Taiwan</td><td>751,930</td></tr>
+                        <tr><td>KOR</td><td>Korea, Rep.</td><td>1,712,790</td></tr>
+                        <tr><td>JPN</td><td>Japan</td><td>4,212,950</td></tr>
+                        <tr><td>THA</td><td>Thailand</td><td>512,180</td></tr>
+                    </tbody>
+                </table>
+
+                <p><strong>資料表 B：population_2023.csv（人口資料）</strong></p>
+                <table class="example-table" style="margin: 15px 0; background: rgba(255,255,255,0.95);">
+                    <thead>
+                        <tr>
+                            <th>國家代碼</th>
+                            <th>人口數（千人）</th>
+                            <th>人口年增率（%）</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>TWN</td><td>23,545</td><td>-0.05</td></tr>
+                        <tr><td>KOR</td><td>51,712</td><td>0.09</td></tr>
+                        <tr><td>JPN</td><td>124,352</td><td>-0.53</td></tr>
+                        <tr><td>VNM</td><td>98,186</td><td>0.88</td></tr>
+                    </tbody>
+                </table>
+
+                <div class="tip-box">
+                    <strong>💡 專有名詞解釋：</strong>
+                    <ul>
+                        <li><strong>合併 (Merge)：</strong> 在 Power Query 中，以「共同鍵值欄位」為依據，將兩張表的欄位橫向合併。類似 Excel 的 VLOOKUP，但更強大且支援多種 Join 類型。</li>
+                        <li><strong>Left Outer Join：</strong> 保留左側（主）資料表的所有列；右側若無對應鍵值，則該欄位填入 null。是最常見的 Merge 類型。</li>
+                        <li><strong>人均 GDP (GDP per Capita)：</strong> 一國 GDP 除以人口數，常用來比較不同規模國家的生活水準或經濟發展程度。</li>
+                        <li><strong>自訂資料行 (Custom Column)：</strong> Power Query 中可新增公式計算欄位的功能，路徑為「新增資料行 → 自訂資料行」。</li>
+                    </ul>
+                </div>
+
+                <p><strong>操作步驟與任務：</strong></p>
+                <ol>
+                    <li>分別匯入兩份 CSV，在 Power Query 中命名查詢為 <strong>GDP_2023</strong> 與 <strong>Population_2023</strong>。</li>
+                    <li>在 <strong>GDP_2023</strong> 查詢中，執行「<strong>合併查詢 (Merge Queries)</strong>」，以「國家代碼」為鍵值，選擇 Population_2023 作為右側資料表，連結類型選 <strong>Left Outer</strong>。</li>
+                    <li>展開合併後的欄位，僅勾選「<strong>人口數（千人）</strong>」加入主表（不保留重複的國家代碼欄位）。</li>
+                    <li>確認 Thailand（THA）的人口欄位為 <strong>null</strong>（因為 Population_2023 中不含 THA，符合 Left Outer 行為）。</li>
+                    <li>新增<strong>自訂資料行 (Custom Column)</strong>，命名為「人均 GDP（美元）」，公式為：<br>
+                        <span class="formula">= [GDP（百萬美元）] * 1000000 / ([人口數（千人）] * 1000)</span>
+                    </li>
+                    <li>將新欄位的資料類型設為<strong>小數 (Decimal Number)</strong>，並載入至 Excel。</li>
+                    <li>在 Excel 中，確認 VNM（越南）的資料是否被包含（預期：不包含，因為 GDP 表中沒有 VNM）。</li>
+                </ol>
+            </div>
+
+            <!-- 練習題 3 -->
+            <div class="question">
+                <h3>練習題 3：轉置寬格式經濟指標資料並進行格式化</h3>
+                <p><strong>任務描述：</strong></p>
+                <p>世界銀行提供的部分開放資料採用「寬格式 (Wide Format)」，即每個年度為一欄，不利於 Excel 圖表繪製與長期趨勢分析。請使用 Power Query 將下列寬格式資料轉置為「長格式 (Long Format / Tall Format)」，並完成清洗與格式化。</p>
+
+                <p><strong>原始資料（Wide Format，欄位為年度）：</strong></p>
+                <table class="example-table" style="margin: 15px 0; background: rgba(255,255,255,0.95);">
+                    <thead>
+                        <tr>
+                            <th>指標代碼</th>
+                            <th>指標名稱</th>
+                            <th>國家代碼</th>
+                            <th>2020</th>
+                            <th>2021</th>
+                            <th>2022</th>
+                            <th>2023</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>NY.GDP.MKTP.KD.ZG</td><td>GDP 成長率 (%)</td><td>TWN</td><td>3.36</td><td>6.53</td><td>2.43</td><td>1.31</td></tr>
+                        <tr><td>FP.CPI.TOTL.ZG</td><td>通貨膨脹率 (%)</td><td>TWN</td><td>-0.02</td><td>1.98</td><td>3.02</td><td>2.50</td></tr>
+                        <tr><td>SL.UEM.TOTL.ZS</td><td>失業率 (%)</td><td>TWN</td><td>3.85</td><td>3.95</td><td>3.67</td><td>3.47</td></tr>
+                        <tr><td>NY.GDP.MKTP.KD.ZG</td><td>GDP 成長率 (%)</td><td>KOR</td><td>-0.71</td><td>4.30</td><td>2.61</td><td>1.36</td></tr>
+                        <tr><td>FP.CPI.TOTL.ZG</td><td>通貨膨脹率 (%)</td><td>KOR</td><td>0.54</td><td>2.50</td><td>5.09</td><td>3.60</td></tr>
+                    </tbody>
+                </table>
+
+                <p><strong>目標輸出格式（Long Format，每列代表一個年度觀測值）：</strong></p>
+                <table class="example-table" style="margin: 15px 0; background: rgba(255,255,255,0.95);">
+                    <thead>
+                        <tr>
+                            <th>指標代碼</th>
+                            <th>指標名稱</th>
+                            <th>國家代碼</th>
+                            <th>年份</th>
+                            <th>數值</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>NY.GDP.MKTP.KD.ZG</td><td>GDP 成長率 (%)</td><td>TWN</td><td>2020</td><td>3.36</td></tr>
+                        <tr><td>NY.GDP.MKTP.KD.ZG</td><td>GDP 成長率 (%)</td><td>TWN</td><td>2021</td><td>6.53</td></tr>
+                        <tr><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td></tr>
+                    </tbody>
+                </table>
+
+                <div class="tip-box">
+                    <strong>💡 專有名詞解釋：</strong>
+                    <ul>
+                        <li><strong>寬格式 (Wide Format)：</strong> 每個觀察單位（如國家+指標）佔一列，不同時間點的數值分散在多個欄位（多年度欄）。此格式人眼易讀，但不適合統計分析與圖表。</li>
+                        <li><strong>長格式 (Long Format / Tidy Data)：</strong> 每筆觀測值各佔一列，通常包含「識別欄」（如國家、指標）與「值欄」（如年份、數值）。此格式是統計分析、樞紐分析表與 BI 工具的標準輸入格式。</li>
+                        <li><strong>取消資料行樞紐 (Unpivot Columns)：</strong> Power Query 中將「寬格式轉為長格式」的核心操作，路徑為「選取年度欄 → 轉換 → 取消其他資料行的樞紐 (Unpivot Other Columns)」。</li>
+                        <li><strong>指標代碼 (Indicator Code)：</strong> 世界銀行等國際機構用來唯一識別統計指標的代碼，如 NY.GDP.MKTP.KD.ZG 代表以固定美元計算的 GDP 年增率。</li>
+                    </ul>
+                </div>
+
+                <p><strong>操作步驟與任務：</strong></p>
+                <ol>
+                    <li>將原始寬格式資料匯入 Power Query（可直接從 Excel 工作表建立查詢，或從 CSV 匯入）。</li>
+                    <li>選取「指標代碼」、「指標名稱」、「國家代碼」三欄（按住 Ctrl 多選），執行「<strong>取消其他資料行的樞紐 (Unpivot Other Columns)</strong>」，將年度欄轉換為長格式。</li>
+                    <li>將 Power Query 自動產生的「<strong>屬性 (Attribute)</strong>」欄重新命名為「<strong>年份</strong>」，「<strong>值 (Value)</strong>」欄重新命名為「<strong>數值</strong>」。</li>
+                    <li>將「年份」欄的資料類型設為<strong>整數</strong>，「數值」欄設為<strong>小數</strong>。</li>
+                    <li>確認最終列數：<strong>原始 5 列 × 4 個年度欄 = 20 列</strong>（加上標題列後共 21 列）。</li>
+                    <li>載入至 Excel，並<strong>依「國家代碼」→「指標代碼」→「年份」的順序排序</strong>，確認資料整齊排列。</li>
+                    <li><strong>進階挑戰：</strong>利用整理後的長格式資料，建立一個「折線圖」，比較台灣（TWN）與韓國（KOR）的 GDP 成長率走勢（2020–2023）。</li>
+                </ol>
+            </div>
+
+            <!-- 學習重點回顧 -->
+            <div style="margin-top: 30px; padding: 20px; background: rgba(255,255,255,0.15); border-radius: 8px;">
+                <h3 style="color: white; margin-bottom: 15px;">🎓 學習重點回顧</h3>
+                <ul>
+                    <li><strong>Power Query：</strong>Excel 內建的資料整合引擎，支援 CSV、Web、資料庫等多種來源，所有操作自動記錄為可重複執行的步驟。</li>
+                    <li><strong>資料類型轉換：</strong>匯入後務必確認欄位類型，數值誤為文字將導致計算錯誤。</li>
+                    <li><strong>轉置 (Transpose)：</strong>行與列互換，適用於原始格式不符分析需求的情境。</li>
+                    <li><strong>合併 (Merge)：</strong>以共同鍵值欄位橫向合併兩表，類似 VLOOKUP；Left Outer 是最常用的連結類型。</li>
+                    <li><strong>追加 (Append)：</strong>將欄位相同的多張表縱向堆疊，適用於多年度資料整合。</li>
+                    <li><strong>寬格式 vs. 長格式：</strong>使用「取消資料行樞紐」將寬格式轉為長格式，是 Power Query 清洗經濟數據的核心技能。</li>
+                </ul>
+            </div>
+        </div>
+        <!-- end .practice-section -->
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>巨集 (Macros) 與報表自動化</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: "Microsoft JhengHei", "微軟正黑體", Arial, sans-serif;
+            line-height: 1.8;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+	    color: white;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
+        }
+        
+        .section h2 {
+            color: #1e3c72;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section h3 {
+            color: #2a5298;
+            margin: 20px 0 15px 0;
+            font-size: 1.3em;
+        }
+        
+        .icon {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+            background: #667eea;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .interface-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .interface-item {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        
+        .interface-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+        
+        .interface-item h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .example-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .example-table th {
+            background: #667eea;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+        }
+        
+        .example-table td {
+            padding: 12px;
+            border: 1px solid #ddd;
+			color: black;
+        }
+        
+        .example-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        
+        .example-table tr:hover {
+            background: #e9ecef;
+        }
+        
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: "Consolas", "Monaco", monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+			white-space: pre; 
+        }
+        
+        .formula {
+            background: #fff3cd;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: "Consolas", "Monaco", monospace;
+            color: #856404;
+            font-weight: bold;
+        }
+        
+        .tip-box {
+            background: #d1ecf1;
+            border-left: 4px solid #0c5460;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+			color: black;
+        }
+
+        
+        .tip-box strong {
+            color: #0c5460;
+        }
+        
+        .warning-box {
+            background: #fff3cd;
+            border-left: 4px solid #856404;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+			color: black;
+        }
+        
+        .warning-box strong {
+            color: #856404;
+        }
+        
+        .practice-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            margin-top: 40px;
+            border-radius: 10px;
+        }
+        
+        .practice-section h2 {
+            color: white;
+            margin-bottom: 30px;
+        }
+        
+        .question {
+            background: rgba(255,255,255,0.1);
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border-left: 5px solid white;
+        }
+        
+        .question h3 {
+            color: white;
+            margin-bottom: 15px;
+        }
+        
+        .question ul {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+        
+        .question li {
+            margin: 8px 0;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            margin: 20px 0;
+        }
+        
+        .comparison-table td {
+            padding: 15px;
+            vertical-align: top;
+        }
+        
+        .comparison-table td:first-child {
+            background: #e7f3ff;
+            border-right: 3px solid #667eea;
+            font-weight: bold;
+        }
+        
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        
+        ul, ol {
+            margin-left: 25px;
+            margin-top: 10px;
+        }
+        
+        li {
+            margin: 8px 0;
+        }
+        
+        p {
+            margin: 12px 0;
+            color: #333;
+        }
+
+		.step-box {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+			color: black;
+        }
+        
+        .step-box strong {
+            color: #2e7d32;
+        }
+
+		.vba-example {
+			background: #f5f5f5;
+			padding: 20px;
+			border-radius: 8px;
+			margin: 15px 0;
+			border-left: 4px solid #ff9800;
+		}
+
+		.vba-example h4 {
+			color: #e65100;
+			margin-bottom: 10px;
+		}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 巨集 (Macros) 與報表自動化</h1>
+            <p>錄製巨集與基礎 VBA 編輯，實現一鍵自動化報表生成</p>
+        </div>
+
+        <div class="content">
+            <!-- 第一節：什麼是巨集 -->
+            <div class="section">
+                <h2><span class="icon">1</span>什麼是巨集 (Macro)?</h2>
+                
+                <p>巨集是 Excel 中一種強大的自動化工具，能夠將重複性的操作步驟錄製下來，並在需要時一鍵執行，大幅提升工作效率。</p>
+
+                <div class="tip-box">
+                    <strong>💡 專有名詞解釋：</strong>
+                    <ul>
+                        <li><strong>巨集 (Macro)：</strong> 一組預先錄製或編寫的操作指令，可以自動執行重複性任務，如資料整理、格式設定、報表生成等。</li>
+                        <li><strong>VBA (Visual Basic for Applications)：</strong> Excel 內建的程式語言，用於編寫和編輯巨集。即使不懂程式設計，也可以透過「錄製巨集」功能自動生成 VBA 程式碼。</li>
+                        <li><strong>巨集錄製器：</strong> Excel 提供的工具，可以記錄您的操作步驟並自動轉換為 VBA 程式碼。</li>
+                    </ul>
+                </div>
+
+                <h3>📌 巨集的應用場景</h3>
+                <ul>
+                    <li><strong>報表自動化：</strong>每月固定格式的銷售報表、財務報表生成</li>
+                    <li><strong>資料整理：</strong>批次刪除空白列、統一格式、資料驗證</li>
+                    <li><strong>樞紐分析表更新：</strong>自動更新多個樞紐分析表並刷新資料</li>
+                    <li><strong>匯出作業：</strong>將特定工作表另存為 PDF 或其他格式</li>
+                    <li><strong>重複性操作：</strong>任何需要多次執行的固定流程</li>
+                </ul>
+
+                <div class="warning-box">
+                    <strong>⚠️ 注意事項：</strong>
+                    <ul>
+                        <li>巨集會記錄您的每一個操作步驟，包括錯誤操作，因此錄製前建議先規劃好流程。</li>
+                        <li>巨集檔案需要儲存為 <span class="formula">.xlsm</span> 格式（啟用巨集的 Excel 活頁簿）。</li>
+                        <li>第一次執行巨集時，Excel 可能會顯示安全性警告，需要啟用巨集才能執行。</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 第二節：如何錄製巨集 -->
+            <div class="section">
+                <h2><span class="icon">2</span>如何錄製巨集</h2>
+
+                <p>Excel 提供了簡單易用的「錄製巨集」功能，讓您無需撰寫程式碼即可創建自動化流程。</p>
+
+                <h3>🎬 錄製巨集的步驟</h3>
+
+                <div class="step-box">
+                    <strong>步驟 1：啟用開發人員索引標籤</strong>
+                    <ol>
+                        <li>點選 <span class="formula">檔案 → 選項 → 自訂功能區</span></li>
+                        <li>在右側勾選「<strong>開發人員</strong>」選項</li>
+                        <li>按下「確定」，功能區即會顯示「開發人員」索引標籤</li>
+                    </ol>
+                </div>
+
+                <div class="step-box">
+                    <strong>步驟 2：開始錄製巨集</strong>
+                    <ol>
+                        <li>點選 <span class="formula">開發人員 → 錄製巨集</span></li>
+                        <li>設定巨集名稱（例如：<span class="formula">生成月報表</span>）</li>
+                        <li>選擇「儲存位置」：
+                            <ul>
+                                <li><strong>此活頁簿：</strong>僅在目前檔案中可用</li>
+                                <li><strong>新活頁簿：</strong>每次開新檔案都要重新錄製</li>
+                                <li><strong>個人巨集活頁簿：</strong>所有 Excel 檔案都可使用（建議選此項）</li>
+                            </ul>
+                        </li>
+                        <li>（選用）設定快速鍵，例如 <span class="formula">Ctrl + Shift + M</span></li>
+                        <li>按下「確定」開始錄製</li>
+                    </ol>
+                </div>
+
+                <div class="step-box">
+                    <strong>步驟 3：執行要自動化的操作</strong>
+                    <p>錄製開始後，Excel 會記錄您的每一個動作。例如：</p>
+                    <ul>
+                        <li>調整欄寬、列高</li>
+                        <li>套用格式（加粗、顏色、框線）</li>
+                        <li>插入公式或函數</li>
+                        <li>建立或更新樞紐分析表</li>
+                        <li>另存新檔為 PDF</li>
+                    </ul>
+                </div>
+
+                <div class="step-box">
+                    <strong>步驟 4：停止錄製</strong>
+                    <ol>
+                        <li>完成所有操作後，點選 <span class="formula">開發人員 → 停止錄製</span></li>
+                        <li>巨集已成功建立，可在「開發人員 → 巨集」中找到</li>
+                    </ol>
+                </div>
+
+                <div class="tip-box">
+                    <strong>💡 錄製技巧：</strong>
+                    <ul>
+                        <li>錄製前先在空白檔案練習一次流程，確保步驟正確無誤。</li>
+                        <li>盡量使用鍵盤快速鍵（如 <span class="formula">Ctrl + Home</span> 回到 A1 儲存格），而非滑鼠點選，巨集執行會更穩定。</li>
+                        <li>避免在錄製過程中切換工作表或檔案，除非這是流程的一部分。</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 第三節：執行與管理巨集 -->
+            <div class="section">
+                <h2><span class="icon">3</span>執行與管理巨集</h2>
+
+                <h3>▶️ 如何執行巨集</h3>
+                <p>有多種方式可以執行已錄製的巨集：</p>
+
+                <div class="interface-grid">
+                    <div class="interface-item">
+                        <h4>方法 1：透過功能區</h4>
+                        <p>點選 <span class="formula">開發人員 → 巨集</span>，選擇巨集名稱後按「執行」。</p>
+                    </div>
+                    <div class="interface-item">
+                        <h4>方法 2：使用快速鍵</h4>
+                        <p>如果錄製時有設定快速鍵（例如 <span class="formula">Ctrl + Shift + M</span>），直接按快速鍵即可執行。</p>
+                    </div>
+                    <div class="interface-item">
+                        <h4>方法 3：按鈕觸發</h4>
+                        <p>在工作表中插入按鈕（開發人員 → 插入 → 按鈕），指定巨集後即可一鍵執行。</p>
+                    </div>
+                </div>
+
+                <h3>🗂️ 管理巨集</h3>
+                <ul>
+                    <li><strong>檢視巨集清單：</strong>點選 <span class="formula">開發人員 → 巨集</span>，即可看到所有可用的巨集。</li>
+                    <li><strong>編輯巨集：</strong>選擇巨集後點選「編輯」，進入 VBA 編輯器查看或修改程式碼。</li>
+                    <li><strong>刪除巨集：</strong>選擇巨集後點選「刪除」即可移除不需要的巨集。</li>
+                    <li><strong>重新命名巨集：</strong>需進入 VBA 編輯器，修改 <span class="formula">Sub 巨集名稱()</span> 中的名稱。</li>
+                </ul>
+
+                <div class="warning-box">
+                    <strong>⚠️ 儲存格式注意：</strong>
+                    <p>含有巨集的 Excel 檔案必須儲存為 <span class="formula">.xlsm</span> 格式。如果儲存為一般的 <span class="formula">.xlsx</span> 格式，巨集將會遺失。</p>
+                </div>
+            </div>
+
+            <!-- 第四節：基礎 VBA 編輯 -->
+            <div class="section">
+                <h2><span class="icon">4</span>基礎 VBA 編輯</h2>
+
+                <p>錄製的巨集會自動轉換為 VBA 程式碼。了解基礎的 VBA 語法，可以幫助您更靈活地調整和優化巨集。</p>
+
+                <h3>🖥️ 開啟 VBA 編輯器</h3>
+                <ul>
+                    <li>點選 <span class="formula">開發人員 → Visual Basic</span></li>
+                    <li>或按快速鍵 <span class="formula">Alt + F11</span></li>
+                </ul>
+
+                <h3>📝 VBA 程式碼結構範例</h3>
+
+                <div class="vba-example">
+                    <h4>範例：簡單的格式設定巨集</h4>
+                    <div class="code-block">Sub 設定標題格式()
+    '選取 A1 儲存格
+    Range("A1").Select
+    
+    '設定字型為粗體、大小 16、顏色為藍色
+    With Selection.Font
+        .Bold = True
+        .Size = 16
+        .Color = RGB(0, 0, 255)
+    End With
+    
+    '設定儲存格背景顏色為淺灰色
+    Selection.Interior.Color = RGB(220, 220, 220)
+    
+    '提示訊息
+    MsgBox "標題格式設定完成！"
+End Sub</div>
+                </div>
+
+                <div class="tip-box">
+                    <strong>💡 VBA 基礎語法說明：</strong>
+                    <ul>
+                        <li><strong>Sub ... End Sub：</strong> 定義一個巨集（副程式）的開始與結束。</li>
+                        <li><strong>Range("A1")：</strong> 指定儲存格範圍，例如 <span class="formula">Range("A1:D10")</span> 表示 A1 到 D10 的範圍。</li>
+                        <li><strong>Selection：</strong> 代表目前選取的儲存格或範圍。</li>
+                        <li><strong>With ... End With：</strong> 簡化多個屬性設定，避免重複撰寫物件名稱。</li>
+                        <li><strong>MsgBox：</strong> 顯示訊息對話框。</li>
+                        <li><strong>' (單引號)：</strong> 註解符號，該行內容不會被執行，用於說明程式碼功能。</li>
+                    </ul>
+                </div>
+
+                <h3>🔧 常用的 VBA 修改技巧</h3>
+                
+                <div class="vba-example">
+                    <h4>技巧 1：修改儲存格範圍</h4>
+                    <p>錄製的巨集可能會固定選取特定儲存格，您可以修改為動態範圍：</p>
+                    <div class="code-block">    '原始錄製（固定選取 A1:A10）
+    Range("A1:A10").Select
+
+    '修改為動態選取（選取 A 欄所有有資料的儲存格）
+    Range("A1", Range("A1").End(xlDown)).Select</div>
+                </div>
+
+                <div class="vba-example">
+                    <h4>技巧 2：新增變數提升彈性</h4>
+                    <p>使用變數可讓巨集更靈活，避免寫死特定數值：</p>
+                    <div class="code-block">Sub 計算總和()
+    Dim 總和 As Double
+    總和 = WorksheetFunction.Sum(Range("B2:B100"))
+    Range("B101").Value = 總和
+    MsgBox "總和為：" & 總和
+End Sub</div>
+                </div>
+
+                <div class="vba-example">
+                    <h4>技巧 3：加入條件判斷</h4>
+                    <p>讓巨集根據不同狀況執行不同動作：</p>
+                    <div class="code-block">Sub 檢查銷售額()
+    If Range("D2").Value > 100000 Then
+        MsgBox "恭喜！本月銷售達標！"
+    Else
+        MsgBox "尚未達標，請繼續努力！"
+    End If
+End Sub</div>
+                </div>
+
+            </div>
+
+            <!-- 第五節：實戰案例 - 一鍵生成月報表 -->
+            <div class="section">
+                <h2><span class="icon">5</span>實戰案例：一鍵生成月報表</h2>
+
+                <p>以下將示範如何錄製一個完整的月報表自動化巨集，包含更新樞紐分析表、格式調整及匯出 PDF。</p>
+
+                <h3>📋 月報表自動化流程</h3>
+
+                <div class="step-box">
+                    <strong>步驟 1：準備資料</strong>
+                    <ul>
+                        <li>假設您有一個包含銷售資料的工作表「原始資料」</li>
+                        <li>另有一個工作表「月報表」，其中包含樞紐分析表</li>
+                    </ul>
+                </div>
+
+                <div class="step-box">
+                    <strong>步驟 2：開始錄製巨集</strong>
+                    <ol>
+                        <li>點選 <span class="formula">開發人員 → 錄製巨集</span></li>
+                        <li>巨集名稱：<span class="formula">生成月報表</span></li>
+                        <li>快速鍵：<span class="formula">Ctrl + Shift + R</span></li>
+                        <li>儲存位置：<strong>此活頁簿</strong></li>
+                    </ol>
+                </div>
+
+                <div class="step-box">
+                    <strong>步驟 3：執行自動化操作</strong>
+                    <ol>
+                        <li><strong>更新樞紐分析表：</strong>
+                            <ul>
+                                <li>切換到「月報表」工作表</li>
+                                <li>點選樞紐分析表內任一儲存格</li>
+                                <li>右鍵選擇「<strong>重新整理</strong>」</li>
+                            </ul>
+                        </li>
+                        <li><strong>調整報表格式：</strong>
+                            <ul>
+                                <li>選取標題列（例如 A1:F1），設定粗體、背景色、字型大小</li>
+                                <li>調整欄寬為自動調整（雙擊欄位邊界）</li>
+                                <li>設定數值格式（例如千分位符號、小數點）</li>
+                            </ul>
+                        </li>
+                        <li><strong>新增報表日期：</strong>
+                            <ul>
+                                <li>在特定儲存格（例如 A1）輸入 <span class="formula">=TODAY()</span></li>
+                                <li>設定日期格式為「yyyy/mm/dd」</li>
+                            </ul>
+                        </li>
+                        <li><strong>匯出為 PDF：</strong>
+                            <ul>
+                                <li>點選 <span class="formula">檔案 → 另存新檔</span></li>
+                                <li>選擇儲存類型為「<strong>PDF</strong>」</li>
+                                <li>檔案名稱設定為「月報表_年月.pdf」（例如：月報表_2024年12月.pdf）</li>
+                                <li>按下「儲存」</li>
+                            </ul>
+                        </li>
+                    </ol>
+                </div>
+
+                <div class="step-box">
+                    <strong>步驟 4：停止錄製並測試</strong>
+                    <ol>
+                        <li>點選 <span class="formula">開發人員 → 停止錄製</span></li>
+                        <li>測試巨集：按 <span class="formula">Ctrl + Shift + R</span> 或透過「巨集」清單執行</li>
+                        <li>確認報表是否正確更新並成功匯出 PDF</li>
+                    </ol>
+                </div>
+
+                <div class="vba-example">
+                    <h4>自動生成的 VBA 程式碼範例（部分）</h4>
+                    <div class="code-block">Sub 生成月報表()
+    '切換到月報表工作表
+    Sheets("月報表").Select
+    
+    '重新整理樞紐分析表
+    ActiveSheet.PivotTables("樞紐分析表1").PivotCache.Refresh
+    
+    '設定標題格式
+    Range("A1:F1").Select
+    With Selection.Font
+        .Bold = True
+        .Size = 14
+        .Color = RGB(255, 255, 255)
+    End With
+    Selection.Interior.Color = RGB(68, 114, 196)
+    
+    '插入報表日期
+    Range("H1").Value = "報表日期："
+    Range("I1").Value = Date
+    
+    '匯出為 PDF
+    ActiveSheet.ExportAsFixedFormat Type:=xlTypePDF, _
+        Filename:="C:\Reports\月報表_" & Format(Date, "yyyy年mm月") & ".pdf"
+    
+    MsgBox "月報表已成功生成並儲存為 PDF！"
+End Sub</div>
+                </div>
+
+                <div class="tip-box">
+                    <strong>💡 進階優化建議：</strong>
+                    <ul>
+                        <li>將 PDF 儲存路徑改為變數，方便日後修改。</li>
+                        <li>加入錯誤處理機制（<span class="formula">On Error Resume Next</span>），避免執行中斷。</li>
+                        <li>使用迴圈批次處理多個樞紐分析表或工作表。</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 第六節：期末綜合應用案例討論與總結 -->
+            <div class="section">
+                <h2><span class="icon">6</span>期末綜合應用案例討論與總結</h2>
+
+                <p>在學期的最後階段,讓我們回顧整學期所學的 Excel 技能，並討論如何將這些技能整合應用於實際工作場景中。</p>
+
+                <h3>🎯 綜合應用案例：企業數據分析儀表板</h3>
+
+                <p>假設您是一家零售企業的數據分析師，需要建立一個完整的月度分析儀表板，整合以下功能：</p>
+
+                <table class="example-table">
+                    <thead>
+                        <tr>
+                            <th>階段</th>
+                            <th>應用技能</th>
+                            <th>具體內容</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>資料準備</strong></td>
+                            <td>資料清理、函數應用</td>
+                            <td>使用 TRIM、CLEAN 清理原始資料<br>使用 VLOOKUP/XLOOKUP 整合多來源資料<br>使用 IF、IFS 進行資料分類</td>
+                        </tr>
+                        <tr>
+                            <td><strong>資料分析</strong></td>
+                            <td>樞紐分析表、統計函數</td>
+                            <td>建立銷售分析樞紐表<br>使用 SUMIFS、COUNTIFS 進行條件統計<br>計算同比、環比成長率</td>
+                        </tr>
+                        <tr>
+                            <td><strong>視覺化呈現</strong></td>
+                            <td>圖表製作、格式美化</td>
+                            <td>建立趨勢圖、圓餅圖、組合圖<br>設定條件格式突顯重點資料<br>使用儲存格樣式統一版面</td>
+                        </tr>
+                        <tr>
+                            <td><strong>自動化流程</strong></td>
+                            <td>巨集、VBA</td>
+                            <td>錄製資料更新巨集<br>一鍵重新整理所有樞紐分析表<br>自動匯出 PDF 報表並寄送</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>📚 學期技能總回顧</h3>
+
+                <div class="interface-grid">
+                    <div class="interface-item">
+                        <h4>📊 資料處理</h4>
+                        <ul>
+                            <li>基礎函數（SUM、AVERAGE、MAX、MIN）</li>
+                            <li>邏輯函數（IF、IFS、AND、OR）</li>
+                            <li>查詢函數（VLOOKUP、XLOOKUP、INDEX、MATCH）</li>
+                            <li>文字函數（LEFT、RIGHT、MID、CONCATENATE）</li>
+                        </ul>
+                    </div>
+                    <div class="interface-item">
+                        <h4>📈 資料分析</h4>
+                        <ul>
+                            <li>樞紐分析表建立與應用</li>
+                            <li>條件統計（SUMIF、COUNTIF、AVERAGEIF）</li>
+                            <li>資料驗證與下拉選單</li>
+                            <li>篩選與排序技巧</li>
+                        </ul>
+                    </div>
+                    <div class="interface-item">
+                        <h4>🎨 視覺化設計</h4>
+                        <ul>
+                            <li>各類圖表製作與美化</li>
+                            <li>條件格式設定</li>
+                            <li>儲存格樣式與主題</li>
+                            <li>儀表板版面配置</li>
+                        </ul>
+                    </div>
+                    <div class="interface-item">
+                        <h4>⚡ 自動化工具</h4>
+                        <ul>
+                            <li>巨集錄製與執行</li>
+                            <li>基礎 VBA 編輯</li>
+                            <li>快速鍵與自訂按鈕</li>
+                            <li>批次處理流程</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>💼 職場實務建議</h3>
+
+                <ul>
+                    <li><strong>持續學習：</strong>Excel 功能強大且不斷更新，保持學習熱情，關注新功能（如 Power Query、Power Pivot）。</li>
+                    <li><strong>建立範本庫：</strong>將常用的報表格式、巨集整理成範本，建立個人的工作效率工具箱。</li>
+                    <li><strong>文件化流程：</strong>為重要的巨集和公式撰寫說明文件，方便日後維護和交接。</li>
+                    <li><strong>資料安全：</strong>處理敏感資料時，注意設定檔案保護和權限管理。</li>
+                    <li><strong>團隊協作：</strong>善用 Excel 的共用活頁簿和雲端協作功能（OneDrive、SharePoint）。</li>
+                </ul>
+
+                <div class="tip-box">
+                    <strong>🎓 進階學習方向：</strong>
+                    <ul>
+                        <li><strong>Power Query：</strong>更強大的資料整合與轉換工具，適合處理大量資料。</li>
+                        <li><strong>Power Pivot：</strong>建立複雜的資料模型和 DAX 公式，進行高階分析。</li>
+                        <li><strong>VBA 進階：</strong>學習更複雜的程式邏輯、自訂函數、使用者表單設計。</li>
+                        <li><strong>Excel 與其他工具整合：</strong>與 Python、SQL、Power BI 等工具結合，建立完整的數據分析流程。</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 練習題區塊 -->
+            <div class="practice-section">
+                <h2>📝 練習題</h2>
+
+                <div class="question">
+                    <h3>練習題 1：錄製資料清理巨集</h3>
+                    <p><strong>任務描述：</strong></p>
+                    <p>您每週都會收到一份格式混亂的銷售資料表，需要進行以下清理步驟：</p>
+                    <ul>
+                        <li>刪除所有空白列</li>
+                        <li>將標題列（第一列）設定為粗體、藍色背景、白色字體</li>
+                        <li>將所有金額欄位設定為千分位格式，並保留兩位小數</li>
+                        <li>自動調整所有欄寬至最適大小</li>
+                        <li>在 A1 儲存格上方插入一列，輸入「資料清理日期：」和今天日期</li>
+                    </ul>
+
+                    <p><strong>練習要求：</strong></p>
+                    <ol>
+                        <li>請錄製一個名為「<strong>資料清理</strong>」的巨集，完成以上所有步驟。</li>
+                        <li>設定快速鍵為 <span class="formula">Ctrl + Shift + C</span></li>
+                        <li>在工作表中插入一個按鈕，並指定執行此巨集。</li>
+                        <li>測試巨集是否能正確執行所有清理步驟。</li>
+                    </ol>
+
+                    <div class="tip-box">
+                        <strong>💡 提示：</strong>
+                        <ul>
+                            <li>刪除空白列：選取整個工作表 → 常用 → 尋找與選取 → 到特殊目標 → 空白 → 刪除列</li>
+                            <li>調整欄寬：選取所有欄 → 常用 → 格式 → 自動調整欄寬</li>
+                            <li>插入列：右鍵點選列號 → 插入</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>練習題 2：建立樞紐分析表更新巨集</h3>
+                    <p><strong>任務描述：</strong></p>
+                    <p>您的 Excel 檔案中有三個工作表：「原始資料」、「銷售分析」、「產品分析」。後兩個工作表各包含一個樞紐分析表，每當原始資料更新後，需要手動重新整理兩個樞紐分析表。請建立一個巨集來自動化此流程。</p>
+
+                    <p><strong>練習要求：</strong></p>
+                    <ol>
+                        <li>錄製一個名為「<strong>更新所有樞紐表</strong>」的巨集，執行以下操作：
+                            <ul>
+                                <li>切換到「銷售分析」工作表，重新整理樞紐分析表</li>
+                                <li>切換到「產品分析」工作表，重新整理樞紐分析表</li>
+                                <li>顯示訊息「所有樞紐分析表已更新完成！」</li>
+                                <li>最後切換回「原始資料」工作表</li>
+                            </ul>
+                        </li>
+                        <li>設定快速鍵為 <span class="formula">Ctrl + Shift + U</span></li>
+                        <li>執行巨集並確認兩個樞紐分析表都已正確更新。</li>
+                    </ol>
+
+                    <div class="tip-box">
+                        <strong>💡 進階挑戰：</strong>
+                        <p>開啟 VBA 編輯器（Alt + F11），查看自動生成的程式碼。嘗試修改程式碼，使其能夠自動偵測並更新活頁簿中的「所有」樞紐分析表，而不是只更新特定的兩個。</p>
+                        <p><em>提示：可以使用迴圈遍歷所有工作表和樞紐分析表。</em></p>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>練習題 3：一鍵生成與寄送週報表</h3>
+                    <p><strong>任務描述：</strong></p>
+                    <p>公司要求每週五下班前提交週報表 PDF 給主管。報表需包含本週銷售統計、排名前五的產品、以及與上週的比較分析。目前這些步驟都需要手動完成，非常耗時。請建立一個完整的自動化流程。</p>
+
+                    <p><strong>練習要求：</strong></p>
+                    <ol>
+                        <li>錄製一個名為「<strong>生成週報表</strong>」的巨集，執行以下步驟：
+                            <ul>
+                                <li>更新「週報表」工作表中的樞紐分析表</li>
+                                <li>在報表標題處（例如 A1）自動填入當週日期範圍（例如：2024/12/09 - 2024/12/15）</li>
+                                <li>調整表格格式：
+                                    <ul>
+                                        <li>標題列：粗體、18pt、深藍色背景、白色字體</li>
+                                        <li>數值欄位：千分位、兩位小數</li>
+                                        <li>自動調整欄寬</li>
+                                    </ul>
+                                </li>
+                                <li>將「週報表」工作表匯出為 PDF，檔案名稱為「週報表_YYYYMMDD.pdf」（例如：週報表_20241215.pdf）</li>
+                                <li>顯示訊息「週報表已生成！檔案儲存於：[檔案路徑]」</li>
+                            </ul>
+                        </li>
+                        <li>設定快速鍵為 <span class="formula">Ctrl + Shift + W</span></li>
+                        <li>在工作表中建立一個美觀的按鈕「🚀 生成週報表」，並指定此巨集。</li>
+                    </ol>
+
+                    <div class="warning-box">
+                        <strong>⚠️ 進階挑戰（選做）：</strong>
+                        <p>在 VBA 編輯器中加入以下功能：</p>
+                        <ul>
+                            <li>檢查今天是否為週五，如果不是則顯示提示訊息「今天不是週五，確定要生成週報嗎？」</li>
+                            <li>自動開啟 Outlook 並建立一封新郵件，收件人為主管 Email，主旨為「週報表_YYYYMMDD」，並自動附加剛才生成的 PDF 檔案。</li>
+                        </ul>
+                        <p><em>提示：需要學習使用 VBA 的 Outlook 物件模型和檔案操作函數。</em></p>
+                    </div>
+
+                    <div class="tip-box">
+                        <strong>💡 提示：</strong>
+                        <ul>
+                            <li>使用 <span class="formula">=TODAY()</span> 函數取得今天日期</li>
+                            <li>使用 <span class="formula">=TEXT(TODAY(), "YYYYMMDD")</span> 格式化日期為檔案名稱</li>
+                            <li>匯出 PDF 時，在「另存新檔」對話框中選擇存檔類型為「PDF」</li>
+                            <li>VBA 中使用 <span class="formula">Format(Date, "YYYYMMDD")</span> 格式化日期</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div style="margin-top: 30px; padding: 20px; background: rgba(255,255,255,0.2); border-radius: 8px;">
+                    <h3 style="color: white; margin-top: 0px; margin-bottom: 15px;">🎓 本課學習重點回顧</h3>
+                    <ul>
+                        <li><strong>巨集 (Macro)：</strong>自動化重複性操作的強大工具，可透過錄製或 VBA 編寫。</li>
+                        <li><strong>錄製巨集：</strong>透過「開發人員」索引標籤啟動錄製器，記錄操作步驟並生成 VBA 程式碼。</li>
+                        <li><strong>VBA 編輯：</strong>使用 Visual Basic 編輯器（Alt + F11）查看和修改巨集程式碼，增加巨集彈性。</li>
+                        <li><strong>執行方式：</strong>可透過快速鍵、功能區按鈕或工作表按鈕觸發巨集執行。</li>
+                        <li><strong>儲存格式：</strong>包含巨集的檔案必須儲存為 <span class="formula">.xlsm</span> 格式。</li>
+                        <li><strong>實務應用：</strong>報表自動化、樞紐表批次更新、資料清理、PDF 匯出等。</li>
+                        <li><strong>期末總結：</strong>整合所學技能（函數、樞紐表、圖表、巨集），建立完整的數據分析與報表自動化流程。</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

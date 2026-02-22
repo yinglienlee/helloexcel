@@ -1,0 +1,1203 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>假設分析工具</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Microsoft JhengHei", "微軟正黑體", Arial, sans-serif;
+            line-height: 1.8;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        /* ── Header ─────────────────────────────── */
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header .lesson-tag {
+            display: inline-block;
+            background: rgba(255,255,255,0.18);
+            border-radius: 20px;
+            padding: 4px 18px;
+            font-size: 0.95em;
+            letter-spacing: 1px;
+            margin-bottom: 14px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+	    color: white;
+        }
+
+        /* ── Content area ────────────────────────── */
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
+        }
+
+        .section h2 {
+            color: #1e3c72;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            display: flex;
+            align-items: center;
+        }
+
+        .section h3 {
+            color: #2a5298;
+            margin: 24px 0 14px 0;
+            font-size: 1.3em;
+            border-bottom: 2px solid #e0e6f8;
+            padding-bottom: 6px;
+        }
+
+        .section p,
+        .section li {
+            color: #333;
+        }
+
+        .icon {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+            background: #667eea;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            color: white;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        /* ── Card grid ───────────────────────────── */
+        .interface-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .interface-item {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .interface-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+
+        .interface-item h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.05em;
+        }
+
+        .interface-item p,
+        .interface-item li {
+            color: #444;
+            font-size: 0.95em;
+        }
+
+        /* ── Tables ──────────────────────────────── */
+        .example-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .example-table th {
+            background: #667eea;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        .example-table td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            color: #222;
+        }
+
+        .example-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .example-table tr:hover {
+            background: #e9ecef;
+        }
+
+        .example-table td.input-cell {
+            background: #e8f4fd;
+            font-weight: bold;
+            color: #1e3c72;
+        }
+
+        .example-table td.formula-cell {
+            background: #fff9e6;
+            color: #856404;
+            font-family: "Consolas", "Monaco", monospace;
+        }
+
+        .example-table td.result-cell {
+            background: #eaf7ea;
+            font-weight: bold;
+            color: #155724;
+        }
+
+        .example-table td.target-cell {
+            background: #fde8e8;
+            font-weight: bold;
+            color: #721c24;
+        }
+
+        /* ── Code block ──────────────────────────── */
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: "Consolas", "Monaco", monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+            white-space: pre;
+            font-size: 0.93em;
+            line-height: 1.6;
+        }
+
+        /* ── Inline formula tag ──────────────────── */
+        .formula {
+            background: #fff3cd;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: "Consolas", "Monaco", monospace;
+            color: #856404;
+            font-weight: bold;
+        }
+
+        /* ── Tip / Warning boxes ─────────────────── */
+        .tip-box {
+            background: #d1ecf1;
+            border-left: 4px solid #0c5460;
+            padding: 15px 18px;
+            margin: 20px 0;
+            border-radius: 5px;
+            color: #0a3940;
+        }
+
+        .tip-box strong {
+            color: #0c5460;
+        }
+
+        .tip-box ul, .tip-box ol {
+            margin-left: 20px;
+            margin-top: 8px;
+        }
+
+        .tip-box li {
+            color: #0a3940;
+            margin: 6px 0;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border-left: 4px solid #856404;
+            padding: 15px 18px;
+            margin: 20px 0;
+            border-radius: 5px;
+            color: #533f03;
+        }
+
+        .warning-box strong {
+            color: #856404;
+        }
+
+        /* ── Step-by-step box ────────────────────── */
+        .step-box {
+            background: #f0f4ff;
+            border-left: 4px solid #667eea;
+            padding: 15px 20px;
+            margin: 12px 0;
+            border-radius: 5px;
+        }
+
+        .step-box .step-title {
+            font-weight: bold;
+            color: #1e3c72;
+            margin-bottom: 6px;
+        }
+
+        .step-box p, .step-box li {
+            color: #333;
+        }
+
+        .steps-list {
+            counter-reset: step-counter;
+            list-style: none;
+            padding: 0;
+            margin: 14px 0;
+        }
+
+        .steps-list li {
+            counter-increment: step-counter;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin: 10px 0;
+            color: #333;
+        }
+
+        .steps-list li::before {
+            content: counter(step-counter);
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            min-width: 26px;
+            height: 26px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.82em;
+            flex-shrink: 0;
+            margin-top: 3px;
+        }
+
+        /* ── Comparison table ────────────────────── */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .comparison-table th {
+            background: #667eea;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+
+        .comparison-table td {
+            padding: 13px 15px;
+            vertical-align: top;
+            border: 1px solid #dde;
+            color: #333;
+        }
+
+        .comparison-table tr:nth-child(even) td {
+            background: #f5f6ff;
+        }
+
+        .comparison-table td:first-child {
+            background: #e7f3ff;
+            border-right: 3px solid #667eea;
+            font-weight: bold;
+            color: #1e3c72;
+        }
+
+        /* ── Highlight ───────────────────────────── */
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 6px;
+            border-radius: 3px;
+            color: #533f03;
+        }
+
+        /* ── Badge ───────────────────────────────── */
+        .badge {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 0.82em;
+            margin: 0 3px;
+            vertical-align: middle;
+        }
+
+        .badge.green  { background: #28a745; }
+        .badge.orange { background: #fd7e14; }
+        .badge.red    { background: #dc3545; }
+
+        /* ── Summary flow diagram ────────────────── */
+        .flow-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin: 16px 0;
+        }
+
+        .flow-box {
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            padding: 10px 16px;
+            text-align: center;
+            font-size: 0.9em;
+            color: #1e3c72;
+            font-weight: bold;
+            min-width: 100px;
+        }
+
+        .flow-arrow {
+            color: #667eea;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        /* ── List defaults ───────────────────────── */
+        ul, ol {
+            margin-left: 25px;
+            margin-top: 10px;
+        }
+
+        li {
+            margin: 8px 0;
+            color: #333;
+        }
+
+        p {
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        /* ═══════════════════════════════════════════
+           PRACTICE SECTION
+        ═══════════════════════════════════════════ */
+        .practice-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            margin-top: 40px;
+            border-radius: 10px;
+        }
+
+        .practice-section h2 {
+            color: white;
+            margin-bottom: 30px;
+            font-size: 1.8em;
+        }
+
+        .question {
+            background: rgba(255,255,255,0.12);
+            padding: 25px;
+            margin: 24px 0;
+            border-radius: 8px;
+            border-left: 5px solid white;
+        }
+
+        .question h3 {
+            color: white;
+            margin-bottom: 15px;
+            font-size: 1.25em;
+        }
+
+        .question p {
+            color: rgba(255,255,255,0.92);
+            margin-bottom: 10px;
+        }
+
+        .question strong {
+            color: #1e3c72;
+        }
+
+        .question ul,
+        .question ol {
+            margin-left: 22px;
+            margin-top: 10px;
+        }
+
+        .question li {
+            color: rgba(255,255,255,0.92);
+            margin: 8px 0;
+        }
+
+        /* Tip box inside question */
+        .question .tip-box {
+            background: rgba(255,255,255,0.15);
+            border-left: 4px solid rgba(255,255,255,0.7);
+            color: rgba(255,255,255,0.95);
+        }
+
+        .question .tip-box strong {
+            color: #ffffff;
+        }
+
+        .question .tip-box li {
+            color: rgba(255,255,255,0.92);
+        }
+
+        /* Formula inside question */
+        .question .formula {
+            background: rgba(255,255,255,0.2);
+            color: #ffe599;
+        }
+
+        /* Table inside question */
+        .question .example-table {
+            background: rgba(255,255,255,0.95);
+        }
+
+        .question .example-table th {
+            background: #1e3c72;
+        }
+
+        .question .example-table td {
+            color: #222;
+        }
+
+        .question .example-table td.input-cell  { background: #e8f4fd; color: #1e3c72; }
+        .question .example-table td.formula-cell { background: #fff9e6; color: #856404; }
+        .question .example-table td.result-cell  { background: #eaf7ea; color: #155724; }
+        .question .example-table td.target-cell  { background: #fde8e8; color: #721c24; }
+
+        /* Recap box inside practice */
+        .recap-box {
+            background: rgba(255,255,255,0.15);
+            border-radius: 8px;
+            padding: 22px 28px;
+            margin-top: 30px;
+        }
+
+        .recap-box h3 {
+            color: white;
+            margin-bottom: 14px;
+            font-size: 1.2em;
+        }
+
+        .recap-box li {
+            color: rgba(255,255,255,0.92);
+            margin: 8px 0;
+        }
+
+        .recap-box strong {
+            color: #ffe599;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <!-- ══════════ HEADER ══════════════════════════ -->
+    <div class="header">
+        <h1>🔮 假設分析工具</h1>
+        <p>What-If Analysis — 目標搜尋、資料表、情境管理器</p>
+    </div>
+
+    <div class="content">
+
+        <!-- ══════════════════════════════════════════
+             Section 1: 什麼是假設分析？
+        ══════════════════════════════════════════ -->
+        <div class="section">
+            <h2><span class="icon">1</span>什麼是假設分析？</h2>
+
+            <p>
+                <strong>假設分析 (What-If Analysis)</strong> 是一組讓你探索「如果某個條件改變，結果會如何變化」的 Excel 工具。
+                在財務規劃、生產排程、定價決策等情境中，你往往需要回答以下問題：
+            </p>
+            <ul>
+                <li>售價需要設定在多少，才能<strong>剛好達到損益平衡</strong>？</li>
+                <li>生產線的機器速度如果從 80 件/小時提升到 120 件/小時，<strong>日產量會如何變化</strong>？</li>
+                <li>在樂觀、普通、悲觀三種情境下，公司的<strong>淨利分別是多少</strong>？</li>
+            </ul>
+            <p>
+                Excel 提供三種假設分析工具，分別對應不同的使用情境：
+            </p>
+
+            <div class="interface-grid">
+                <div class="interface-item">
+                    <h4>🎯 目標搜尋 (Goal Seek)</h4>
+                    <p>已知<strong>目標結果</strong>，反推所需的<strong>輸入值</strong>。<br>
+                    例：利潤要達到 $50,000，售價應設為多少？</p>
+                </div>
+                <div class="interface-item">
+                    <h4>📊 資料表 (Data Table)</h4>
+                    <p>一次性計算<strong>一個或兩個變數</strong>在多個數值下的所有結果，形成完整的敏感性分析矩陣。</p>
+                </div>
+                <div class="interface-item">
+                    <h4>📋 情境管理器 (Scenario Manager)</h4>
+                    <p>儲存<strong>多組假設條件</strong>（如樂觀／普通／悲觀），並快速切換或產生比較摘要報表。</p>
+                </div>
+            </div>
+
+            <div class="tip-box">
+                <strong>💡 如何開啟假設分析工具？</strong><br>
+                三種工具都位於同一個位置：<br>
+                點擊「<strong>資料 (Data)</strong>」分頁 → 在「<strong>預測 (Forecast)</strong>」群組中，點擊「<strong>模擬分析 (What-If Analysis)</strong>」下拉按鈕，即可看到三種工具的選項。
+            </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════
+             Section 2: 目標搜尋 (Goal Seek)
+        ══════════════════════════════════════════ -->
+        <div class="section">
+            <h2><span class="icon">2</span>目標搜尋 (Goal Seek)</h2>
+
+            <p>
+                <strong>目標搜尋</strong>解決「逆向計算」問題：你已經知道希望得到的<strong>目標值</strong>，
+                並想讓 Excel 幫你找出某個<strong>輸入儲存格</strong>需要調整到多少，才能達成目標。
+            </p>
+
+            <div class="tip-box">
+                <strong>💡 專有名詞解釋</strong>
+                <ul>
+                    <li><strong>設定目標儲存格 (Set Cell)：</strong>包含公式的儲存格，其計算結果就是你想要達到的目標。例如「利潤」儲存格。</li>
+                    <li><strong>目標值 (To Value)：</strong>你希望目標儲存格達到的數字。例如輸入 0 代表剛好損益平衡。</li>
+                    <li><strong>變數儲存格 (By Changing Cell)：</strong>Excel 會調整這個儲存格的數值，直到目標儲存格達到目標值。例如「售價」儲存格。</li>
+                </ul>
+            </div>
+
+            <h3>使用條件與限制</h3>
+            <ul>
+                <li>目標搜尋<strong>每次只能調整一個變數</strong>（若需調整多個變數，請使用「規劃求解 Solver」增益集）。</li>
+                <li>目標儲存格必須<strong>包含公式</strong>，且公式必須直接或間接參照到變數儲存格。</li>
+                <li>目標搜尋使用<strong>數值迭代法</strong>逼近解答，結果為近似值（通常精度已足夠）。</li>
+            </ul>
+
+            <h3>實務範例：損益平衡點分析</h3>
+            <p>
+                某公司推出新產品，固定成本為 $120,000，每單位變動成本 $45，目前售價 $80。
+                問：<strong>需銷售多少單位才能達到損益平衡（利潤 = 0）？</strong>
+            </p>
+
+            <table class="example-table">
+                <thead>
+                    <tr>
+                        <th>儲存格</th>
+                        <th>項目</th>
+                        <th>數值 / 公式</th>
+                        <th>說明</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>B1</strong></td>
+                        <td>售價（元/單位）</td>
+                        <td class="input-cell">$80</td>
+                        <td>輸入值</td>
+                    </tr>
+                    <tr>
+                        <td><strong>B2</strong></td>
+                        <td>變動成本（元/單位）</td>
+                        <td class="input-cell">$45</td>
+                        <td>輸入值</td>
+                    </tr>
+                    <tr>
+                        <td><strong>B3</strong></td>
+                        <td>固定成本（元）</td>
+                        <td class="input-cell">$120,000</td>
+                        <td>輸入值</td>
+                    </tr>
+                    <tr>
+                        <td><strong>B4</strong></td>
+                        <td>銷售數量（單位）</td>
+                        <td class="target-cell">??? ← 要求解的值</td>
+                        <td><strong>變數儲存格</strong>（Goal Seek 將調整此值）</td>
+                    </tr>
+                    <tr>
+                        <td><strong>B5</strong></td>
+                        <td>總收入（元）</td>
+                        <td class="formula-cell">=B1*B4</td>
+                        <td>售價 × 數量</td>
+                    </tr>
+                    <tr>
+                        <td><strong>B6</strong></td>
+                        <td>總變動成本（元）</td>
+                        <td class="formula-cell">=B2*B4</td>
+                        <td>變動成本 × 數量</td>
+                    </tr>
+                    <tr>
+                        <td><strong>B7</strong></td>
+                        <td>利潤（元）</td>
+                        <td class="formula-cell">=B5-B6-B3</td>
+                        <td><strong>目標儲存格</strong>（要讓此值 = 0）</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>操作步驟</h3>
+            <ol class="steps-list">
+                <li>在工作表中依上表建立資料結構，並在 B4 先輸入任意初始值（如 1000）。</li>
+                <li>點擊「<strong>資料</strong>」→「<strong>模擬分析 (What-If Analysis)</strong>」→「<strong>目標搜尋 (Goal Seek)</strong>」。</li>
+                <li>
+                    在對話框中填入三個欄位：
+                    <ul>
+                        <li><strong>設定目標儲存格：</strong>點選 <span class="formula">B7</span>（利潤）</li>
+                        <li><strong>目標值：</strong>輸入 <span class="formula">0</span>（損益平衡）</li>
+                        <li><strong>藉由變更儲存格：</strong>點選 <span class="formula">B4</span>（銷售數量）</li>
+                    </ul>
+                </li>
+                <li>點擊「<strong>確定</strong>」，Excel 會自動迭代計算並將結果填入 B4。</li>
+                <li>確認結果視窗顯示「已找到解答」，B4 應顯示約 <strong>2,667 單位</strong>，此即損益平衡點。</li>
+            </ol>
+
+            <div class="tip-box">
+                <strong>💡 損益平衡點 (Break-Even Point, BEP) 說明</strong><br>
+                損益平衡點是指企業的<strong>總收入 = 總成本</strong>（即利潤為零）時的銷售量或銷售金額。
+                公式推導：<br>
+                售價 × 數量 = 變動成本 × 數量 + 固定成本<br>
+                → 數量 = 固定成本 ÷（售價 − 變動成本）= $120,000 ÷ ($80 − $45) = <strong>3,429 單位</strong>。<br>
+                目標搜尋可快速驗算此結果，特別適合公式較複雜、無法用代數直接求解的情境。
+            </div>
+
+            <div class="warning-box">
+                <strong>⚠️ 注意：目標搜尋會直接覆寫儲存格數值</strong><br>
+                執行目標搜尋後，Excel 會把求得的結果直接填入變數儲存格。如果你想保留原始數值，
+                請在執行前按 <span class="highlight">Ctrl + Z</span> 復原，或事先將原始值記錄在其他儲存格。
+            </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════
+             Section 3: 資料表 (Data Table)
+        ══════════════════════════════════════════ -->
+        <div class="section">
+            <h2><span class="icon">3</span>資料表 (Data Table)</h2>
+
+            <p>
+                <strong>資料表</strong>（又稱「敏感性分析表」）可以同時計算<strong>一個或兩個輸入變數</strong>在多個不同數值下的所有輸出結果，讓你一眼看清各種情境的影響。
+            </p>
+
+            <div class="tip-box">
+                <strong>💡 專有名詞解釋</strong>
+                <ul>
+                    <li><strong>單變數資料表 (One-Variable Data Table)：</strong>固定其他所有變數，只讓<strong>一個輸入值</strong>在不同數值間變化，觀察對某個結果的影響。例如：觀察不同售價對利潤的影響。</li>
+                    <li><strong>雙變數資料表 (Two-Variable Data Table)：</strong>同時讓<strong>兩個輸入值</strong>在不同數值間變化，在矩陣中呈現所有組合的結果。例如：同時改變售價與銷售量，觀察各組合下的利潤。</li>
+                    <li><strong>列輸入儲存格 (Row Input Cell)：</strong>資料表中，橫向（列方向）的變數所對應的原始輸入儲存格。</li>
+                    <li><strong>欄輸入儲存格 (Column Input Cell)：</strong>資料表中，縱向（欄方向）的變數所對應的原始輸入儲存格。</li>
+                </ul>
+            </div>
+
+            <h3>單變數資料表：不同售價 vs. 利潤</h3>
+            <p>
+                以前一節的損益分析模型為基礎（B4 = 3,000 單位固定），觀察<strong>售價從 $60 到 $100</strong> 時利潤的變化。
+            </p>
+
+            <div class="step-box">
+                <div class="step-title">資料表版面配置（欄輸入）</div>
+                <p>在試算表中建立以下結構：</p>
+            </div>
+
+            <table class="example-table">
+                <thead>
+                    <tr>
+                        <th>儲存格</th>
+                        <th>內容</th>
+                        <th>說明</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>D1</strong></td>
+                        <td class="formula-cell">=B7</td>
+                        <td>公式儲存格，參照利潤。<strong>必須放在變數值列的右上方或同行</strong>。</td>
+                    </tr>
+                    <tr>
+                        <td><strong>C2</strong></td>
+                        <td class="input-cell">$60</td>
+                        <td rowspan="5" style="vertical-align:middle;">欄方向（縱向）的變數值清單：要測試的售價。</td>
+                    </tr>
+                    <tr><td><strong>C3</strong></td><td class="input-cell">$70</td></tr>
+                    <tr><td><strong>C4</strong></td><td class="input-cell">$80</td></tr>
+                    <tr><td><strong>C5</strong></td><td class="input-cell">$90</td></tr>
+                    <tr><td><strong>C6</strong></td><td class="input-cell">$100</td></tr>
+                    <tr>
+                        <td><strong>D2:D6</strong></td>
+                        <td class="result-cell">（Excel 自動填入）</td>
+                        <td>資料表執行後，Excel 自動計算各售價下的利潤結果。</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>操作步驟（單變數）</h3>
+            <ol class="steps-list">
+                <li>在工作表中建立上述版面：D1 輸入 <span class="formula">=B7</span>，C2:C6 輸入 $60、$70、$80、$90、$100。</li>
+                <li><strong>選取整個資料表範圍</strong>：框選 C1:D6（含公式儲存格與所有變數值）。</li>
+                <li>點擊「<strong>資料</strong>」→「<strong>模擬分析</strong>」→「<strong>資料表 (Data Table)</strong>」。</li>
+                <li>
+                    因為售價清單是縱向（欄方向）排列：
+                    <ul>
+                        <li><strong>列輸入儲存格：</strong>留白</li>
+                        <li><strong>欄輸入儲存格：</strong>點選 <span class="formula">B1</span>（原始售價儲存格）</li>
+                    </ul>
+                </li>
+                <li>點擊「<strong>確定</strong>」，D2:D6 即自動填入各售價對應的利潤。</li>
+            </ol>
+
+            <h3>雙變數資料表：售價 × 銷售數量 矩陣</h3>
+            <p>
+                同時讓售價（列方向：$60–$100）與銷售數量（欄方向：1,000–5,000）各自變化，
+                產生一個 <strong>5×5 的利潤矩陣</strong>。
+            </p>
+
+            <table class="example-table">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>1,000 件</th>
+                        <th>2,000 件</th>
+                        <th>3,000 件</th>
+                        <th>4,000 件</th>
+                        <th>5,000 件</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="input-cell">售價 $60</td>
+                        <td class="result-cell">−$75,000</td>
+                        <td class="result-cell">−$30,000</td>
+                        <td class="result-cell">$15,000</td>
+                        <td class="result-cell">$60,000</td>
+                        <td class="result-cell">$105,000</td>
+                    </tr>
+                    <tr>
+                        <td class="input-cell">售價 $70</td>
+                        <td class="result-cell">−$70,000</td>
+                        <td class="result-cell">−$20,000</td>
+                        <td class="result-cell">$30,000</td>
+                        <td class="result-cell">$80,000</td>
+                        <td class="result-cell">$130,000</td>
+                    </tr>
+                    <tr>
+                        <td class="input-cell">售價 $80</td>
+                        <td class="result-cell">−$65,000</td>
+                        <td class="result-cell">−$10,000</td>
+                        <td class="result-cell">$45,000</td>
+                        <td class="result-cell">$100,000</td>
+                        <td class="result-cell">$155,000</td>
+                    </tr>
+                    <tr>
+                        <td class="input-cell">售價 $90</td>
+                        <td class="result-cell">−$60,000</td>
+                        <td class="result-cell">$0</td>
+                        <td class="result-cell">$60,000</td>
+                        <td class="result-cell">$120,000</td>
+                        <td class="result-cell">$180,000</td>
+                    </tr>
+                    <tr>
+                        <td class="input-cell">售價 $100</td>
+                        <td class="result-cell">−$55,000</td>
+                        <td class="result-cell">$10,000</td>
+                        <td class="result-cell">$75,000</td>
+                        <td class="result-cell">$140,000</td>
+                        <td class="result-cell">$205,000</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>操作步驟（雙變數）</h3>
+            <ol class="steps-list">
+                <li>在交叉點（左上角）儲存格（如 G1）輸入 <span class="formula">=B7</span>（利潤公式）。</li>
+                <li>在<strong>同一列</strong>（G1 右側）填入列方向的變數值：$60、$70、$80、$90、$100。</li>
+                <li>在<strong>同一欄</strong>（G1 下方）填入欄方向的變數值：1,000、2,000、3,000、4,000、5,000。</li>
+                <li>選取整個矩陣範圍（含左上角公式儲存格、列標題、欄標題）。</li>
+                <li>點擊「<strong>資料</strong>」→「<strong>模擬分析</strong>」→「<strong>資料表</strong>」。</li>
+                <li>
+                    <ul>
+                        <li><strong>列輸入儲存格：</strong>點選 <span class="formula">B1</span>（售價 ─ 對應列方向）</li>
+                        <li><strong>欄輸入儲存格：</strong>點選 <span class="formula">B4</span>（銷售數量 ─ 對應欄方向）</li>
+                    </ul>
+                </li>
+                <li>點擊「<strong>確定</strong>」，矩陣內部自動填滿所有組合的利潤結果。</li>
+            </ol>
+
+            <div class="warning-box">
+                <strong>⚠️ 資料表的計算結果是陣列公式，無法單獨編輯</strong><br>
+                Excel 會以 <span class="formula">{=TABLE(...)}</span> 陣列公式填入結果。若需修改，必須選取整個結果範圍後再一次刪除，不能只刪除單一儲存格。
+            </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════
+             Section 4: 情境管理器 (Scenario Manager)
+        ══════════════════════════════════════════ -->
+        <div class="section">
+            <h2><span class="icon">4</span>情境管理器 (Scenario Manager)</h2>
+
+            <p>
+                <strong>情境管理器</strong>讓你預先定義並儲存<strong>多組假設條件組合</strong>（稱為「情境」），
+                之後可以一鍵切換查看不同情境下的工作表數值，也可以產生一份<strong>摘要報表</strong>並排比較所有情境的結果。
+            </p>
+
+            <div class="tip-box">
+                <strong>💡 專有名詞解釋</strong>
+                <ul>
+                    <li><strong>情境 (Scenario)：</strong>一組特定假設值的組合。例如「樂觀情境」可能是高售價＋高銷售量；「悲觀情境」是低售價＋低銷售量。每個情境可包含多個變動儲存格的值。</li>
+                    <li><strong>變動儲存格 (Changing Cells)：</strong>情境中會改變數值的輸入儲存格，最多可設定 32 個。</li>
+                    <li><strong>情境摘要 (Scenario Summary)：</strong>將所有情境的輸入值與關鍵輸出值並排成報表，方便決策者一次比較所有可能結果。</li>
+                </ul>
+            </div>
+
+            <h3>實務範例：三種市場情境的年度利潤比較</h3>
+            <p>
+                沿用損益分析模型，但現在有三種市場情境假設，每種情境下售價與銷售數量不同：
+            </p>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>情境名稱</th>
+                        <th>售價（B1）</th>
+                        <th>銷售數量（B4）</th>
+                        <th>預期利潤</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>🟢 樂觀情境</td>
+                        <td>$90</td>
+                        <td>5,000 單位</td>
+                        <td>$210,000</td>
+                    </tr>
+                    <tr>
+                        <td>🟡 普通情境</td>
+                        <td>$80</td>
+                        <td>3,500 單位</td>
+                        <td>$2,500</td>
+                    </tr>
+                    <tr>
+                        <td>🔴 悲觀情境</td>
+                        <td>$70</td>
+                        <td>2,000 單位</td>
+                        <td>−$70,000</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>操作步驟：建立情境</h3>
+            <ol class="steps-list">
+                <li>點擊「<strong>資料</strong>」→「<strong>模擬分析</strong>」→「<strong>情境管理器 (Scenario Manager)</strong>」。</li>
+                <li>點擊「<strong>新增 (Add)</strong>」按鈕，建立第一個情境。</li>
+                <li>
+                    在「新增情境」對話框：
+                    <ul>
+                        <li><strong>情境名稱：</strong>輸入 <span class="highlight">樂觀情境</span></li>
+                        <li><strong>變動儲存格：</strong>按住 Ctrl 同時點選 <span class="formula">B1</span> 和 <span class="formula">B4</span>（售價與數量）</li>
+                    </ul>
+                    點擊「確定」。
+                </li>
+                <li>在「情境值」對話框中輸入樂觀情境的數值：B1 = <span class="formula">90</span>，B4 = <span class="formula">5000</span>。點擊「<strong>新增</strong>」繼續建立下一個情境。</li>
+                <li>重複步驟 3–4，分別建立「普通情境」（B1=80, B4=3500）與「悲觀情境」（B1=70, B4=2000）。</li>
+                <li>全部情境建立完成後，點擊「<strong>關閉</strong>」。</li>
+            </ol>
+
+            <h3>操作步驟：切換情境 & 產生摘要報表</h3>
+            <ol class="steps-list">
+                <li>再次開啟情境管理器，在清單中選取任一情境，點擊「<strong>顯示 (Show)</strong>」，工作表數值會立即切換為該情境的假設值。</li>
+                <li>若要產生比較報表，點擊「<strong>摘要 (Summary)</strong>」按鈕。</li>
+                <li>
+                    在「情境摘要」對話框中：
+                    <ul>
+                        <li>報表類型選「<strong>情境摘要 (Scenario Summary)</strong>」。</li>
+                        <li><strong>結果儲存格：</strong>點選 <span class="formula">B7</span>（利潤），可按住 Ctrl 多選多個輸出儲存格。</li>
+                    </ul>
+                    點擊「確定」。
+                </li>
+                <li>Excel 自動在新工作表中產生並排的比較報表，可直接印出或呈報使用。</li>
+            </ol>
+
+            <div class="tip-box">
+                <strong>💡 情境管理器 vs. 資料表：如何選擇？</strong>
+                <ul>
+                    <li>若要測試<strong>連續的數值範圍</strong>（如售價每次增加 $10），且需要一次性看到所有組合結果 → 使用<strong>資料表</strong>。</li>
+                    <li>若要儲存<strong>有意義的命名情境</strong>（如「樂觀」「悲觀」「基線」），並能隨時切換套用到工作表 → 使用<strong>情境管理器</strong>。</li>
+                    <li>情境管理器可改變<strong>最多 32 個</strong>輸入儲存格；資料表最多同時改變 <strong>2 個</strong>變數。</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════
+             Section 5: 三工具比較總覽
+        ══════════════════════════════════════════ -->
+        <div class="section">
+            <h2><span class="icon">5</span>三種工具比較總覽</h2>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>工具</th>
+                        <th>解決的問題</th>
+                        <th>可變動的輸入數量</th>
+                        <th>輸出形式</th>
+                        <th>典型應用</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>🎯 目標搜尋</td>
+                        <td>已知目標結果，反求輸入值</td>
+                        <td>1 個</td>
+                        <td>直接修改儲存格數值</td>
+                        <td>損益平衡計算、目標達成條件</td>
+                    </tr>
+                    <tr>
+                        <td>📊 資料表</td>
+                        <td>一次計算多個輸入值對應的所有輸出</td>
+                        <td>1–2 個</td>
+                        <td>自動填入的結果矩陣</td>
+                        <td>敏感性分析、定價矩陣</td>
+                    </tr>
+                    <tr>
+                        <td>📋 情境管理器</td>
+                        <td>儲存、切換、比較多組假設條件</td>
+                        <td>最多 32 個</td>
+                        <td>情境摘要報表（新工作表）</td>
+                        <td>多情境財務預測、策略比較</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>決策流程圖</h3>
+            <div class="flow-row">
+                <div class="flow-box">已知目標值？</div>
+                <div class="flow-arrow">→ 是</div>
+                <div class="flow-box">🎯 目標搜尋</div>
+            </div>
+            <div class="flow-row">
+                <div class="flow-box">需要連續值域矩陣？</div>
+                <div class="flow-arrow">→ 1~2個變數</div>
+                <div class="flow-box">📊 資料表</div>
+            </div>
+            <div class="flow-row">
+                <div class="flow-box">需命名並儲存多組假設？</div>
+                <div class="flow-arrow">→ 是</div>
+                <div class="flow-box">📋 情境管理器</div>
+            </div>
+        </div>
+
+    </div><!-- end .content -->
+
+    <!-- ═══════════════════════════════════════════
+         PRACTICE SECTION
+    ═══════════════════════════════════════════ -->
+    <div class="practice-section">
+        <h2>✏️ 練習題</h2>
+
+        <!-- ── 練習題 1 ─────────────────────────── -->
+        <div class="question">
+            <h3>練習題 1：目標搜尋 — 生產線達標所需機器速度</h3>
+            <p><strong>任務描述：</strong></p>
+            <p>
+                某工廠的生產線每天運作 <strong>16 小時</strong>，目前機器速度為 <strong>80 件/小時</strong>，
+                但因設備閒置與換線，實際效率僅有 <strong>85%</strong>。
+                工廠接到訂單，必須在一天內生產至少 <strong>1,500 件</strong>成品。
+                請使用目標搜尋，找出機器速度需要達到多少才能完成訂單。
+            </p>
+
+            <table class="example-table" style="margin: 20px 0; background: rgba(255,255,255,0.95);">
+                <thead>
+                    <tr>
+                        <th>儲存格</th>
+                        <th>項目</th>
+                        <th>數值 / 公式</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>B1</strong></td><td>每日生產時數（小時）</td><td class="input-cell">16</td></tr>
+                    <tr><td><strong>B2</strong></td><td>機器速度（件/小時）</td><td class="target-cell">80（← 目標搜尋將調整此值）</td></tr>
+                    <tr><td><strong>B3</strong></td><td>實際效率</td><td class="input-cell">85%</td></tr>
+                    <tr><td><strong>B4</strong></td><td>日產量（件）</td><td class="formula-cell">=B1*B2*B3</td></tr>
+                </tbody>
+            </table>
+
+            <div class="tip-box">
+                <strong>💡 專有名詞解釋</strong>
+                <ul>
+                    <li><strong>機器速度 (Machine Speed / Cycle Rate)：</strong>生產線每單位時間可完成的產品數量，是 IE（工業工程）中衡量設備能力的關鍵指標。</li>
+                    <li><strong>實際效率 (Overall Equipment Effectiveness, OEE)：</strong>考量設備停機、換線損失後，設備實際有效運轉時間與理論最大時間的比率。</li>
+                    <li><strong>日產量：</strong>每日實際生產的成品數量，公式為：生產時數 × 機器速度 × 實際效率。</li>
+                </ul>
+            </div>
+
+            <p><strong>操作步驟：</strong></p>
+            <ol>
+                <li>依上表在工作表中建立資料，B4 輸入公式 <span class="formula">=B1*B2*B3</span>。</li>
+                <li>點擊「<strong>資料 → 模擬分析 → 目標搜尋</strong>」。</li>
+                <li>設定目標儲存格：<span class="formula">B4</span>，目標值：<span class="formula">1500</span>，變更儲存格：<span class="formula">B2</span>。</li>
+                <li>點擊「確定」，記錄 Excel 求得的機器速度結果。</li>
+                <li><strong>驗算：</strong>將求得的速度代入公式，確認日產量是否恰好等於 1,500 件。</li>
+                <li><strong>進階思考：</strong>若機器速度提升有上限（最高 130 件/小時），而實際效率最多可改善至 95%，請再次使用目標搜尋，分別求出在速度上限下，效率需達多少才能完成 1,500 件。</li>
+            </ol>
+        </div>
+
+        <!-- ── 練習題 2 ─────────────────────────── -->
+        <div class="question">
+            <h3>練習題 2：雙變數資料表 — 定價與銷量的利潤敏感性分析</h3>
+            <p><strong>任務描述：</strong></p>
+            <p>
+                某新創公司推出一款 APP 訂閱服務，財務模型如下。行銷部門估計不同定價與不同訂閱用戶數會有不同利潤，
+                請建立一個<strong>雙變數資料表</strong>，同時分析月訂閱費（$5–$25）與月活躍用戶數（5,000–25,000）
+                對每月利潤的影響，並找出利潤為正的最小定價與用戶數組合。
+            </p>
+
+            <table class="example-table" style="margin: 20px 0; background: rgba(255,255,255,0.95);">
+                <thead>
+                    <tr>
+                        <th>儲存格</th>
+                        <th>項目</th>
+                        <th>數值 / 公式</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>B1</strong></td><td>月訂閱費（元/用戶）</td><td class="input-cell">$15</td></tr>
+                    <tr><td><strong>B2</strong></td><td>月活躍用戶數（人）</td><td class="input-cell">12,000</td></tr>
+                    <tr><td><strong>B3</strong></td><td>每用戶月均服務成本（元）</td><td class="input-cell">$4</td></tr>
+                    <tr><td><strong>B4</strong></td><td>每月固定營運成本（元）</td><td class="input-cell">$60,000</td></tr>
+                    <tr><td><strong>B5</strong></td><td>月收入（元）</td><td class="formula-cell">=B1*B2</td></tr>
+                    <tr><td><strong>B6</strong></td><td>月變動成本（元）</td><td class="formula-cell">=B3*B2</td></tr>
+                    <tr><td><strong>B7</strong></td><td>月利潤（元）</td><td class="formula-cell">=B5-B6-B4</td></tr>
+                </tbody>
+            </table>
+
+            <div class="tip-box">
+                <strong>💡 專有名詞解釋</strong>
+                <ul>
+                    <li><strong>月活躍用戶 (Monthly Active Users, MAU)：</strong>在一個月內至少使用一次該服務的用戶數量，是訂閱制 SaaS 公司衡量業務規模的核心指標。</li>
+                    <li><strong>敏感性分析 (Sensitivity Analysis)：</strong>分析當輸入變數改變時，輸出結果變化幅度的方法。雙變數資料表是在 Excel 中進行敏感性分析最有效率的工具。</li>
+                    <li><strong>損益平衡 (Break-Even)：</strong>在資料表矩陣中，利潤 = 0 的格子所在的組合即為損益平衡點；正值的格子代表獲利情境。</li>
+                </ul>
+            </div>
+
+            <p><strong>操作步驟：</strong></p>
+            <ol>
+                <li>依上表建立財務模型，確認 B7 的公式正確。</li>
+                <li>在新的區域（如 D1）輸入 <span class="formula">=B7</span>（公式儲存格，放在矩陣左上角）。</li>
+                <li>在 <strong>D1 右側</strong>（E1:I1）依序輸入<strong>列方向</strong>變數值（月訂閱費）：<span class="formula">5</span>、<span class="formula">10</span>、<span class="formula">15</span>、<span class="formula">20</span>、<span class="formula">25</span>。</li>
+                <li>在 <strong>D1 下方</strong>（D2:D6）依序輸入<strong>欄方向</strong>變數值（用戶數）：<span class="formula">5000</span>、<span class="formula">10000</span>、<span class="formula">15000</span>、<span class="formula">20000</span>、<span class="formula">25000</span>。</li>
+                <li>框選整個矩陣範圍 D1:I6，點擊「<strong>資料 → 模擬分析 → 資料表</strong>」。</li>
+                <li>列輸入儲存格：<span class="formula">B1</span>（月訂閱費）；欄輸入儲存格：<span class="formula">B2</span>（用戶數）。點擊「確定」。</li>
+                <li><strong>分析結果：</strong>找出矩陣中所有利潤 ≥ 0 的組合，並使用<strong>條件式格式設定 (Conditional Formatting)</strong> 將正值格子標記為綠色、負值標記為紅色，讓損益平衡線一目了然。</li>
+                <li><strong>進階挑戰：</strong>若公司要求每月利潤至少達 $50,000，在月訂閱費 $15 固定的情況下，最少需要多少活躍用戶？請利用資料表結果或目標搜尋工具驗證。</li>
+            </ol>
+        </div>
+
+        <!-- ── 練習題 3 ─────────────────────────── -->
+        <div class="question">
+            <h3>練習題 3：情境管理器 — 三種生產策略的年度成本比較</h3>
+            <p><strong>任務描述：</strong></p>
+            <p>
+                某製造廠正在評估三種生產策略（正常生產、加班生產、外包生產），
+                每種策略的勞工成本、材料成本與固定費用不同。
+                請使用情境管理器建立三種情境，並產生情境摘要報表，比較各策略下的年度總成本與毛利。
+            </p>
+
+            <table class="example-table" style="margin: 20px 0; background: rgba(255,255,255,0.95);">
+                <thead>
+                    <tr>
+                        <th>儲存格</th>
+                        <th>項目</th>
+                        <th>基準值</th>
+                        <th>說明</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>B1</strong></td><td>年產量（件）</td><td class="input-cell">50,000</td><td>各情境均固定</td></tr>
+                    <tr><td><strong>B2</strong></td><td>單位售價（元）</td><td class="input-cell">$200</td><td>各情境均固定</td></tr>
+                    <tr><td><strong>B3</strong></td><td>單位勞工成本（元）</td><td class="input-cell">$45</td><td>情境 1 變動儲存格</td></tr>
+                    <tr><td><strong>B4</strong></td><td>單位材料成本（元）</td><td class="input-cell">$60</td><td>情境 2 變動儲存格</td></tr>
+                    <tr><td><strong>B5</strong></td><td>年度固定成本（元）</td><td class="input-cell">$1,500,000</td><td>情境 3 變動儲存格</td></tr>
+                    <tr><td><strong>B6</strong></td><td>年度總收入（元）</td><td class="formula-cell">=B1*B2</td><td>公式</td></tr>
+                    <tr><td><strong>B7</strong></td><td>年度總變動成本（元）</td><td class="formula-cell">=B1*(B3+B4)</td><td>公式</td></tr>
+                    <tr><td><strong>B8</strong></td><td>年度毛利（元）</td><td class="formula-cell">=B6-B7-B5</td><td>目標輸出儲存格</td></tr>
+                </tbody>
+            </table>
+
+            <div class="tip-box">
+                <strong>💡 三種生產策略假設值</strong>
+                <ul>
+                    <li>
+                        <strong>🟢 策略 A（正常生產）：</strong>
+                        勞工成本 $45 / 材料成本 $60 / 固定成本 $1,500,000
+                    </li>
+                    <li>
+                        <strong>🟡 策略 B（加班生產）：</strong>
+                        勞工成本 <strong>$65</strong>（加班費較高）/ 材料成本 $60 / 固定成本 <strong>$1,200,000</strong>（無需增設設備）
+                    </li>
+                    <li>
+                        <strong>🔴 策略 C（外包生產）：</strong>
+                        勞工成本 <strong>$35</strong>（外包較便宜）/ 材料成本 <strong>$75</strong>（外包商採購成本較高）/ 固定成本 <strong>$800,000</strong>（廠內固定設備減少）
+                    </li>
+                </ul>
+            </div>
+
+            <div class="tip-box">
+                <strong>💡 專有名詞解釋</strong>
+                <ul>
+                    <li><strong>毛利 (Gross Profit)：</strong>總收入扣除所有生產相關成本（含固定成本與變動成本）後的剩餘利潤，是衡量生產策略獲利能力的指標。</li>
+                    <li><strong>加班生產 (Overtime Production)：</strong>利用現有設備與人員在正常工時以外延長工作，可提升產量但勞工成本大幅增加。</li>
+                    <li><strong>外包生產 (Outsourcing)：</strong>將部分或全部生產委外給其他廠商，可降低廠內固定成本，但可能增加單位材料成本並降低品質管控能力。</li>
+                </ul>
+            </div>
+
+            <p><strong>操作步驟：</strong></p>
+            <ol>
+                <li>依上表建立財務模型，確認 B6、B7、B8 的公式均正確。</li>
+                <li>點擊「<strong>資料 → 模擬分析 → 情境管理器</strong>」，點擊「<strong>新增</strong>」。</li>
+                <li>建立「<strong>策略A_正常生產</strong>」情境：變動儲存格選 <span class="formula">B3,B4,B5</span>；數值分別為 <span class="formula">45</span>、<span class="formula">60</span>、<span class="formula">1500000</span>。</li>
+                <li>繼續新增「<strong>策略B_加班生產</strong>」情境：B3 = <span class="formula">65</span>，B4 = <span class="formula">60</span>，B5 = <span class="formula">1200000</span>。</li>
+                <li>新增「<strong>策略C_外包生產</strong>」情境：B3 = <span class="formula">35</span>，B4 = <span class="formula">75</span>，B5 = <span class="formula">800000</span>。</li>
+                <li>全部情境建立後，點擊「<strong>摘要 (Summary)</strong>」，結果儲存格選 <span class="formula">B8</span>（年度毛利）。點擊「確定」。</li>
+                <li>在 Excel 自動產生的<strong>情境摘要工作表</strong>中，比較三種策略的年度毛利，判斷哪種策略最有利可圖。</li>
+                <li><strong>進階挑戰：</strong>若公司對外包商的單位材料成本有談判空間，從 $75 降低到 $65，請更新「策略C」的情境值，重新產生摘要報表，觀察結論是否改變。</li>
+            </ol>
+        </div>
+
+        <!-- ── 學習重點回顧 ──────────────────────── -->
+        <div class="recap-box">
+            <h3>🎓 學習重點回顧</h3>
+            <ul>
+                <li><strong>開啟位置：</strong>三種工具都在「資料 → 模擬分析 (What-If Analysis)」下拉選單中。</li>
+                <li><strong>目標搜尋：</strong>已知輸出目標，反求輸入值；每次僅能調整 1 個變數；結果直接寫入儲存格。</li>
+                <li><strong>資料表：</strong>一次計算 1–2 個變數在所有指定值下的輸出，自動填入結果矩陣；輸出為陣列公式，不可單獨修改。</li>
+                <li><strong>情境管理器：</strong>儲存最多 32 個輸入儲存格的多組命名假設；可切換顯示或一鍵產生並排比較的摘要報表。</li>
+                <li><strong>損益平衡點：</strong>固定成本 ÷（單位售價 − 單位變動成本），可用目標搜尋快速驗算。</li>
+                <li><strong>工具選擇原則：</strong>逆向求解 → 目標搜尋；連續值域矩陣 → 資料表；命名情境比較 → 情境管理器。</li>
+            </ul>
+        </div>
+
+    </div><!-- end .practice-section -->
+
+</div><!-- end .container -->
+</body>
+</html>

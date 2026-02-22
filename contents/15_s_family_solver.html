@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>統計分析與規劃求解</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: "Microsoft JhengHei", "微軟正黑體", Arial, sans-serif;
+            line-height: 1.8;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
+        }
+        
+        .section h2 {
+            color: #1e3c72;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section h3 {
+            color: #2a5298;
+            margin: 20px 0 15px 0;
+            font-size: 1.3em;
+        }
+        
+        .icon {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+            background: #667eea;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .interface-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .interface-item {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        
+        .interface-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+        
+        .interface-item h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .example-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .example-table th {
+            background: #667eea;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+        }
+        
+        .example-table td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            color: black;
+        }
+        
+        .example-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        
+        .example-table tr:hover {
+            background: #e9ecef;
+        }
+        
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: "Consolas", "Monaco", monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+            white-space: pre;
+        }
+        
+        .formula {
+            background: #fff3cd;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: "Consolas", "Monaco", monospace;
+            color: #856404;
+            font-weight: bold;
+        }
+        
+        .tip-box {
+            background: #d1ecf1;
+            border-left: 4px solid #0c5460;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            color: black;
+        }
+        
+        .tip-box strong {
+            color: #0c5460;
+        }
+        
+        .warning-box {
+            background: #fff3cd;
+            border-left: 4px solid #856404;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            color: black;
+        }
+        
+        .warning-box strong {
+            color: #856404;
+        }
+        
+        .practice-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            margin-top: 40px;
+            border-radius: 10px;
+        }
+        
+        .practice-section h2 {
+            color: white;
+            margin-bottom: 30px;
+        }
+        
+        .question {
+            background: rgba(255,255,255,0.1);
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border-left: 5px solid white;
+        }
+        
+        .question h3 {
+            color: white;
+            margin-bottom: 15px;
+        }
+        
+        .question ul {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+        
+        .question li {
+            margin: 8px 0;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            margin: 20px 0;
+        }
+        
+        .comparison-table td {
+            padding: 15px;
+            vertical-align: top;
+        }
+        
+        .comparison-table td:first-child {
+            background: #e7f3ff;
+            border-right: 3px solid #667eea;
+            font-weight: bold;
+        }
+        
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        
+        ul, ol {
+            margin-left: 25px;
+            margin-top: 10px;
+        }
+        
+        li {
+            margin: 8px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 統計分析與規劃求解</h1>
+            <p>AVERAGEIF、COUNTIF、SUMIF 及其 S 家族 | Solver 線性規劃應用</p>
+        </div>
+        
+        <div class="content">
+            <!-- Section 1: 條件統計函數家族 -->
+            <div class="section">
+                <h2><span class="icon">1</span>條件統計函數家族</h2>
+                
+                <h3>📌 單條件函數：COUNTIF、SUMIF、AVERAGEIF</h3>
+                <p>這三個函數允許我們根據<strong>單一條件</strong>來篩選資料並進行統計運算。</p>
+                
+                <div class="interface-grid">
+                    <div class="interface-item">
+                        <h4>COUNTIF</h4>
+                        <p><strong>功能：</strong>計算符合條件的儲存格數量</p>
+                        <div class="code-block">=COUNTIF(範圍, 條件)</div>
+                        <p><strong>範例：</strong></p>
+                        <div class="code-block">=COUNTIF(A2:A10, "台北")
+計算 A2:A10 範圍內等於「台北」的數量</div>
+                    </div>
+                    
+                    <div class="interface-item">
+                        <h4>SUMIF</h4>
+                        <p><strong>功能：</strong>加總符合條件的數值</p>
+                        <div class="code-block">=SUMIF(條件範圍, 條件, 加總範圍)</div>
+                        <p><strong>範例：</strong></p>
+                        <div class="code-block">=SUMIF(B2:B10, ">80", C2:C10)
+當 B 欄 > 80 時，加總對應的 C 欄數值</div>
+                    </div>
+                    
+                    <div class="interface-item">
+                        <h4>AVERAGEIF</h4>
+                        <p><strong>功能：</strong>計算符合條件的平均值</p>
+                        <div class="code-block">=AVERAGEIF(條件範圍, 條件, 平均範圍)</div>
+                        <p><strong>範例：</strong></p>
+                        <div class="code-block">=AVERAGEIF(A2:A10, "女", B2:B10)
+計算 A 欄為「女」時，B 欄的平均值</div>
+                    </div>
+                </div>
+
+                <div class="tip-box">
+                    <strong>💡 專有名詞解釋：</strong>
+                    <ul>
+                        <li><strong>條件 (Criteria)：</strong>用於篩選資料的規則，可以是文字、數字、比較運算符 (如 "&gt;80"、"&lt;=100") 或萬用字元 (如 "*台北*")。</li>
+                        <li><strong>範圍 (Range)：</strong>要進行檢查或運算的儲存格區域,例如 A2:A10。</li>
+                        <li><strong>萬用字元 (Wildcard)：</strong> 使用 * 代表任意字元,例如 "台*" 可以匹配「台北」、「台中」、「台南」。</li>
+                    </ul>
+                </div>
+
+                <h3>📌 多條件函數：COUNTIFS、SUMIFS、AVERAGEIFS</h3>
+                <p>當需要同時滿足<strong>多個條件</strong>時,使用這些「S」家族函數。所有條件都必須為 TRUE (邏輯 AND)。</p>
+                
+                <div class="interface-grid">
+                    <div class="interface-item">
+                        <h4>COUNTIFS</h4>
+                        <p><strong>功能：</strong>計算符合多個條件的數量</p>
+                        <div class="code-block">=COUNTIFS(條件範圍1, 條件1, 
+          條件範圍2, 條件2, ...)</div>
+                        <p><strong>範例：</strong></p>
+                        <div class="code-block">=COUNTIFS(A2:A10, "台北", 
+          B2:B10, ">80")
+計算 A 欄=台北 且 B 欄>80 的數量</div>
+                    </div>
+                    
+                    <div class="interface-item">
+                        <h4>SUMIFS</h4>
+                        <p><strong>功能：</strong>加總符合多個條件的數值</p>
+                        <div class="code-block">=SUMIFS(加總範圍, 
+         條件範圍1, 條件1, 
+         條件範圍2, 條件2, ...)</div>
+                        <p><strong>範例：</strong></p>
+                        <div class="code-block">=SUMIFS(C2:C10, A2:A10, "台北", 
+         B2:B10, ">=60")
+計算 A 欄=台北 且 B 欄>=60 時的 C 欄總和</div>
+                    </div>
+                    
+                    <div class="interface-item">
+                        <h4>AVERAGEIFS</h4>
+                        <p><strong>功能：</strong>計算符合多個條件的平均值</p>
+                        <div class="code-block">=AVERAGEIFS(平均範圍, 
+            條件範圍1, 條件1, 
+            條件範圍2, 條件2, ...)</div>
+                        <p><strong>範例：</strong></p>
+                        <div class="code-block">=AVERAGEIFS(D2:D10, A2:A10, "女", 
+            B2:B10, ">25")
+計算 A 欄=女 且 B 欄>25 時的 D 欄平均</div>
+                    </div>
+                </div>
+
+                <div class="warning-box">
+                    <strong>⚠️ 注意事項：</strong>
+                    <ul>
+                        <li><strong>參數順序差異：</strong>SUMIF/AVERAGEIF 的「加總/平均範圍」在<strong>最後</strong>,但 SUMIFS/AVERAGEIFS 的對應範圍在<strong>最前面</strong>!</li>
+                        <li><strong>條件格式：</strong>數字比較需用雙引號,例如 "&gt;80"、"&lt;=100"。</li>
+                        <li><strong>文字匹配：</strong>預設不區分大小寫,但可使用萬用字元做模糊匹配。</li>
+                    </ul>
+                </div>
+
+                <h3>📊 實務範例：社會科學態度調查統計</h3>
+                <p>某社會學研究調查了民眾對環保政策的態度,包含受訪者的地區、年齡、教育程度與態度評分 (1-10 分)。</p>
+
+                <table class="example-table">
+                    <thead>
+                        <tr>
+                            <th>編號 (A)</th>
+                            <th>地區 (B)</th>
+                            <th>年齡 (C)</th>
+                            <th>教育程度 (D)</th>
+                            <th>態度評分 (E)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>1</td><td>台北</td><td>28</td><td>大學</td><td>8</td></tr>
+                        <tr><td>2</td><td>台中</td><td>45</td><td>高中</td><td>6</td></tr>
+                        <tr><td>3</td><td>台北</td><td>35</td><td>碩士</td><td>9</td></tr>
+                        <tr><td>4</td><td>高雄</td><td>52</td><td>大學</td><td>7</td></tr>
+                        <tr><td>5</td><td>台北</td><td>23</td><td>大學</td><td>8</td></tr>
+                        <tr><td>6</td><td>台中</td><td>38</td><td>碩士</td><td>9</td></tr>
+                        <tr><td>7</td><td>高雄</td><td>41</td><td>高中</td><td>5</td></tr>
+                        <tr><td>8</td><td>台北</td><td>29</td><td>碩士</td><td>10</td></tr>
+                    </tbody>
+                </table>
+
+                <p><strong>統計分析問題：</strong></p>
+                <ol>
+                    <li>計算<strong>台北地區</strong>的受訪者數量：
+                        <div class="code-block">=COUNTIF(B2:B9, "台北")</div>
+                    </li>
+                    <li>計算<strong>年齡大於 30 歲</strong>的受訪者總態度評分：
+                        <div class="code-block">=SUMIF(C2:C9, ">30", E2:E9)</div>
+                    </li>
+                    <li>計算<strong>大學學歷</strong>者的平均態度評分：
+                        <div class="code-block">=AVERAGEIF(D2:D9, "大學", E2:E9)</div>
+                    </li>
+                    <li>計算<strong>台北地區且年齡小於 30 歲</strong>的受訪者數量：
+                        <div class="code-block">=COUNTIFS(B2:B9, "台北", C2:C9, "<30")</div>
+                    </li>
+                    <li>計算<strong>碩士學歷且態度評分 >= 8</strong>的總評分：
+                        <div class="code-block">=SUMIFS(E2:E9, D2:D9, "碩士", E2:E9, ">=8")</div>
+                    </li>
+                    <li>計算<strong>台北地區且碩士學歷</strong>者的平均態度評分：
+                        <div class="code-block">=AVERAGEIFS(E2:E9, B2:B9, "台北", D2:D9, "碩士")</div>
+                    </li>
+                </ol>
+
+                <div class="tip-box">
+                    <strong>💡 社會科學應用情境：</strong>
+                    <ul>
+                        <li><strong>交叉分析 (Cross-tabulation)：</strong>使用 COUNTIFS 進行多變量交叉統計,例如分析「性別 × 年齡層 × 政黨傾向」的分布。</li>
+                        <li><strong>分層抽樣檢驗：</strong>使用 AVERAGEIFS 計算特定群體的平均值,檢驗樣本代表性。</li>
+                        <li><strong>態度量表分析：</strong>結合條件函數統計不同人口變項下的李克特量表 (Likert Scale) 分數。</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Section 2: 規劃求解 (Solver) -->
+            <div class="section">
+                <h2><span class="icon">2</span>規劃求解 (Solver)</h2>
+                
+                <h3>📌 什麼是 Solver?</h3>
+                <p>Solver 是 Excel 的增益集工具,用於解決<strong>最佳化問題 (Optimization Problems)</strong>。它可以在給定的限制條件下,找出使目標函數達到最大值、最小值或特定值的變數組合。</p>
+
+                <div class="tip-box">
+                    <strong>💡 專有名詞解釋：</strong>
+                    <ul>
+                        <li><strong>線性規劃 (Linear Programming, LP)：</strong>一種數學優化方法,目標函數和限制條件都是線性關係。常用於資源分配、生產排程、運輸問題等。</li>
+                        <li><strong>目標函數 (Objective Function)：</strong>要最大化或最小化的數學式,例如「總利潤」、「總成本」。</li>
+                        <li><strong>決策變數 (Decision Variables)：</strong>可以調整的變數,例如「生產 A 產品的數量」、「投資金額」。</li>
+                        <li><strong>限制條件 (Constraints)：</strong>決策變數必須滿足的條件,例如「總預算 ≤ 100 萬」、「產量 ≥ 0」。</li>
+                    </ul>
+                </div>
+
+                <h3>📌 啟用 Solver</h3>
+                <ol>
+                    <li>點選 Excel 功能表的<strong>「檔案」→「選項」</strong></li>
+                    <li>選擇<strong>「增益集」</strong></li>
+                    <li>在「管理」下拉選單選擇<strong>「Excel 增益集」</strong>,點選<strong>「執行」</strong></li>
+                    <li>勾選<strong>「Solver 增益集」</strong>,按<strong>「確定」</strong></li>
+                    <li>完成後,在<strong>「資料」</strong>功能區會出現<strong>「規劃求解」</strong>按鈕</li>
+                </ol>
+
+                <h3>📊 Solver 操作步驟</h3>
+                <div class="interface-grid">
+                    <div class="interface-item">
+                        <h4>步驟 1：設定目標</h4>
+                        <p>指定要最大化、最小化或達到特定值的儲存格 (目標函數)。</p>
+                    </div>
+                    
+                    <div class="interface-item">
+                        <h4>步驟 2：設定變數儲存格</h4>
+                        <p>指定可以改變的儲存格範圍 (決策變數)。</p>
+                    </div>
+                    
+                    <div class="interface-item">
+                        <h4>步驟 3：加入限制條件</h4>
+                        <p>設定決策變數必須滿足的條件,例如 ≥ 0、總和 ≤ 某值等。</p>
+                    </div>
+                    
+                    <div class="interface-item">
+                        <h4>步驟 4：選擇求解方法</h4>
+                        <p>線性規劃問題選擇<strong>「單純形 LP」</strong>。</p>
+                    </div>
+                    
+                    <div class="interface-item">
+                        <h4>步驟 5：執行求解</h4>
+                        <p>按下<strong>「求解」</strong>按鈕,等待 Solver 計算最佳解。</p>
+                    </div>
+                    
+                    <div class="interface-item">
+                        <h4>步驟 6：檢視結果</h4>
+                        <p>Solver 會將最佳解填入變數儲存格,並顯示目標值。</p>
+                    </div>
+                </div>
+
+                <h3>📊 實務範例：資源分配最佳化問題 (IE/Econ)</h3>
+                <p><strong>問題情境：</strong><br>
+                某製造公司生產 A、B 兩種產品。每生產一單位 A 需要 2 小時機器時間、3 單位原料,利潤為 $500;每生產一單位 B 需要 1 小時機器時間、4 單位原料,利潤為 $300。公司每日有 100 小時機器時間、240 單位原料可用。請問應該如何分配生產數量以<strong>最大化總利潤</strong>?</p>
+
+                <div class="tip-box">
+                    <strong>💡 問題建模：</strong>
+                    <ul>
+                        <li><strong>決策變數：</strong>x = A 產品生產數量, y = B 產品生產數量</li>
+                        <li><strong>目標函數：</strong>最大化總利潤 = 500x + 300y</li>
+                        <li><strong>限制條件：</strong>
+                            <ul>
+                                <li>機器時間：2x + 1y ≤ 100</li>
+                                <li>原料限制：3x + 4y ≤ 240</li>
+                                <li>非負限制：x ≥ 0, y ≥ 0</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+
+                <p><strong>Excel 工作表設計：</strong></p>
+                <table class="example-table">
+                    <thead>
+                        <tr>
+                            <th>項目</th>
+                            <th>A 產品</th>
+                            <th>B 產品</th>
+                            <th>限制</th>
+                            <th>使用量</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>生產數量 (決策變數)</td><td>0 (B2)</td><td>0 (C2)</td><td>—</td><td>—</td></tr>
+                        <tr><td>單位利潤</td><td>500</td><td>300</td><td>—</td><td>—</td></tr>
+                        <tr><td>機器時間 (小時/單位)</td><td>2</td><td>1</td><td>100</td><td>=2*B2+1*C2 (E4)</td></tr>
+                        <tr><td>原料 (單位/單位)</td><td>3</td><td>4</td><td>240</td><td>=3*B2+4*C2 (E5)</td></tr>
+                        <tr><td><strong>總利潤 (目標)</strong></td><td colspan="2"><strong>=500*B2+300*C2 (B6)</strong></td><td>—</td><td>—</td></tr>
+                    </tbody>
+                </table>
+
+                <p><strong>Solver 設定：</strong></p>
+                <ol>
+                    <li><strong>目標儲存格：</strong>B6 (總利潤),選擇<strong>「最大值」</strong></li>
+                    <li><strong>變數儲存格：</strong>B2:C2 (A、B 產品生產數量)</li>
+                    <li><strong>限制條件：</strong>
+                        <ul>
+                            <li>E4 ≤ D4 (機器時間使用量 ≤ 100)</li>
+                            <li>E5 ≤ D5 (原料使用量 ≤ 240)</li>
+                            <li>B2:C2 ≥ 0 (生產數量非負)</li>
+                        </ul>
+                    </li>
+                    <li><strong>求解方法：</strong>單純形 LP</li>
+                    <li><strong>求解結果：</strong>A 產品生產 20 單位,B 產品生產 60 單位,最大利潤為 $28,000</li>
+                </ol>
+
+                <div class="tip-box">
+                    <strong>💡 產業應用情境：</strong>
+                    <ul>
+                        <li><strong>工業工程 (IE)：</strong>生產排程最佳化、設施佈置規劃、庫存管理、人力資源分配。</li>
+                        <li><strong>經濟學 (Economics)：</strong>投資組合最佳化、成本最小化、效用最大化、均衡分析。</li>
+                        <li><strong>供應鏈管理：</strong>運輸路線規劃、配送中心選址、訂單分配。</li>
+                        <li><strong>財務金融：</strong>資產配置、風險管理、資本預算決策。</li>
+                    </ul>
+                </div>
+
+                <div class="warning-box">
+                    <strong>⚠️ Solver 使用注意事項：</strong>
+                    <ul>
+                        <li><strong>線性 vs 非線性：</strong>只有當目標函數和限制條件都是線性時,才能使用「單純形 LP」方法。非線性問題需使用 GRG 非線性或演化式方法。</li>
+                        <li><strong>可行解存在性：</strong>如果限制條件互相衝突,Solver 可能找不到可行解。</li>
+                        <li><strong>整數限制：</strong>如果決策變數必須為整數 (例如生產件數),需在限制條件中設定「int」。</li>
+                        <li><strong>敏感度分析：</strong>求解完成後可檢視「敏感度報告」,了解參數變動對最佳解的影響。</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Section 3: 綜合比較 -->
+            <div class="section">
+                <h2><span class="icon">3</span>條件函數家族比較表</h2>
+                
+                <table class="example-table">
+                    <thead>
+                        <tr>
+                            <th>函數</th>
+                            <th>條件數量</th>
+                            <th>語法</th>
+                            <th>用途</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>COUNTIF</strong></td>
+                            <td>單一條件</td>
+                            <td>=COUNTIF(範圍, 條件)</td>
+                            <td>計算符合條件的儲存格數量</td>
+                        </tr>
+                        <tr>
+                            <td><strong>COUNTIFS</strong></td>
+                            <td>多條件</td>
+                            <td>=COUNTIFS(範圍1, 條件1, 範圍2, 條件2, ...)</td>
+                            <td>計算同時符合多個條件的數量</td>
+                        </tr>
+                        <tr>
+                            <td><strong>SUMIF</strong></td>
+                            <td>單一條件</td>
+                            <td>=SUMIF(條件範圍, 條件, 加總範圍)</td>
+                            <td>加總符合條件的數值</td>
+                        </tr>
+                        <tr>
+                            <td><strong>SUMIFS</strong></td>
+                            <td>多條件</td>
+                            <td>=SUMIFS(加總範圍, 條件範圍1, 條件1, ...)</td>
+                            <td>加總同時符合多個條件的數值</td>
+                        </tr>
+                        <tr>
+                            <td><strong>AVERAGEIF</strong></td>
+                            <td>單一條件</td>
+                            <td>=AVERAGEIF(條件範圍, 條件, 平均範圍)</td>
+                            <td>計算符合條件的平均值</td>
+                        </tr>
+                        <tr>
+                            <td><strong>AVERAGEIFS</strong></td>
+                            <td>多條件</td>
+                            <td>=AVERAGEIFS(平均範圍, 條件範圍1, 條件1, ...)</td>
+                            <td>計算同時符合多個條件的平均值</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="warning-box">
+                    <strong>⚠️ 語法差異重點：</strong>
+                    <p>單條件函數 (IF) 的「運算範圍」在<strong>最後</strong>,但多條件函數 (IFS) 的「運算範圍」在<strong>最前面</strong>!</p>
+                    <div class="code-block">=SUMIF(條件範圍, 條件, 加總範圍)    ← 加總範圍在最後
+=SUMIFS(加總範圍, 條件範圍1, 條件1, ...) ← 加總範圍在最前</div>
+                </div>
+            </div>
+
+            <!-- Practice Section -->
+            <div class="practice-section">
+                <h2>📝 練習題</h2>
+
+                <div class="question">
+                    <h3>練習題 1：顧客滿意度調查多條件分析</h3>
+                    <p><strong>任務描述：</strong></p>
+                    <p>某電商平台進行了顧客滿意度調查,收集了顧客的年齡、會員等級、消費金額與滿意度評分 (1-5 分)。行銷部門希望針對不同客群進行深入分析,以制定精準行銷策略。</p>
+
+                    <table class="example-table" style="margin: 20px 0; background: white;">
+                        <thead>
+                            <tr>
+                                <th>編號 (A)</th>
+                                <th>年齡 (B)</th>
+                                <th>會員等級 (C)</th>
+                                <th>消費金額 (D)</th>
+                                <th>滿意度 (E)</th>
+                                <th>購買類別 (F)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>1</td><td>25</td><td>金卡</td><td>8,500</td><td>5</td><td>電子產品</td></tr>
+                            <tr><td>2</td><td>32</td><td>銀卡</td><td>3,200</td><td>4</td><td>服飾</td></tr>
+                            <tr><td>3</td><td>28</td><td>金卡</td><td>12,000</td><td>5</td><td>電子產品</td></tr>
+                            <tr><td>4</td><td>45</td><td>普通</td><td>1,800</td><td>3</td><td>家居</td></tr>
+                            <tr><td>5</td><td>38</td><td>金卡</td><td>9,500</td><td>4</td><td>電子產品</td></tr>
+                            <tr><td>6</td><td>52</td><td>銀卡</td><td>4,500</td><td>4</td><td>服飾</td></tr>
+                            <tr><td>7</td><td>29</td><td>金卡</td><td>15,000</td><td>5</td><td>電子產品</td></tr>
+                            <tr><td>8</td><td>35</td><td>普通</td><td>2,100</td><td>3</td><td>家居</td></tr>
+                            <tr><td>9</td><td>41</td><td>銀卡</td><td>5,800</td><td>4</td><td>服飾</td></tr>
+                            <tr><td>10</td><td>26</td><td>金卡</td><td>11,200</td><td>5</td><td>電子產品</td></tr>
+                        </tbody>
+                    </table>
+
+                    <p><strong>分析任務：</strong></p>
+                    <ol>
+                        <li>計算<strong>金卡會員且購買電子產品</strong>的顧客數量</li>
+                        <li>計算<strong>年齡 30 歲以下且滿意度 = 5</strong>的顧客總消費金額</li>
+                        <li>計算<strong>銀卡會員且消費金額 > 4000</strong>的平均滿意度</li>
+                        <li>計算<strong>年齡 40 歲以上且購買家居類別</strong>的顧客數量</li>
+                        <li>計算<strong>金卡會員且年齡 25-35 歲之間</strong>的平均消費金額 (提示：需兩個年齡條件)</li>
+                    </ol>
+
+                    <div class="tip-box">
+                        <strong>💡 提示：</strong>
+                        <ul>
+                            <li>使用 COUNTIFS 計算符合多條件的數量</li>
+                            <li>使用 SUMIFS 計算符合多條件的加總</li>
+                            <li>使用 AVERAGEIFS 計算符合多條件的平均值</li>
+                            <li>年齡區間需要兩個條件："&gt;=25" 和 "&lt;=35"</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>練習題 2：員工績效考核條件統計</h3>
+                    <p><strong>任務描述：</strong></p>
+                    <p>人力資源部門需要分析員工的績效考核數據,以制定獎金發放與晉升計畫。考核項目包含業績達成率、專案完成數、客戶滿意度等指標。</p>
+
+                    <table class="example-table" style="margin: 20px 0; background: white;">
+                        <thead>
+                            <tr>
+                                <th>員工編號 (A)</th>
+                                <th>部門 (B)</th>
+                                <th>業績達成率 (C)</th>
+                                <th>專案完成數 (D)</th>
+                                <th>客戶滿意度 (E)</th>
+                                <th>年資 (F)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>E001</td><td>業務</td><td>125%</td><td>8</td><td>4.5</td><td>3</td></tr>
+                            <tr><td>E002</td><td>研發</td><td>95%</td><td>12</td><td>4.2</td><td>5</td></tr>
+                            <tr><td>E003</td><td>業務</td><td>110%</td><td>6</td><td>4.8</td><td>2</td></tr>
+                            <tr><td>E004</td><td>客服</td><td>105%</td><td>10</td><td>4.6</td><td>4</td></tr>
+                            <tr><td>E005</td><td>業務</td><td>140%</td><td>9</td><td>4.9</td><td>6</td></tr>
+                            <tr><td>E006</td><td>研發</td><td>88%</td><td>15</td><td>4.0</td><td>3</td></tr>
+                            <tr><td>E007</td><td>客服</td><td>115%</td><td>11</td><td>4.7</td><td>5</td></tr>
+                            <tr><td>E008</td><td>業務</td><td>98%</td><td>7</td><td>4.3</td><td>2</td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="tip-box">
+                        <strong>💡 專有名詞解釋：</strong>
+                        <ul>
+                            <li><strong>業績達成率：</strong>實際業績 ÷ 目標業績的百分比,用於評估銷售人員表現。</li>
+                            <li><strong>客戶滿意度：</strong>以 1-5 分量表評估,反映服務品質。</li>
+                        </ul>
+                    </div>
+
+                    <p><strong>分析任務：</strong></p>
+                    <ol>
+                        <li>計算<strong>業務部門且業績達成率 > 100%</strong>的員工數量</li>
+                        <li>計算<strong>年資 >= 4 年且客戶滿意度 >= 4.5</strong>的員工總專案完成數</li>
+                        <li>計算<strong>研發部門且專案完成數 > 10</strong>的平均客戶滿意度</li>
+                        <li>計算<strong>業績達成率 >= 120% 且年資 < 5 年</strong>的員工數量 (高潛力人才)</li>
+                        <li>計算<strong>客服部門</strong>的平均業績達成率</li>
+                    </ol>
+                </div>
+
+                <div class="question">
+                    <h3>練習題 3：生產排程最佳化 (Solver 應用)</h3>
+                    <p><strong>任務描述：</strong></p>
+                    <p>某家具製造廠生產<strong>桌子</strong>和<strong>椅子</strong>兩種產品。生產一張桌子需要 4 小時木工時間、2 小時組裝時間,利潤為 $1,200;生產一張椅子需要 2 小時木工時間、1 小時組裝時間,利潤為 $600。工廠每週有 160 小時木工時間、80 小時組裝時間。市場需求限制:桌子每週最多賣出 30 張。</p>
+
+                    <div class="tip-box">
+                        <strong>💡 問題建模提示：</strong>
+                        <ul>
+                            <li><strong>決策變數：</strong>設 x = 桌子生產數量, y = 椅子生產數量</li>
+                            <li><strong>目標函數：</strong>最大化總利潤 = 1200x + 600y</li>
+                            <li><strong>限制條件：</strong>
+                                <ul>
+                                    <li>木工時間：4x + 2y ≤ 160</li>
+                                    <li>組裝時間：2x + 1y ≤ 80</li>
+                                    <li>市場需求：x ≤ 30</li>
+                                    <li>非負限制：x ≥ 0, y ≥ 0</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <p><strong>Excel 建模步驟：</strong></p>
+                    <ol>
+                        <li>建立工作表,設定決策變數儲存格 (桌子數量 B2、椅子數量 C2),初始值設為 0</li>
+                        <li>設定單位利潤 (桌子 1200、椅子 600)</li>
+                        <li>計算總利潤公式：=1200*B2+600*C2</li>
+                        <li>計算資源使用量：
+                            <ul>
+                                <li>木工時間使用：=4*B2+2*C2</li>
+                                <li>組裝時間使用：=2*B2+1*C2</li>
+                            </ul>
+                        </li>
+                        <li>開啟 Solver 設定：
+                            <ul>
+                                <li>目標：總利潤儲存格,選擇「最大值」</li>
+                                <li>變數：B2:C2</li>
+                                <li>限制條件：木工時間 ≤ 160、組裝時間 ≤ 80、桌子 ≤ 30、兩個變數 ≥ 0</li>
+                                <li>求解方法：單純形 LP</li>
+                            </ul>
+                        </li>
+                        <li>執行求解並分析結果</li>
+                    </ol>
+
+                    <p><strong>分析問題：</strong></p>
+                    <ul>
+                        <li>最佳生產組合是多少張桌子和椅子?</li>
+                        <li>最大總利潤是多少?</li>
+                        <li>哪些資源被完全使用了? (檢查限制條件的「鬆弛變數」)</li>
+                        <li>如果木工時間增加 10 小時,利潤會增加多少? (敏感度分析)</li>
+                    </ul>
+                </div>
+
+                <div style="margin-top: 30px; padding: 20px; background: rgba(255,255,255,0.2); border-radius: 8px;">                
+                    <h3 style="color: white; margin-top: 25px; margin-bottom: 15px;">🎓 學習重點回顧</h3>
+                    <ul>
+                        <li><strong>COUNTIF / SUMIF / AVERAGEIF：</strong>單一條件的計數、加總、平均。</li>
+                        <li><strong>COUNTIFS / SUMIFS / AVERAGEIFS：</strong>多條件統計,所有條件需同時滿足 (AND 邏輯)。</li>
+                        <li><strong>語法差異：</strong>單條件函數的運算範圍在最後,多條件函數的運算範圍在最前!</li>
+                        <li><strong>條件格式：</strong>比較運算需用雙引號 (如 "&gt;80"),文字條件直接輸入或加引號。</li>
+                        <li><strong>Solver：</strong>用於線性規劃等最佳化問題,需設定目標、變數與限制條件。</li>
+                        <li><strong>應用情境：</strong>社會科學調查分析、資源分配最佳化、生產排程、投資組合等。</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
