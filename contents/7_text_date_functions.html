@@ -544,6 +544,14 @@
                     • <strong>批次代碼（Batch Code）：</strong>標識產品生產批次的代碼，用於品質追溯和庫存管理。
                 </div>
                 
+				<div class="tip-box">
+					<strong>📥 練習檔案下載：</strong><br>
+					請先下載以下 Excel 檔案，並依照題目說明完成練習。<br>
+					👉 <a href="files/7_實務範例_電子零件編碼解析系統.xlsx" download="">
+						點此下載：實務範例 電子零件編碼解析系統 Excel 檔
+					</a>
+				</div>
+				
                 <p><strong>情境說明：</strong>某電子元件公司使用結構化編碼系統，格式為：<span class="highlight">類別-年份-批次-序號</span></p>
                 <p>範例：<span class="formula">IC-2024-B03-A001</span> 表示 2024 年 B03 批次的第 A001 號積體電路產品。</p>
                 
@@ -636,7 +644,15 @@
                 </div>
                 
                 <p><strong>情境說明：</strong>某工程公司需要管理多個專案的時程，計算工期並監控進度。</p>
-                
+				
+				<div class="tip-box">
+					<strong>📥 練習檔案下載：</strong><br>
+					請先下載以下 Excel 檔案，並依照題目說明完成練習。<br>
+					👉 <a href="files/7_實務範例_專案工期管理系統.xlsx" download="">
+						點此下載：實務範例 專案工期管理系統 Excel 檔
+					</a>
+				</div>
+        
                 <table class="example-table">
                     <thead>
                         <tr>
@@ -732,6 +748,15 @@
 					
 					<p>某公司員工編號格式為：<span class="highlight">部門代碼-入職年份-流水號</span>，部門代碼固定2字元，年份固定4位數，流水號固定4位數（不足補0）。</p>
 					<p>例如：<span class="formula">HR-2023-0156</span> 表示人力資源部 2023 年入職的第 156 號員工。</p>
+
+					<div class="tip-box">
+						<strong>📥 練習檔案下載：</strong><br>
+						請先下載以下 Excel 檔案，並依照題目說明完成練習。<br>
+						👉 <a href="files/7_練習1_員工編號系統.xlsx" download="">
+							點此下載：練習1 員工編號系統 Excel 檔
+						</a>
+					</div>
+
 					
 					<table class="example-table">
 						<thead>
@@ -813,6 +838,14 @@
 					<p>統一發票號碼標準格式為：<span class="highlight">兩個英文字母 - 八位數字</span></p>
 					<p>正確範例：<span class="formula">AB-12345678</span>（總長度11個字元，包含1個「-」）</p>
 					<p>錯誤範例：AB12345678（無「-」）、ABC-12345678（字母超過2位）、AB-1234567（數字不足8位）</p>
+					
+					<div class="tip-box">
+						<strong>📥 練習檔案下載：</strong><br>
+						請先下載以下 Excel 檔案，並依照題目說明完成練習。<br>
+						👉 <a href="files/7_練習2_發票號碼驗證.xlsx" download="">
+							點此下載：練習2 發票號碼驗證 Excel 檔
+						</a>
+					</div>
 					
 					<table class="example-table">
 						<thead>
@@ -923,6 +956,14 @@
 						<li><strong>特殊情況：</strong>不考慮國定假日影響（為簡化計算）</li>
 					</ul>
 
+					<div class="tip-box">
+						<strong>📥 練習檔案下載：</strong><br>
+						請先下載以下 Excel 檔案，並依照題目說明完成練習。<br>
+						👉 <a href="files/7_練習3_課程時數統計.xlsx" download="">
+							點此下載：練習3 課程時數統計 Excel 檔
+						</a>
+					</div>
+
 					<table class="example-table">
 						<thead>
 							<tr>
@@ -1005,6 +1046,14 @@
 						「公司名稱 - YYYY年MM月 銷售報表」
 					</p>
 					
+					<div class="tip-box">
+						<strong>📥 練習檔案下載：</strong><br>
+						請先下載以下 Excel 檔案，並依照題目說明完成練習。<br>
+						👉 <a href="files/7_練習4_動態報表標題.xlsx" download="">
+							點此下載：練習4 動態報表標題 Excel 檔
+						</a>
+					</div>
+					
 					<p>範例（假設今天是 2025年12月23日，公司名稱為「宏達科技」）：</p>
 					<p style="font-size:1.4em; color:#2a5298; text-align:center; background:#f8f9fa; padding:15px; border-radius:8px;">
 						「宏達科技 - 2025年12月 銷售報表」
@@ -1053,7 +1102,7 @@
 						<li>使用 <strong>TODAY()</strong> 取得當前日期</li>
 						<li>年份顯示四位數（YYYY）</li>
 						<li>月份顯示兩位數並加上「月」（如 12月）</li>
-						<li>前後加上「「」」與「 - 銷售報表」</li>
+						<li>前後加上「「」」與「銷售報表」</li>
 					</ul>
 
 					<div class="tip-box">
@@ -1062,7 +1111,7 @@
 							="「" & A1 & " - " & TEXT(TODAY(),"YYYY") & "年" & TEXT(TODAY(),"MM") & "月 銷售報表」"
 						</span>
 						<br><br>
-						<strong>進階版（自動判斷是否需要「份」）：</strong><br>
+						<strong>進階版：</strong><br>
 						<span class="formula">
 							="「" & A1 & " - " & TEXT(TODAY(),"YYYY年MM月") & " 銷售報表」"
 						</span>
