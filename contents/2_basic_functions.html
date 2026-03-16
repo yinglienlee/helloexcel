@@ -710,8 +710,8 @@
 					<li>計算每個部門的<strong>總投入工時</strong> (總計列)：<span class="formula">=SUM(...)</span></li>
 					<li>計算每個部門在各階段的<strong>平均工時</strong> (平均列)：<span class="formula">=AVERAGE(...)</span></li>
 					<li>計算專案<strong>總工時</strong> (所有部門總投入的總和)：<span class="formula">=SUM(B7:D7)</span></li>
-					<li>找出單一階段中，<strong>最高工時</strong>的部門投入量：<span class="formula">=MAX(B2:D6)</span> (可選取整個工時範圍)</li>
-					<li>找出單一階段中，<strong>最低工時</strong>的部門投入量：<span class="formula">=MIN(B2:D6)</span></li>
+					<li>找出所有階段中，<strong>最高工時</strong>的部門投入量：<span class="formula">=MAX(B2:D6)</span> (可選取整個工時範圍)</li>
+					<li>找出所有階段中，<strong>最低工時</strong>的部門投入量：<span class="formula">=MIN(B2:D6)</span></li>
 					<li>計算有<strong>備註說明</strong>的階段數量：<span class="formula">=COUNTA(...)</span> (選取 E 欄的備註範圍)</li>
 					<li>計算<strong>沒有備註說明</strong>的階段數量：<span class="formula">=COUNTBLANK(...)</span> (選取 E 欄的備註範圍)</li>
 				</ol>
@@ -773,8 +773,8 @@
                 <ol>
                     <li>計算<strong>總銷售數量</strong> (忽略無數據的月份)：<span class="formula">=SUM(B2:B7)</span></li>
                     <li>計算有紀錄月份的<strong>平均銷售單價</strong>：<span class="formula">=AVERAGE(C2:C7)</span></li>
-                    <li>找出<strong>最高營業利益</strong>的月份數值：<span class="formula">=MAX(H2:H7)</span></li>
-                    <li>找出<strong>最低營業利益</strong>的月份數值：<span class="formula">=MIN(H2:H7)</span></li>
+                    <li>找出<strong>最高營業利益</strong>的數值：<span class="formula">=MAX(H2:H7)</span></li>
+                    <li>找出<strong>最低營業利益</strong>的數值：<span class="formula">=MIN(H2:H7)</span></li>
                     <li>計算有<strong>銷售數據 (非文字/空白)</strong> 的月份數量：<span class="formula">=COUNT(B2:B7)</span></li>
                     <li>計算所有交易紀錄 (非空白) 的總筆數：<span class="formula">=COUNTA(A2:A7)</span></li>
                 </ol>
@@ -829,11 +829,10 @@
 				<ol>
 					<li>計算<strong>目前庫存總量</strong>：<span class="formula">=SUM(B2:B7)</span>（會自動忽略「缺貨」文字）</li>
 					<li>計算<strong>安全庫存總量</strong>：<span class="formula">=SUM(C2:C7)</span></li>
-					<li>找出<strong>月銷售量最高</strong>的產品：<span class="formula">=MAX(D2:D7)</span></li>
-					<li>找出<strong>月銷售量最低</strong>的產品：<span class="formula">=MIN(D2:D7)</span></li>
+					<li>找出<strong>月銷售量最高</strong>的數量：<span class="formula">=MAX(D2:D7)</span></li>
+					<li>找出<strong>月銷售量最低</strong>的數量：<span class="formula">=MIN(D2:D7)</span></li>
 					<li>計算<strong>具有有效庫存數據</strong>的產品數量（排除「缺貨」文字）：<span class="formula">=COUNT(B2:B7)</span></li>
 					<li>計算<strong>所有產品記錄筆數</strong>：<span class="formula">=COUNTA(A2:A7)</span></li>
-					<li><strong>進階挑戰：</strong>計算庫存不足（B 欄 &lt; C 欄）的產品數量（可使用下週會教授的 <span class="formula">COUNTIF</span>）。</li>
 				</ol>
 			</div>
 
@@ -848,6 +847,7 @@
 						點此下載：練習題7 行銷活動成效評估 Excel 檔
 					</a>
 				</div>	
+				
 				<table class="example-table" style="margin: 20px 0; background: white;">
 					<thead>
 						<tr>
@@ -889,11 +889,11 @@
 					<li>計算所有活動的<strong>總曝光人數</strong>（忽略文字「無數據」）：<span class="formula">=SUM(B2:B7)</span></li>
 					<li>計算所有活動的<strong>總參與人數</strong>：<span class="formula">=SUM(C2:C7)</span></li>
 					<li>計算整體活動的<strong>總轉換訂單</strong>：<span class="formula">=SUM(E2:E7)</span></li>
-					<li>找出<strong>轉換率最高</strong>的活動：<span class="formula">=MAX(G2:G7)</span></li>
-					<li>找出<strong>轉換率最低</strong>的活動：<span class="formula">=MIN(G2:G7)</span></li>
+					<li>找出<strong>最高轉換率</strong>：<span class="formula">=MAX(G2:G7)</span></li>
+					<li>找出<strong>最低轉換率</strong>：<span class="formula">=MIN(G2:G7)</span></li>
 					<li>計算有效曝光數據的活動筆數：<span class="formula">=COUNT(B2:B7)</span></li>
 					<li>計算所有活動紀錄筆數：<span class="formula">=COUNTA(A2:A7)</span></li>
-					<li><strong>進階挑戰：</strong>找出 CPC 最低（成本效益最好的）活動：<span class="formula">=MIN(H2:H7)</span></li>
+					<li><strong>進階挑戰：</strong>找出最低 CPC（成本效益最好的）：<span class="formula">=MIN(H2:H7)</span></li>
 				</ol>
 			</div>
 
