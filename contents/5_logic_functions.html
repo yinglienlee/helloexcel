@@ -537,27 +537,40 @@
                         <tr>
                             <td>同時滿足多個條件</td>
                             <td>條件A 且 條件B</td>
-                            <td>=IF(AND(A2>100, B2="已付款"), "符合", "不符合")</td>
+                            <td>=IF(AND(B5>10000, C5="已付款"), "符合", "不符合")</td>
                         </tr>
                         <tr>
                             <td>滿足任一條件</td>
                             <td>條件A 或 條件B</td>
-                            <td>=IF(OR(A2="VIP", B2>50000), "優惠", "原價")</td>
+                            <td>=IF(OR(B14="VIP", C14>50000), "優惠", "原價")</td>
                         </tr>
                         <tr>
                             <td>複雜組合 (A且B) 或 C</td>
                             <td>(A AND B) OR C</td>
-                            <td>=IF(OR(AND(A2>100, B2="是"), C2="緊急"), "Y", "N")</td>
+                            <td>=IF(OR(AND(B23>100,C23="是"), D23="緊急"), "Y", "N")</td>
                         </tr>
                         <tr>
                             <td>排除特定條件</td>
                             <td>不是 A</td>
-                            <td>=IF(NOT(A2="取消"), "有效訂單", "已取消")</td>
+                            <td>=IF(NOT(B32="取消"), "有效訂單", "已取消")</td>
                         </tr>
                         <tr>
                             <td>A 或 B 但不是同時</td>
                             <td>(A OR B) AND NOT(A AND B)</td>
-                            <td>=IF(AND(OR(A2,B2), NOT(AND(A2,B2))), "是", "否")</td>
+                            <td>=IF(AND(OR(B41, C41), NOT(AND(B41, C41))),"是","否")<br>
+<br>
+<pre>
+B41 ──┐
+        ├─→ OR ────┐
+C41 ──┘                │
+                          ├─→ AND ─→ IF → "是 / 否"
+B41 ──┐                │
+        ├─→ AND → NOT ┘
+C41 ──┘
+</pre>
+<br>
+=XOR(B41, C41)
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -687,6 +700,7 @@
                         <li><strong>條件順序:</strong>IFS 從左到右判斷,遇到第一個 TRUE 就停止,所以要按照從嚴格到寬鬆的順序</li>
                         <li><strong>相容性問題:</strong>Excel 2016 及更早版本不支援 IFS,需改用巢狀 IF</li>
                         <li><strong>錯誤偵錯:</strong>檢查是否有條件永遠無法被執行到 (被前面的條件覆蓋)</li>
+			<li><strong>輸入方式:</strong>可使用 Alt + Enter 輸入多行公式</li>
                     </ul>
                 </div>
                 
