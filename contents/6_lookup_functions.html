@@ -798,12 +798,12 @@
 • range_lookup:    TRUE=近似匹配 / FALSE=精確匹配</div>
                 </div>
 
-                <h3>📊 實務範例:季度業績報表</h3>
+                <h3>📊 實務範例 3:季度業績報表</h3>
 				<div class="tip-box">
 					<strong>📥 練習檔案下載：</strong><br>
 					請先下載以下 Excel 檔案，並依照題目說明完成練習。<br>
-					👉 <a href="files/6_實務範例_季度業績報表.xlsx" download="">
-						點此下載：實務範例 季度業績報表 Excel 檔
+					👉 <a href="files/6_實務範例3_季度業績報表.xlsx" download="">
+						點此下載：實務範例3 季度業績報表 Excel 檔
 					</a>
 				</div>	
                 <table class="example-table">
@@ -843,8 +843,8 @@
 
                 <div class="code-block">
 查詢公式範例:
-=HLOOKUP("Q3",A1:E1,2,FALSE)     → 返回Q3的營收: 142.8
-=HLOOKUP("Q2",A1:E1,4,FALSE)     → 返回Q2的毛利率: 33.4
+=HLOOKUP("Q3",A1:E4,2,FALSE)     → 返回Q3的營收: 142.8
+=HLOOKUP("Q2",A1:E4,4,FALSE)     → 返回Q2的毛利率: 33.4
                 </div>
 
                 <div class="warning-box">
@@ -907,13 +907,13 @@
 2. INDEX 再根據這個位置,從返回值範圍中取出對應的值
                 </div>
 
-                <h3>📋 實務範例 1:向左查詢 (突破VLOOKUP限制)</h3>
+                <h3>📋 實務範例 4:向左查詢 (突破VLOOKUP限制)</h3>
                 <p>VLOOKUP 無法做到的向左查詢,INDEX+MATCH 輕鬆解決:</p>
 				<div class="tip-box">
 					<strong>📥 練習檔案下載：</strong><br>
 					請先下載以下 Excel 檔案，並依照題目說明完成練習。<br>
-					👉 <a href="files/6_實務範例1_向左查詢.xlsx" download="">
-						點此下載：實務範例1 向左查詢 Excel 檔
+					👉 <a href="files/6_實務範例4_向左查詢.xlsx" download="">
+						點此下載：實務範例4 向左查詢 Excel 檔
 					</a>
 				</div>	
                 <table class="example-table">
@@ -960,7 +960,14 @@ INDEX + MATCH 解決方案:
 2. INDEX(A2:A4, 3) → 返回 A2:A4 中第3個值 → "電源管理IC"
                 </div>
 
-                <h3>📋 實務範例 2:IE 成本分析</h3>
+                <h3>📋 實務範例 5: IE成本分析</h3>
+				<div class="tip-box">
+					<strong>📥 練習檔案下載：</strong><br>
+					請先下載以下 Excel 檔案，並依照題目說明完成練習。<br>
+					👉 <a href="files/6_實務範例5_IE成本分析.xlsx" download="">
+						點此下載：實務範例5 IE成本分析 Excel 檔
+					</a>
+				</div>	
                 <table class="example-table">
                     <thead>
                         <tr>
@@ -1029,9 +1036,15 @@ INDEX + MATCH 解決方案:
 - 邏輯清晰,易於維護
                 </div>
 
-                <h3>📊 實務範例 3:雙向查詢 (進階應用)</h3>
+                <h3>📊 實務範例 6:雙向查詢 (進階應用)</h3>
                 <p>同時根據行和列條件查詢數據:</p>
-
+				<div class="tip-box">
+					<strong>📥 練習檔案下載：</strong><br>
+					請先下載以下 Excel 檔案，並依照題目說明完成練習。<br>
+					👉 <a href="files/6_實務範例6_雙向查詢.xlsx" download="">
+						點此下載：實務範例6 雙向查詢 Excel 檔
+					</a>
+				</div>	
                 <table class="example-table">
                     <thead>
                         <tr>
@@ -1112,7 +1125,14 @@ INDEX + MATCH 解決方案:
 - search_mode:     1=從頭搜尋(預設), -1=從尾搜尋, 2=二分搜尋(升序), -2=二分搜尋(降序)</div>
                 </div>
 
-                <h3>📋 實務範例 1:基本使用</h3>
+                <h3>📋 實務範例 7:基本使用</h3>
+				<div class="tip-box">
+					<strong>📥 練習檔案下載：</strong><br>
+					請先下載以下 Excel 檔案，並依照題目說明完成練習。<br>
+					👉 <a href="files/6_實務範例7-10_XLOOKUP.xlsx" download="">
+						點此下載：實務範例7-10 XLOOKUP Excel 檔
+					</a>
+				</div>
                 <div class="code-block">
 使用先前的產品成本表:
 
@@ -1129,7 +1149,14 @@ XLOOKUP 查詢:
 - 語法更簡潔直觀
                 </div>
 
-                <h3>🎯 實務範例 2:找不到時的預設值</h3>
+                <h3>🎯 實務範例 8:找不到時的預設值</h3>
+				<div class="tip-box">
+					<strong>📥 練習檔案下載：</strong><br>
+					請先下載以下 Excel 檔案，並依照題目說明完成練習。<br>
+					👉 <a href="files/6_實務範例7-10_XLOOKUP.xlsx" download="">
+						點此下載：實務範例7-10 XLOOKUP Excel 檔
+					</a>
+				</div>
                 <div class="code-block">
 =XLOOKUP("IC-9999", A2:A6, C2:C6, "查無此產品")
                                       ↑
@@ -1140,7 +1167,14 @@ XLOOKUP 查詢:
 ↑ 需要額外使用 IFERROR 函數
                 </div>
 
-                <h3>📊 實務範例 3:查詢整個欄位</h3>
+                <h3>📊 實務範例 9:查詢整個欄位</h3>
+				<div class="tip-box">
+					<strong>📥 練習檔案下載：</strong><br>
+					請先下載以下 Excel 檔案，並依照題目說明完成練習。<br>
+					👉 <a href="files/6_實務範例7-10_XLOOKUP.xlsx" download="">
+						點此下載：實務範例7-10 XLOOKUP Excel 檔
+					</a>
+				</div>
                 <div class="code-block">
 查詢整個產品資訊(多欄):
 
@@ -1154,7 +1188,14 @@ XLOOKUP 查詢:
 這在建立動態報表時非常有用!
                 </div>
 
-                <h3>🔍 實務範例 4:反向查詢(從下往上找)</h3>
+                <h3>🔍 實務範例 10:反向查詢(從下往上找)</h3>
+				<div class="tip-box">
+					<strong>📥 練習檔案下載：</strong><br>
+					請先下載以下 Excel 檔案，並依照題目說明完成練習。<br>
+					👉 <a href="files/6_實務範例7-10_XLOOKUP.xlsx" download="">
+						點此下載：實務範例7-10 XLOOKUP Excel 檔
+					</a>
+				</div>
                 <div class="code-block">
 當有重複值時,找最後一個出現的項目:
 
@@ -1169,7 +1210,14 @@ XLOOKUP 查詢:
 - 查詢產品最新的價格異動
                 </div>
 
-                <h3>📈 實務範例 5:區間查詢(經濟學應用)</h3>
+                <h3>📈 實務範例 11:區間查詢(經濟學應用)</h3>
+				<div class="tip-box">
+					<strong>📥 練習檔案下載：</strong><br>
+					請先下載以下 Excel 檔案，並依照題目說明完成練習。<br>
+					👉 <a href="files/6_實務範例11_區間查詢.xlsx" download="">
+						點此下載：實務範例11 區間查詢 Excel 檔
+					</a>
+				</div>	
                 <table class="example-table">
                     <thead>
                         <tr>
